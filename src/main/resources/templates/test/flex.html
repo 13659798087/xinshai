@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<!-- <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+
+
+<style>
+	.placeholder {
+		margin: 5px;
+		padding: 0 10px;
+		background-color: #ebebeb;
+		height: 2.3em;
+		line-height: 2.3em;
+		text-align: center;
+		color: #cfcfcf;
+	}
+</style>
+</head>
+<body ontouchstart>
+
+<header class='demos-header'>
+	<h1 class="demos-title">Flex</h1>
+</header>
+
+<div class="weui-flex">
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+</div>
+<div class="weui-flex">
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+</div>
+<div class="weui-flex">
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+</div>
+<div class="weui-flex">
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+</div>
+<div class="weui-flex">
+	<div><div class="placeholder">weui</div></div>
+	<div class="weui-flex__item"><div class="placeholder">weui</div></div>
+	<div><div class="placeholder">weui</div></div>
+</div>
+
+</body>
+
+<script>
+
+	var map={
+	    message: '',
+	    ret:'',
+	    cc:'',
+	    dd:'',
+	};
+    
+	new Vue({
+	  el: '#app',
+	  data: map
+	});
+	
+	$(function(){
+	    $.get("/test/getList",{},function(data){
+		   map.message=data.aa;
+		   map.ret=data.bb;
+	    })
+	});
+
+    
+    $(".ok").click(function(){
+       $.get("/test/ok",{"type":"hello"},function(data){
+           map.cc=data.cc;
+           map.dd=data.dd;
+           
+       
+       })
+    })
+
+
+	
+
+
+</script>
+
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<!-- <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+
+</head>
+<body>
+<div class="weui-grids">
+	<a href="/test/button" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_button.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Button
+		</p>
+	</a>
+	<a href="/test/flex" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_cell.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Flex
+		</p>
+	</a>
+	<a href="/test/cell" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_cell.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			List
+		</p>
+	</a>
+	<a href="/test/slider" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_swiper.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Slider
+		</p>
+	</a>
+	<a href="/test/swipeout" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_swiper.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Swipeout
+		</p>
+	</a>
+	<a href="/test/form" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_cell.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Form
+		</p>
+	</a>
+	<a href="/test/uploader" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_up.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Uploader
+		</p>
+	</a>
+	<a href="/test/gallery" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_cell.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Gallery
+		</p>
+	</a>
+	<a href="/test/msg" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_msg.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Msg
+		</p>
+	</a>
+	<a href="/test/progress" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_progress.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Progress
+		</p>
+	</a>
+	<a href="/test/dialog" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_dialog.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Dialog
+		</p>
+	</a>
+	<a href="/test/loadmore" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_cell.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Loadmore
+		</p>
+	</a>
+	<a href="/test/actionSheet" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_actionSheet.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			ActionSheet
+		</p>
+	</a>
+	<a href="/test/toast" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_toast.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Toast
+		</p>
+	</a>
+	<a href="/test/toptip" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_cell.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Toptip
+		</p>
+	</a>
+	<a href="/test/tabbar" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_tab.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Tabbar
+		</p>
+	</a>
+	<a href="/test/navbar" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_article.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Navbar
+		</p>
+	</a>
+	<a href="/test/panel" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_panel.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Panel
+		</p>
+	</a>
+	<a href="/test/preview" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_panel.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Preview
+		</p>
+	</a>
+	<a href="/test/searchbar" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_search_bar.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Searchbar
+		</p>
+	</a>
+	<a href="/test/footer" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_search_bar.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			Footer
+		</p>
+	</a>
+	<a href="/test/icons" class="weui-grid js_grid">
+		<div class="weui-grid__icon">
+			<img src="../img/images/icon_nav_icons.png" alt="">
+		</div>
+		<p class="weui-grid__label">
+			图标
+		</p>
+	</a>
+
+
+
+</div>
+
+
+</body>
+
+<script>
+
+
+</script>
+
+</html>

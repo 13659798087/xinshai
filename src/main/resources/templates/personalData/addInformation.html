@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>输入查询信息</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<style>
+
+	input[type="date"]:before{color:#A9A9A9;content:attr(placeholder);}
+	input[type="date"].full:before {color:black;content:""!important;}
+
+</style>
+
+</head>
+<body ontouchstart>
+
+
+
+
+<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+		<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
+		<div class="weui-cell__bd">
+			<span style="font-size: 18px;">输入查询资料</span>
+		</div>
+	</div>
+
+<form action="/personalData/submitInformation" method="post">
+
+	<div>
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">姓名：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" name="p_name" type="text" placeholder="请输入母亲（或受检人）姓名">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">电话：</label></div>
+			<div class="weui-cell__bd">
+			<input class="weui-input" type="tel" name="p_tel" placeholder="请输入采血卡上的手机号码">
+		</div>
+		</div>
+
+		<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label">日期：</label></div>
+		<div class="weui-cell__bd">
+			<input id="date" class="weui-input" type="date" name="s_birthday"  placeholder="填写小孩的出生日期" style="height:41px;overflow: hidden;">
+		</div>
+	</div>
+
+		<br/><br/>
+		<div class='demos-content-padded'  >
+			<!--<a href="/personalData/submitInformation" class="weui-btn weui-btn_primary"  >确定提交</a>-->
+			<input type=submit name="submit1" value="确定提交" class="weui-btn weui-btn_primary"
+				   onclick="return check(this.form)">
+		</div>
+		<br/>
+
+		<!--<span>温馨提示：请输入采血时在卡片上留下的手机号码与宝宝准确的出生日期。
+			如您多次未能绑定成功，请拔打中心电话 0757-82969720咨询。</span>-->
+
+		<div class="weui-footer">
+			<!--<p class="weui-footer__links">
+				<a href="javascript:void(0);" class="weui-footer__link">底部链接</a>
+			</p>-->
+			<p class="weui-footer__text" style="text-align: left;padding: 0px 20px;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;温馨提示：请输入采血时在卡片上留下的手机号码与宝宝准确的出生日期。
+				如您多次未能绑定成功，请拔打中心电话 <a href="tel://12345678">12345678</a>咨询。</p>
+
+		</div>
+	</div>
+
+</form>
+<div>
+
+
+</div>
+
+</body>
+
+<script>
+
+    function check(form) {
+        if(form.p_name.value=='') {
+            $.alert("请输入母亲姓名", "提示！");
+            //alert("请输入母亲姓名!");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.p_tel.value==''){
+            $.alert("请输入采血卡号上的电话号码", "提示！");
+            //alert("请输入采血卡号上的电话号码!");
+            //form.p_tel.focus();
+            return false;
+        }
+        if(form.s_birthday.value==''){
+            $.alert("请输入小孩出生日期", "提示！");
+            //alert("请输入小孩出生日期!");
+            //form.s_birthday.focus();
+            return false;
+        }
+        return true;
+    }
+
+
+
+    $("#date").on("input",function(){
+        debugger;
+        if($(this).val().length>0){
+            $(this).addClass("full");
+        }
+        else{
+            $(this).removeClass("full");
+        }
+    });
+
+    $('.delete-swipeout').click(function () {
+        $(this).parents('.weui-cell').remove()
+    });
+    $('.close-swipeout').click(function () {
+        $(this).parents('.weui-cell').swipeout('close')
+    })
+</script>
+
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+
+</html>

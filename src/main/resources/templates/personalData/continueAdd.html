@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我的信息</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<style>
+
+	input[type="date"]:before{color:#A9A9A9;content:attr(placeholder);}
+	input[type="date"].full:before {color:black;content:""!important;}
+	.weui-toast{margin-left: 3%;}
+</style>
+
+</head>
+<body ontouchstart>
+
+	<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+		<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
+		<div class="weui-cell__bd">
+			<span style="font-size: 18px;">我的信息</span>
+		</div>
+	</div>
+
+	<div class="weui-form-preview"  th:each="m:${listWeixinMsg}"  th:id="${m.id}+w" style="border: 2px solid #e5e5e5 ; border-radius: 8px;margin: 10px;">
+		<div class="weui-form-preview__bd">
+			<div class="weui-form-preview__item">
+				<label class="weui-form-preview__label">母亲姓名</label>
+				<span class="weui-form-preview__value" th:text="${m.p_name}"></span>
+			</div>
+			<div class="weui-form-preview__item">
+				<label class="weui-form-preview__label">联系电话</label>
+				<span class="weui-form-preview__value"  th:text="${m.p_tel}"></span>
+			</div>
+			<div class="weui-form-preview__item">
+				<label class="weui-form-preview__label">小孩出生日期</label>
+				<!--<span class="weui-form-preview__value"  th:text="${#dates.format(m.s_birthday,'yyyy-MM-dd')}"  th:if="${m.s_birthday!=null}"></span>-->
+				<span class="weui-form-preview__value"  th:text="${#strings.substring(m.s_birthday,0,10)}"></span>
+			</div>
+		</div>
+
+		<div class="weui-form-preview__ft">
+			<sapn class="weui-form-preview__btn weui-form-preview__btn_primary" style="color: black;" >待验证</sapn>
+		</div>
+		<div class="weui-form-preview__ft">
+			<a class="weui-form-preview__btn weui-form-preview__btn_primary show-confirm" href="javascript:"   th:id="${m.id}" >解除绑定</a>
+		</div>
+	</div>
+
+	<br/>
+	<div class='demos-content-padded'  >
+		<a href="/personalData/addInformation" class="weui-btn weui-btn_primary" >  继续添加 </a>
+	</div>
+
+	<span></span>
+	<div class="weui-footer">
+		<p class="weui-footer__text" style="text-align: left;padding: 0px 20px;">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;提交资料后出现【<span style="color: #3cc51f">待验证</span>】说明：
+			1、输入的信息与中心已有的资料不符合；2、中心暂时无您的相关资料（筛查卡片未收到或结果报告未出）；
+			3、如果等待验证超过十个工作日，请致电<a href="tel://12345678">0757-82969720</a>咨询详情！</p>
+	</div>
+
+</body>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+<script>
+
+    $(document).on("click", ".show-confirm", function() {
+        var id = this.id;
+        $.confirm("<span>温馨提示：如果您的资料等待十天左右还是待验证状态。请您拨打中心电话12345678咨询详情！</span><br/><br/>",
+			"<i class='weui-icon-warn weui-icon_msg-primary'></i><br/><br/>"+"<span style='font-weight: bold;font-size: 20px;'>解除绑定?</span><br/><br/>", function() {
+            /*$.toast("解除绑定成功!");*/
+           /* $.get("/personalData/deleteBind",{"id":id},function(){
+                $("#"+id+'w').remove();
+                $.toast("解除绑定成功!");
+            })*/
+				location.href="/personalData/deleteBind?id="+id;
+                //$("#"+id+'w').remove();
+                $.toast("解除绑定成功!");
+        }, function() {
+            //取消操作
+        });
+    });
+
+    $("#date").on("input",function(){
+        if($(this).val().length>0){
+            $(this).addClass("full");
+        }
+        else{
+            $(this).removeClass("full");
+        }
+    });
+
+    $('.delete-swipeout').click(function () {
+        $(this).parents('.weui-cell').remove()
+    });
+    $('.close-swipeout').click(function () {
+        $(this).parents('.weui-cell').swipeout('close')
+    })
+</script>
+
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
+
+</html>

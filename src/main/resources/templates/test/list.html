@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<!-- <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+ 
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+</head>
+<body>
+<center style="margin-top: 10%;">
+	<input type="text" th:value="${user.name}"  class="form-control" style="width: 50%;"><br/>
+	<input type="text" th:value="${user.age}"    class="form-control" style="width: 50%;"><br/><br/><br/>
+
+	<div id="app">
+	
+	   <p>{{ message }}</p>
+       <div class="id1">{{ret}}</div>
+	   <input type="text" v-model="message"  :id="ret"   /><br/><!-- 双向绑定 -->
+	
+	
+	<div class="ok">点击事件</div>
+	<br/>
+	<div>{{ cc }}</div>
+	<div>{{ dd }}</div>
+	
+	</div>
+	</center>
+</body>
+
+<script>
+
+
+   /*  var map={
+	    message: '',
+	    ret:'',
+	    cc:'',
+	    dd:''
+	}; */
+    
+	 /*new Vue({
+	  el: '#app',
+	  data: {
+			    message: '',
+			    ret:'',
+			    cc:'',
+			    dd:''
+	        }
+	}) */
+
+	var map={
+	    message: '',
+	    ret:'',
+	    cc:'',
+	    dd:'',
+	};
+    
+	new Vue({
+	  el: '#app',
+	  data: map
+	});
+	
+	
+	$(function(){
+	    $.get("/test/getList",{},function(data){
+		   map.message=data.aa;
+		   map.ret=data.bb;
+	    })
+	});
+
+    
+    $(".ok").click(function(){
+       $.get("/test/ok",{"type":"hello"},function(data){
+           map.cc=data.cc;
+           map.dd=data.dd;
+           
+       
+       })
+    })
+
+
+	
+
+
+</script>
+
+</html>

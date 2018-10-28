@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<!-- <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<style>
+
+</style>
+</head>
+<body ontouchstart>
+
+<header class='demos-header'>
+	<h1 class="demos-title">滑动删除</h1>
+</header>
+
+<div class="bd">
+	<div class="page__bd">
+		<div class="weui-cells">
+			<div class="weui-cell weui-cell_swiped" id="swipe1">
+				<div class="weui-cell__bd">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<p>左滑列表</p>
+						</div>
+						<div class="weui-cell__ft">向左滑动试试</div>
+					</div>
+				</div>
+				<div class="weui-cell__ft">
+					<a class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout" href="javascript:">删除</a>
+					<a class="weui-swiped-btn weui-swiped-btn_default close-swipeout" href="javascript:">关闭</a>
+				</div>
+			</div>
+			<div class="weui-cell weui-cell_swiped">
+				<div class="weui-cell__bd">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<p>左滑列表</p>
+						</div>
+						<div class="weui-cell__ft">向左滑动试试</div>
+					</div>
+				</div>
+				<div class="weui-cell__ft">
+					<a class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout" href="javascript:">删除</a>
+				</div>
+			</div>
+			<div class="weui-cell weui-cell_swiped">
+				<div class="weui-cell__bd">
+					<div class="weui-cell">
+						<div class="weui-cell__hd"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=" alt="" style="width:20px;margin-right:5px;display:block"></div>
+						<div class="weui-cell__bd">
+							<p>左滑列表</p>
+						</div>
+						<div class="weui-cell__ft">向左滑动试试</div>
+					</div>
+				</div>
+				<div class="weui-cell__ft">
+					<a class="weui-swiped-btn weui-swiped-btn_default close-swipeout" href="javascript:">取消关注</a>
+				</div>
+			</div>
+		</div>
+		<div class="button_sp_area" style="text-align: center;">
+			<a href="javascript:" class="weui-btn weui-btn_mini weui-btn_primary" id="open">打开第一个</a>
+			<a href="javascript:" class="weui-btn weui-btn_mini weui-btn_default" id="close">关闭第一个</a>
+		</div>
+	</div>
+</div>
+
+</body>
+
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+    //$('.weui-cell_swiped').swipeout()
+</script>
+
+<script>
+
+    //方法
+    //你可以手动调用方法来打开或者关闭
+    $('.weui-cell_swiped').swipeout('open'); //打开
+    $('.weui-cell_swiped').swipeout('close'); //关闭
+
+
+    $('.delete-swipeout').click(function () {
+        $(this).parents('.weui-cell').remove()
+    });
+    $('.close-swipeout').click(function () {
+        $(this).parents('.weui-cell').swipeout('close')
+    });
+    $("#open").click( function () { $("#swipe1").swipeout('open') });
+    $("#close").click( function () { $("#swipe1").swipeout('close') });
+    $("#swipe1").click( function () { console.log('click') })
+</script>
+
+
+
+</html>

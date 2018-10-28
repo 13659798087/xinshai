@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>宜春市新生儿筛查中心</title>
+	<link rel="stylesheet" type="text/css" href="../css/css.css" />
+	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--<link rel="stylesheet" href="../css/iconfont.css" />-->
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+
+	<script src="../js/fastclick.js"></script>
+	<script src="../js/jquery-weui.min.js"></script>
+	<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+	<link href="../css/weui.min.css" rel="stylesheet" />
+	<link href="../css/demos.css" rel="stylesheet" />
+
+</head>
+<body>
+<!--<header class='demos-header'>
+	<h1 class="demos-title">按钮</h1>
+</header>-->
+
+<div id="app">
+
+		<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+			<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
+			<div class="weui-cell__bd">
+				<span style="font-size: 18px;">我的信息</span>
+			</div>
+			<!--<div class="weui-cell__ft">说明文字</div>-->
+		</div>
+
+	<div style="text-align: center;">
+		<img class="demos-title" src="../img/person.png" />
+
+		<div class="weui-cell__bd"  style="text-align: center;font-size: 14px;color: darkgray;margin: 8px 20px;">
+			<span>查询结果请先准确输入小孩做筛查时留下的手机号码等信息！</span>
+		</div>
+
+	</div>
+
+	<!--<div class="weui-cell" >
+		<div class="weui-cell__bd"  style="text-align: center;font-size: 14px;color: darkgray;">
+			<span>查询结果请先准确输入小孩做筛查时留下的手机号码等信息！</span>
+		</div>
+	</div>-->
+
+	<div class='demos-content-padded'  >
+		<a href="/personalData/addInformation" class="weui-btn weui-btn_primary"  >添加个人信息</a>
+	</div>
+
+
+
+</div>
+
+
+</body>
+
+<script>
+
+    var map={
+        message: '',
+        ret:'',
+        listCombine:[],
+        dd:'',
+    };
+
+    new Vue({
+        el: '#app',
+        data: map
+    });
+
+	$(function(){
+
+        //取回当前医院的部门
+        $.get("/combine/getCombine",{},function(data){
+            map.listCombine = data;//组别项目
+        });
+
+	})
+
+
+
+</script>
+
+</html>

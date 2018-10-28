@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>微信菜单</title>
+	<link rel="stylesheet" type="text/css" href="/css/css.css" />
+	<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="/Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="/js/jquery-3.2.0.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<link rel="stylesheet" href="/css/jquery.treegrid.css" />
+	<link rel="stylesheet" href="/css/iconfont.css" />
+	<link rel="stylesheet" href="/css/bootstrap-table.css" />
+	<script src="/js/bootstrap-table.js"></script>
+	<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
+	<script src="/js/bootstrap-table-zh-CN.js"></script>
+	<script src="/js/bootstrap-table-export.js"></script>
+
+	<link rel='stylesheet'   href='/css/pagination.css'/>
+	<script type='text/javascript'   src='/js/jquery.pagination.js' ></script>
+
+	<script src="/js/jquery.treegrid.min.js"></script>
+	<script src="/js/bootstrap-table-treegrid.js"></script>
+	<script src="/js/jquery.treegrid.bootstrap3.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
+
+	<style>
+		.footer{
+			height: 20px;
+			/*background-color: #ddd;*/
+			margin-left: 0.5%;
+			position: fixed;
+			bottom: 0;
+			color: red;
+		}
+	</style>
+
+</head>
+<body>
+
+<div class="container">
+	<table id="table"></table>
+	<br/>
+	<button onclick="test()">选择</button>
+
+
+</div>
+<div class="footer">注：微信公众号自定义菜单须注意：  1、一级菜单最多3个，每个一级菜单最多包含5个二级菜单。2、一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。</div>
+
+</body>
+<script type="text/javascript">
+
+    /*var data = JSON.parse(
+        '[{"id":1,"pid":0,"status":1,"name":"用户管理","permissionValue":"open:user:manage"},' +
+        '{"id":2,"pid":0,"status":1,"name":"系统管理","permissionValue":"open:system:manage"},' +
+        '{"id":3,"pid":1,"status":1,"name":"新增用户","permissionValue":"open:user:add"},' +
+        '{"id":4,"pid":1,"status":1,"name":"修改用户","permissionValue":"open:user:edit"},' +
+        '{"id":5,"pid":1,"status":0,"name":"删除用户","permissionValue":"open:user:del"},' +
+        '{"id":6,"pid":2,"status":1,"name":"系统配置管理","permissionValue":"open:systemconfig:manage"},' +
+        '{"id":7,"pid":6,"status":1,"name":"新增配置","permissionValue":"open:systemconfig:add"},' +
+        '{"id":8,"pid":6,"status":1,"name":"修改配置","permissionValue":"open:systemconfig:edit"},' +
+        '{"id":9,"pid":6,"status":0,"name":"删除配置","permissionValue":"open:systemconfig:del"},' +
+        '{"id":10,"pid":2,"status":1,"name":"系统日志管理","permissionValue":"open:log:manage"},' +
+        '{"id":11,"pid":10,"status":1,"name":"新增日志","permissionValue":"open:log:add"},' +
+        '{"id":12,"pid":10,"status":1,"name":"修改日志","permissionValue":"open:log:edit"},' +
+        '{"id":13,"pid":10,"status":0,"name":"删除日志","permissionValue":"open:log:del"}]'
+	);*/
+
+    $(function () {
+        var heights=window.innerHeight;
+		var $table = $('#table');
+        $table.bootstrapTable({
+            url: '/open/weixinMenu/getData',
+            height: $(window).height()*0.8,
+            striped: true,
+            sidePagination: 'server',
+            idField: 'id',
+            columns: [
+                {
+                    field: 'check',
+                    checkbox: true,
+                    formatter: function (value, row, index) {
+                        if (row.check == true) {
+                            // console.log(row.serverName);
+                            //设置选中
+                            return {  checked: true };
+                        }
+                    }
+                },
+                {
+                    field: 'name',
+                    title: '名称'
+                },
+                {
+                    field: 'type',
+                    title: '响应类型',
+                    align: 'center',
+                },
+                {
+                    field: 'url',
+                    title: 'url',
+                    align: 'LEFT',
+                },
+                {
+                    field: 'menukey',
+                    title: '菜单key',
+                    align: 'center',
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    sortable: true,
+                    align: 'center',
+                    formatter: 'statusFormatter'  },
+                {
+                    field: 'permissionValue',
+                    title: '权限值'
+                },
+                { field: 'operate',
+                    title: '操作',
+                    align: 'center',
+                    events : operateEvents,
+                    formatter: 'operateFormatter'
+                }
+            ],
+            onClickRow: function (row, $element) {
+                //curRow = row;
+            },
+            treeShowField: 'name',
+            parentIdField: 'pid',
+            onLoadSuccess: function(data) {
+                console.log('load');
+                $table.treegrid({
+                    treeColumn: 1,
+                    onChange: function() {
+                        $table.bootstrapTable('resetWidth');
+                    }
+                });
+            }
+        });
+    });
+
+    // 格式化按钮
+    function operateFormatter(value, row, index) {
+        return [
+            '<button type="button" class="RoleOfadd btn-small  btn-primary" style="margin-right:15px;"><i class="fa fa-plus" ></i>&nbsp;新增</button>',
+            '<button type="button" class="RoleOfedit btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;修改</button>',
+            '<button type="button" class="RoleOfdelete btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-trash-o" ></i>&nbsp;删除</button>'
+        ].join('');
+
+    }
+    // 格式化类型
+    function typeFormatter(value, row, index) {
+        if (value === 'menu') {  return '菜单';  }
+        if (value === 'button') {  return '按钮'; }
+        if (value === 'api') {  return '接口'; }
+        return '-';
+    }
+    // 格式化状态
+    function statusFormatter(value, row, index) {
+        if (value === 1) {
+            return '<span class="label label-success">正常</span>';
+        } else {
+            return '<span class="label label-default">锁定</span>';
+        }
+    }
+
+    //初始化操作按钮的方法
+    window.operateEvents = {
+        'click .RoleOfadd': function (e, value, row, index) {
+            add(row.id);
+        },
+        'click .RoleOfdelete': function (e, value, row, index) {
+            del(row.id);
+        },
+        'click .RoleOfedit': function (e, value, row, index) {
+            //update(row.id);
+			alert(row.id+"  "+row.name +"  "+row.type);
+            location.href="/open/weixinMenu/addWeixinMenu?editType=e&id="+row.id+"&name="+row.name
+                +"&type="+row.type+"&url="+row.url+"&menukey="+row.menukey+"&orderNum="+row.orderNum;
+        }
+    };
+</script>
+<script>
+    /**
+     * 选中父项时，同时选中子项
+     * @param datas 所有的数据
+     * @param row 当前数据
+     * @param id id 字段名
+     * @param pid 父id字段名
+     */
+    function selectChilds(datas,row,id,pid,checked) {
+        for(var i in datas){
+            if(datas[i][pid] == row[id]){
+                datas[i].check=checked;
+                selectChilds(datas,datas[i],id,pid,checked);
+            };
+        }
+    }
+
+    function selectParentChecked(datas,row,id,pid){
+        for(var i in datas){
+            if(datas[i][id] == row[pid]){
+                datas[i].check=true;
+                selectParentChecked(datas,datas[i],id,pid);
+            };
+        }
+    }
+
+    function test() {
+        var selRows = $table.bootstrapTable("getSelections");
+        if(selRows.length == 0){
+            alert("请至少选择一行");
+            return;
+        }
+
+        var postData = "";
+        $.each(selRows,function(i) {
+            postData +=  this.id;
+            if (i < selRows.length - 1) {
+                postData += "， ";
+            }
+        });
+        alert("你选中行的 id 为："+postData);
+
+    }
+
+    function add(id) {
+        alert("add 方法 , id = " + id);
+    }
+    function del(id) {
+        alert("del 方法 , id = " + id);
+    }
+    function update(id) {
+        alert("update 方法 , id = " + id);
+    }
+
+</script>
+
+</html>
