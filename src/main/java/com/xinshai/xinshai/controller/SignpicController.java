@@ -1,11 +1,11 @@
 package com.xinshai.xinshai.controller;
 
+
 import com.xinshai.xinshai.entiry.PageResults;
 import com.xinshai.xinshai.model.Signpic;
 import com.xinshai.xinshai.services.SignpicServices;
 import com.xinshai.xinshai.util.Guid;
 import com.xinshai.xinshai.util.Paging;
-import com.xinshai.xinshai.util.SSO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,8 +43,6 @@ public class SignpicController {
     @RequestMapping("/getSignpic")
     public Map<String,Object> getUserRole(String pageNumber, String rowNumber, String sortName,
                                           String sortOrder, String sp_name, HttpServletRequest request){
-
-        String organizationId = SSO.getOrganizationId();//医院的id
 
         List<Signpic> signpic = new ArrayList<Signpic>();
 
@@ -103,7 +101,7 @@ public class SignpicController {
 
 
     @RequestMapping(value = "Pictureshows")
-    public ResponseEntity<byte[]> Pictureshow(HttpServletRequest request,String id)throws Exception{
+    public ResponseEntity<byte[]> Pictureshow(HttpServletRequest request,String id) {
        // int YGID001 = (int)request.getSession().getAttribute("ygid001");
         Signpic list=signpicServices.Pictureshows(id);//根据员工号查找头像
 

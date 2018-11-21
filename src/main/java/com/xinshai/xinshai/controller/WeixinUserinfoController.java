@@ -5,12 +5,13 @@ import com.xinshai.xinshai.entiry.PageResults;
 import com.xinshai.xinshai.model.Tag;
 import com.xinshai.xinshai.model.WeixinUserInfo;
 import com.xinshai.xinshai.services.RoleServices;
-import com.xinshai.xinshai.services.TagServices;
 import com.xinshai.xinshai.services.UserRoleMenuServices;
 import com.xinshai.xinshai.services.WeixinUserInfoServices;
 import com.xinshai.xinshai.servlet.TokenThread;
 import com.xinshai.xinshai.util.Paging;
 import com.xinshai.xinshai.util.WeixinUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("/open/weixinUser")
@@ -41,8 +41,6 @@ public class WeixinUserinfoController {
     @Resource
     private RoleServices roleServices;
 
-    @Resource
-    private TagServices tagServices;
 
     private String view = "weixinUser/";
 
@@ -57,7 +55,7 @@ public class WeixinUserinfoController {
     @ResponseBody
     @RequestMapping("/getUserInfo")
     public Map<String,Object> getUserRole(String pageNumber, String rowNumber, String sortName,
-                                          String sortOrder,String userName,String organizationName,HttpServletRequest request){
+                                          String sortOrder,String userName,String concerns,HttpServletRequest request){
         List<WeixinUserInfo> userInfo = new ArrayList<WeixinUserInfo>();
 
         int pageNo = Integer.parseInt((pageNumber == null || pageNumber =="0") ? "1":pageNumber);
@@ -71,25 +69,9 @@ public class WeixinUserinfoController {
         pageResults.setOrderBy(orderBy);
         pageResults.setOrder(order);
 
-        userInfo = weixinUserInfoServices.getUserMessage((pageNo-1)*pageSize+1, pageNo*pageSize,userName,organizationName);
-        long totalCount = weixinUserInfoServices.getUserCount((pageNo-1)*pageSize+1, pageNo*pageSize,userName,organizationName);
+        userInfo = weixinUserInfoServices.getUserMessage((pageNo-1)*pageSize+1, pageNo*pageSize,userName,concerns);
+        long totalCount = weixinUserInfoServices.getUserCount((pageNo-1)*pageSize+1, pageNo*pageSize,userName,concerns);
 
-        String tagName = "";
-        for(WeixinUserInfo u : userInfo){
-            if(u.getTagid_list() != null){
-                String tid = u.getTagid_list().replace("[","").replace("]","");
-                if(tid.contains(",")){//说明含有两个以上标签
-                    String[] A = tid.split(",");
-                    tagName = "";
-                    for(int i=0;i<A.length;i++){
-                        tagName += "["+ tagServices.getName(A[i])+"]";
-                    }
-                }else{//含有一个标签
-                    tagName = "["+ tagServices.getName(tid)+"]";
-                }
-                u.setTagName_list(tagName);
-            }
-        }
         pageResults.setResult(userInfo);
         pageResults.setTotalCount(totalCount);
         return Paging.ajaxGrid(pageResults);
@@ -209,6 +191,67 @@ public class WeixinUserinfoController {
         return view+"addUser";
     }
 
+
+    //批量拉取用户信息，即更新数据，将关注的用户信息拉去到数据库，当取消关注时，也将此表对应的openid的用户删除掉
+    @ResponseBody
+    @RequestMapping("/batch")
+    public String batch() {
+
+        //先删掉weixinUserinfo表所有数据，在插入新数据
+        weixinUserInfoServices.deletaAll();
+
+        String nextOpenid="";
+        String openidList = null;
+        openidList = WeixinUtil.getUserList( TokenThread.accessToken.getToken() , nextOpenid );
+        String groupMessage = JSONObject.fromObject(WeixinUtil.initUserMessage(openidList)).toString();
+        String result = WeixinUtil.getBatchUser(TokenThread.accessToken.getToken(),groupMessage);
+        JSONArray array=JSONArray.fromObject(result);
+
+        String openid = null;//用户的标识，对当前公众号唯一
+        String nickname = null;//用户的昵称
+        String sex = null;//用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+        String language = null;//用户的语言，简体中文为zh_CN
+        String city = null;//用户所在城市
+        String province = null;//用户所在省份
+        String country = null;//用户所在国家
+        String groupid = null;//用户所在的分组ID（暂时兼容用户分组旧接口）
+        String remark = null;//备注
+
+        for(int i=0;i<array.size();i++){
+            JSONObject job = array.getJSONObject(i);
+            switch (job.getInt("sex")){
+                case 1:
+                    sex = "男";
+                    break;
+                case 2:
+                    sex = "女";
+                case 0:
+                    sex = "未知";
+                    break;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            long time = Long.parseLong(job.getString("subscribe_time"));
+            long lt = new Long(time);
+            Date date = new Date(lt * 1000L);
+            Timestamp t = Timestamp.valueOf( sdf.format(date)  );//关注的时间
+            openid = job.getString("openid");
+            nickname = job.getString("nickname");
+            //处理昵称中有空格的
+            if(nickname.contains(" ")){
+                nickname = nickname.replace(" ","&nbsp;");
+            }
+            language = job.getString("language");
+            city = job.getString("city");
+            province = job.getString("province");
+            country = job.getString("country");
+            groupid = job.getString("groupid");
+            remark = job.getString("remark");
+
+            weixinUserInfoServices.insertUserOpenid(openid,nickname,sex,language,city,province,country,groupid,t,remark);
+
+        }
+        return "拉取用户列表成功，改接口最多拉去100条，可多次拉去，考录到前期关注的人少，先这样处理";
+    }
 
     /*@ResponseBody
     @RequestMapping("/validateUser")

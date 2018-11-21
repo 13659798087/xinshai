@@ -1,19 +1,22 @@
 package com.xinshai.xinshai.util;
 
-import com.sinosoft.demo.entity.Image;
-import com.sinosoft.demo.entity.ImageMessage;
 import com.thoughtworks.xstream.XStream;
 import com.xinshai.xinshai.entiry.*;
+import com.xinshai.xinshai.model.AttentionReply;
+import com.xinshai.xinshai.services.AttentionServices;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+@Component
 public class MessageUtil {
 
 	public static String MESSAGE_TEXT = "text";
@@ -31,6 +34,8 @@ public class MessageUtil {
 	public static String MESSAGE_VIEW = "VIEW";
 	public static final String MESSAGE_SCANCODE= "scancode_push";
 
+	@Resource
+	private AttentionServices attentionServices;
 
 	/**
 	 * 将文本消息对象转为xml
@@ -108,11 +113,21 @@ public class MessageUtil {
         return textMessageToXml(text);
     }
 
+	public static String initServer(String toUserName,String fromUserName,String msgType){
+		TextMessage text = new TextMessage();
+		text.setFromUserName(toUserName);
+		text.setToUserName(fromUserName);
+		text.setMsgType(msgType);
+		text.setCreateTime(new Date().getTime());
+		//text.setContent(content);
+		return textMessageToXml(text);
+	}
+
 
 
     public static String firstMenu() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("本微信号可提供各地区新生儿疾病筛查中心查询报告");
+		sb.append("请输入您的问题，等待客服回复！");
 		return sb.toString();
 	}
 	
@@ -123,19 +138,38 @@ public class MessageUtil {
 	}
 	
 	/**
-	 * 主菜单
+	 * 主菜单 动态取数据
 	 * @return
 	 */
 	public static String menuText(){
+		AttentionServices a = new AttentionServices();
+		List<AttentionReply> reply = new ArrayList<AttentionReply>();
 		StringBuffer sb = new StringBuffer();
-		sb.append("欢迎您的关注！\n");
-		sb.append("点击"+"<a href=\""+DomainUrl.getUrl()+"/personalData/personal\""+">我的消息</a>，进行信息绑定。\n");
-		/*sb.append("1、课程介绍\n");
-		sb.append("2、码上敲响录介绍\n");*/
-		sb.append("回复？调出此菜单。");
+		int i = 1;
+		for(AttentionReply r : reply){
+			sb.append( i+"、"+r.getContent());
+			i++;
+		}
 		return sb.toString();
-		
 	}
+
+	/**
+	 * 主菜单 写死的数据
+	 * @return
+	 */
+	public static String menuText1(){
+		StringBuffer sb = new StringBuffer();
+		//sb.append("欢迎您的关注！\n\n");
+		//sb.append("点击"+"<a href=\""+DomainUrl.getUrl()+"/personalData/personal\""+">我的消息</a>，进行信息绑定。\n");
+		//sb.append("个人信息绑定："+"<a href=\""+DomainUrl.getUrl()+"/personalData/personal\""+">http://wx.lznsn.com/personalData/personal</a>\n");
+		sb.append("1、为了您能及时接收到报告结果，请您先绑定个人信息：http://wx.lznsn.com/personalData/personal\n\n");
+		sb.append("3、回复关键字“人工服务”，即可进入人工服务模式。\n\n");
+		sb.append("回复？调出此菜单。");
+
+		return sb.toString();
+
+	}
+
 
 	/**
 	 * 报告出结果之后，将此消息推送给用户（openid）

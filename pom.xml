@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>lzgene</groupId>
-	<artifactId>newbornscreening</artifactId>
+	<artifactId>xinshai</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>newbornscreening</name>
+	<name>xinshai</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -168,13 +168,26 @@
 		</dependency>
 		<!-- axis 1.4 jar end -->
 
+		<!-- org.apache.tomcat.jdbc.pool.DataSource -->
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+			<version>8.5.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.7.4</version>
+		</dependency>
+
+
 
 		<!-- 热部署模块 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional> <!-- 这个需要为 true 热部署才有效 -->
-		</dependency>
+			<optional>true</optional> &lt;!&ndash; 这个需要为 true 热部署才有效 &ndash;&gt;
+		</dependency>-->
 
 
 		<!-- shiro spring start -->
@@ -259,13 +272,18 @@
 			<artifactId>xstream</artifactId>
 			<version>1.4.7</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.sinosoft</groupId>
 			<artifactId>weixin</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		</dependency>-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

@@ -1,18 +1,19 @@
 package com.xinshai.xinshai.controller;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.*;
 import com.xinshai.xinshai.entiry.Report;
 import com.xinshai.xinshai.model.Combine;
+import com.xinshai.xinshai.model.PersonBinding;
+import com.xinshai.xinshai.model.ResultPushMsg;
 import com.xinshai.xinshai.services.CombineServices;
-import com.xinshai.xinshai.services.LogManagementServices;
-import com.xinshai.xinshai.services.ReportServices;
+import com.xinshai.xinshai.services.PersonalDataServices;
+import com.xinshai.xinshai.util.DomainUrl;
+import com.xinshai.xinshai.util.Guid;
 import com.xinshai.xinshai.util.JasperUtil;
+import com.xinshai.xinshai.util.WeixinUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -20,38 +21,54 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Controller
 @RequestMapping("/reportQuery")
 public class ReportController {
 
     @Resource
-    private ReportServices reportServices;
+    private CombineServices combineServices;
 
     @Resource
-    private CombineServices combineServices;
+    private PersonalDataServices personalDataServices;
 
     @Resource
     private JasperUtil jasperUtil;
 
-    @Resource
-    private LogManagementServices logManagementServices;
-
-
     @Value("${filePath}")
     private String filePath;
 
+    private String view = "reportQuery/";
+
+    @RequestMapping("/pcAndPhone")
+    public String pcAndPhone(){
+        return view + "pcAndPhone";
+    }
+
     @RequestMapping("/report")
     public String report(){
-        return "reportQuery/report";
+        return view + "report";
+    }
+
+    @RequestMapping("/phoneReport")
+    public String phoneReport(){
+        return view + "phoneReport";
     }
 
     @RequestMapping("/reportManage")
     public String reportManage(){
-        return "reportQuery/reportManage";
+        return view + "reportManage";
+    }
+
+    @RequestMapping("/reportPreview")
+    public String reportPreview(String c_id, String authorHospital, String c_code, Model model){
+        model.addAttribute("c_id",c_id);
+        model.addAttribute("authorHospital",authorHospital);
+        model.addAttribute("c_code",c_code);
+
+        return view + "reportPreview";
     }
 
     @RequestMapping("/printReport")
@@ -69,7 +86,7 @@ public class ReportController {
         response.setContentType("application/pdf; charset=UTF-8");
         OutputStream out = response.getOutputStream();
         byte[] b = new byte[512];
-        if( in!=null ){
+            if( in!=null ){
             while ((in.read(b))!=-1) {
                 out.write(b);
             }
@@ -83,249 +100,45 @@ public class ReportController {
     public InputStream genPdf(String c_id,String fileName,String authorHospital) {
         List<Report> userLs = new ArrayList<Report>();
         Map<String, Object> map = new HashMap<String, Object>();
-
         /*map.put("cCombine", "ct"); map.put("cSid", "C1700530");*//*map.put("c_combine", "cl"); map.put("c_sid", "20170967");*///map.put("c_id", "ts180529001");//map.put("c_id", " wc20180529002");// map.put("c_id", "dp20180529001");
         map.put("c_id", c_id);
         map.put("authorHospital", authorHospital);
-
-
         return jasperUtil.exportPdfDir(fileName, map, userLs);
     }
 
 
-    @ResponseBody
-    @RequestMapping("/downLoadZipFile")
-    public void downLoadZipFile(String list,String authorHospital,HttpServletRequest request,HttpServletResponse response) throws IOException{
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=pdf.zip");
-        List<Combine> combine = combineServices.getCombine();
-        String[] array1 = list.split(",");
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(response.getOutputStream());
-            for(int i=0;i<array1.length;i++) {
-                String[] array2 = array1[i].split(":");
-                String c_id = array2[0];
-                String c_code = array2[1];
-                String c_sid = array2[2];
-                String p_name = array2[3];
-                String fileName="";
-                for (Combine c : combine) {
-                    if (c_code.equals(c.getC_code())) {
-                        fileName = c.getC_rpt() + ".jasper";
-                    }
-                }
-                InputStream input = genPdf(c_id, fileName,authorHospital);
-                zos.putNextEntry(new ZipEntry(c_sid+p_name+".pdf")) ; //压缩文件名称 设置ZipEntry对象
-                //zos.setComment("www.mldnjava.cn") ;  // 设置注释
-                int temp = 0 ;
-                while((temp=input.read())!=-1){ // 读取内容
-                    zos.write(temp) ;    // 压缩输出
-                }
+    //在后台数据库插入关注用户绑定的个人信息，用户绑定成功之后，接着就去验证该用户是否存在数据库
+    @RequestMapping("/reportByOpenid")
+    public void submitInformation(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        //这里要将你的授权回调地址处理一下，否则微信识别不了
+        String redirect_uri= URLEncoder.encode(DomainUrl.getUrl()+"reportQuery/getResultItem", "UTF-8");
 
-                input.close() ; // 关闭输入流
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        } finally {
-            try {
-                if (null != zos){ // 关闭流
-                    zos.flush();
-                    zos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    //批量下载pdf文件
-    /*@ResponseBody
-    @RequestMapping("/batchPrint")
-    public void batchPrint(HttpServletResponse response,String list) throws Exception {
-        String fileName = "";
-        List<Combine> combine = combineServices.getCombine();
-        String[] array1 = list.split(",");
-        for(int i=0;i<array1.length;i++){
-            String[] array2=array1[i].split(":");
-            String c_id = array2[0];
-            String c_code = array2[1];
-            for(Combine c : combine){
-                if(c_code.equals(c.getC_code())){
-                    fileName = c.getC_rpt()+".jasper";//拼接文件后缀pdf,此处是下载pdf文件
-                }
-            }
-            InputStream in = genPdf(c_id,fileName);//得到流
-            ServletOutputStream outputStream = response.getOutputStream();
-            BufferedInputStream bis = new BufferedInputStream(in);
-            BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-            byte[] buff = new byte[8192];
-            int bytesRead;
-            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                bos.write(buff, 0, bytesRead);
-            }
-            bis.close();
-            bos.close();
-            outputStream.flush();
-            outputStream.close();
-            reportServices.updatePrintFlag(c_id);//打印之后更改状态
-        }
-
-    }*/
-
-    @ResponseBody
-    @RequestMapping("/dpPrint")
-    public void dpPrint( OutputStream outputStream, boolean paginate,String list,String authorHospital) {
-        List<InputStream> streamOfPDFFiles = new ArrayList<InputStream>();
-
-        String fileName = "";
-        List<Combine> combine = combineServices.getCombine();
-
-        String[] array1 = list.split(",");
-
-        String paper_size="";
-
-        for(int i=0;i<array1.length;i++){
-            String[] array2=array1[i].split(":");
-            String c_id = array2[0];
-            String c_code = array2[1];
-
-            paper_size = array2[2];
-
-            for(Combine c : combine){
-                if(c_code.equals(c.getC_code())){
-                    fileName = c.getC_rpt()+".jasper";//拼接文件后缀pdf,此处是下载pdf文件
-                }
-            }
-            InputStream in = genPdf(c_id,fileName,authorHospital);//得到流
-            streamOfPDFFiles.add(in);
-        }
-
-        //Document document = new Document();
-        //Document document = new Document(PageSize.A5.rotate());//rotate()  横向打印
-        Document document = null;
-        switch (paper_size){
-            case "A4":
-                document = new Document();
-                break;
-            case "A5":
-                document = new Document(PageSize.A5.rotate());//rotate()  横向打印
-                break;
-        }
-
-        try {
-            List<InputStream> pdfs = streamOfPDFFiles;
-            List<PdfReader> readers = new ArrayList<PdfReader>();
-            int totalPages = 0;
-            Iterator<InputStream> iteratorPDFs = pdfs.iterator();
-
-            // Create Readers for the pdfs.
-            while (iteratorPDFs.hasNext()) {
-                InputStream pdf = iteratorPDFs.next();
-                PdfReader pdfReader = new PdfReader(pdf);
-                readers.add(pdfReader);
-                totalPages += pdfReader.getNumberOfPages();
-            }
-            // Create a writer for the outputstream
-            PdfWriter writer = PdfWriter.getInstance(document, outputStream);
-
-            document.open();
-            BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-            PdfContentByte cb = writer.getDirectContent(); // Holds the PDF
-            // data
-
-            PdfImportedPage page;
-            int currentPageNumber = 0;
-            int pageOfCurrentReaderPDF = 0;
-            Iterator<PdfReader> iteratorPDFReader = readers.iterator();
-
-            // Loop through the PDF files and add to the output.
-            while (iteratorPDFReader.hasNext()) {
-                PdfReader pdfReader = iteratorPDFReader.next();
-
-                // Create a new page in the target for each source page.
-                while (pageOfCurrentReaderPDF < pdfReader.getNumberOfPages()) {
-                    document.newPage();
-                    pageOfCurrentReaderPDF++;
-                    currentPageNumber++;
-                    page = writer.getImportedPage(pdfReader,pageOfCurrentReaderPDF);
-                    cb.addTemplate(page, 0, 0);
-                    // Code for pagination.
-                    if (paginate) {
-                        cb.beginText();
-                        cb.setFontAndSize(bf, 10);
-                        cb.showTextAligned(PdfContentByte.ALIGN_CENTER,"" +currentPageNumber + " of " + totalPages, 598,0, 0);
-                        cb.endText();
-                    }
-                }
-                pageOfCurrentReaderPDF = 0;
-            }
-            outputStream.flush();
-            document.close();
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (document.isOpen())
-                document.close();
-            try {
-                if (outputStream != null)
-                    outputStream.close();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-
-
-        //打印之后更改状态
-        for(int i=0;i<array1.length;i++){
-            String[] array2=array1[i].split(":");
-            String c_id = array2[0];
-            reportServices.updatePrintFlag(c_id);
-        }
+        //简单获取openid的话参数response_type与scope与state参数固定写死即可
+        StringBuffer url=new StringBuffer("https://open.weixin.qq.com/connect/oauth2/authorize?redirect_uri="+redirect_uri+"&appid="+WeixinUtil.APPID+"&response_type=code&scope=snsapi_base&state=1#wechat_redirect");
+        response.sendRedirect(url.toString());//这里请不要使用get请求单纯的将页面跳转到该url即可
 
     }
 
 
+    @RequestMapping("/getResultItem")
+    public String getResultItem(Model model,HttpServletRequest request) {
 
-    @ResponseBody
-    @RequestMapping("/deleteReport")
-    public void deleteReport(HttpServletRequest request,String list,String type,String ipAddress,String loggerName){
+        String code = request.getParameter("code");//微信活返回code值，用code获取openid
 
-        String userName =(String) request.getSession().getAttribute("userName");
+        String openId = WeixinUtil.getOpendId(code);
 
-        String[] array = list.split(",");
-        for(int i=0;i<array.length;i++){
+        List<ResultPushMsg> list = null;
 
-            String[] array1=array[i].split(":");
-            String c_sid = array1[0];
-            String c_code = array1[1];
-            String patients = array1[2];
-            String hospital = array1[3];
-            String combine = array1[4];
-            String barcode = array1[5];
-            String sid = array1[6];
-            String phone =  array1[7];
+        list = personalDataServices.getResultItem(openId);
 
-            reportServices.deleteResulto(c_sid,c_code);
-            reportServices.deleteCheckinfo (c_sid,c_code);
-            reportServices.deletePatients (c_sid,c_code);
+        //System.out.println("-------code-------"+code+"\n"+"-------openId-------"+openId);
 
-
-            if(barcode.equals("null")){
-                barcode = null;
-            }
-            if(phone.equals("null")){
-                phone = null;
-            }
-            logManagementServices.recordLog(loggerName,type,userName,ipAddress,patients,hospital,combine,barcode,sid,phone);
-
-        }
+        model.addAttribute("list",list);
+        model.addAttribute("listSize",list.size());
+        return  view+"getResultItem";
     }
-
-
 
 }

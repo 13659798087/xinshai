@@ -34,7 +34,16 @@
 
 	<!-- 引入vue.js -->
 	<script type='text/javascript'   src='/js/vue.min.js' ></script>
-
+	<script src="/js/until.sdk.format.js"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
 	<style>
 		.footer{
 			height: 20px;
@@ -44,15 +53,17 @@
 			bottom: 0;
 			color: red;
 		}
+		.changeWechatMenu{float: left;margin:1%;}
 	</style>
 
 </head>
 <body>
 
+<button  class="btn btn-primary changeWechatMenu" >更新公众号菜单</button>
 <div class="container">
 	<table id="table"></table>
 	<br/>
-	<button onclick="test()">选择</button>
+	<!--<button onclick="test()">选择</button>-->
 
 
 </div>
@@ -60,6 +71,18 @@
 
 </body>
 <script type="text/javascript">
+
+	$(function(){
+	    $(".changeWechatMenu").click(function(){
+	        windowPoint("确定更新微信公众号微信菜单？")
+            document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                $.get("/open/weixinMenu/updateWeChatMenu",{},function(data){
+                    windowSuccess("更新微信公众号菜单成功");
+                })
+            },false);
+
+		})
+	})
 
     /*var data = JSON.parse(
         '[{"id":1,"pid":0,"status":1,"name":"用户管理","permissionValue":"open:user:manage"},' +
@@ -82,7 +105,7 @@
 		var $table = $('#table');
         $table.bootstrapTable({
             url: '/open/weixinMenu/getData',
-            height: $(window).height()*0.8,
+            height: $(window).height()*0.7,
             striped: true,
             sidePagination: 'server',
             idField: 'id',
@@ -117,12 +140,12 @@
                     title: '菜单key',
                     align: 'center',
                 },
-                {
+                /*{
                     field: 'status',
                     title: '状态',
                     sortable: true,
                     align: 'center',
-                    formatter: 'statusFormatter'  },
+                    formatter: 'statusFormatter'  },*/
                 {
                     field: 'permissionValue',
                     title: '权限值'
@@ -179,15 +202,30 @@
     //初始化操作按钮的方法
     window.operateEvents = {
         'click .RoleOfadd': function (e, value, row, index) {
-            add(row.id);
+            location.href="/open/weixinMenu/addWeixinMenu?editType=a&pId="+row.pId;
+            //add(row.id+row.pId);
         },
         'click .RoleOfdelete': function (e, value, row, index) {
-            del(row.id);
+            //del(row.id);
+			var pid = row.pid;
+			if(pid==null){
+                windowPoint("请不要删除一级菜单");
+			}else{
+                windowPoint("确定删除二级菜单？")
+                document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
+                    $.get("/open/weixinMenu/updateMenuState",{"id":row.id},function(data){
+                        windowSuccess("删除菜单之后请点击更新公众号菜单，新菜单才能生效");
+                    })
+                },false);
+
+			}
+
         },
         'click .RoleOfedit': function (e, value, row, index) {
             //update(row.id);
-			alert(row.id+"  "+row.name +"  "+row.type);
-            location.href="/open/weixinMenu/addWeixinMenu?editType=e&id="+row.id+"&name="+row.name
+			//alert(row.id+"  "+row.name +"  "+row.type);
+			debugger;
+            location.href="/open/weixinMenu/addWeixinMenu?editType=e&id="+row.id+"&name="+row.name+"&pid="+row.pid
                 +"&type="+row.type+"&url="+row.url+"&menukey="+row.menukey+"&orderNum="+row.orderNum;
         }
     };

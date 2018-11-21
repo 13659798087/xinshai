@@ -19,17 +19,21 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/config")
+@RequestMapping("/open/config")
 public class ConfigController {
+
 
     @Resource
     private ConfigServices configServices;
 
-    @Value("${barcodeLength}")
+    /*@Value("${barcodeLength}")
     private String barcodeLength;
 
     @Value("${sampleDateValidation}")
-    private String sampleDateValidation;
+    private String sampleDateValidation;*/
+
+    @Value("${bloodCardLen}")
+    private String bloodCardLen;
 
     private String view = "config/";
 
@@ -86,7 +90,7 @@ public class ConfigController {
      创建新模板
      */
     @RequestMapping("/createConfig")
-    public String createConfig(String cf_code, String cf_flag, String cf_val, String cf_explain,String type){
+    public String createConfig(String cf_code, String cf_flag, String cf_val, String cf_explain,String orderNum,String type){
         String sign = "";
         Integer cf_flag1 = null;
         if(!StringUtils.isEmpty(cf_flag)){
@@ -95,21 +99,22 @@ public class ConfigController {
 
         //新增
         if("a".equals(type)){
-            configServices.createConfig(cf_code,cf_flag1,cf_val,cf_explain);
+            configServices.createConfig(cf_code,cf_flag1,cf_val,cf_explain,orderNum);
             sign = "add";
         }else{//修改
-            configServices.updateConfig(cf_code,cf_flag1,cf_val,cf_explain);
+            configServices.updateConfig(cf_code,cf_flag1,cf_val,cf_explain,orderNum);
             sign = "edit";
         }
         return "redirect:addConfig?type=a&sign="+sign; //重定向
     }
 
     @RequestMapping("/addConfig")
-    public String addConfig(Model model, String cf_code, String cf_flag, String cf_val,String cf_explain,String type,String sign){
+    public String addConfig(Model model, String cf_code, String cf_flag, String cf_val,String cf_explain,String orderNum,String type,String sign){
         model.addAttribute("cf_code",cf_code);
         model.addAttribute("cf_flag",cf_flag);
         model.addAttribute("cf_val",cf_val);
         model.addAttribute("cf_explain",cf_explain);
+        model.addAttribute("orderNum",orderNum);
         model.addAttribute("type",type);
         model.addAttribute("sign",sign);//标识是修改还是编辑
         return view+"addConfig";
@@ -129,11 +134,17 @@ public class ConfigController {
     @RequestMapping("/barcodeLength")
     public Map barcodeLength(){
         Map map = new HashMap();
-        Config barConfig = configServices.getBarcodeLength(barcodeLength);//配置文件取的条码号长度
-        Config dateConfig = configServices.getBarcodeLength(sampleDateValidation);//配置采样日期，校验日期输入
+        List<Config> listConfig = configServices.getAllConfig();
 
-        map.put("barcodeLength",barConfig.getCf_val());
-        map.put("sampleDateValidation",dateConfig.getCf_val());
+        String bloodCardVal = null;
+
+        for(Config c : listConfig){
+            if(bloodCardLen.equals(c.getCf_code())){//采血卡号的长度
+                bloodCardVal = c.getCf_val();
+            }
+        }
+
+        map.put("bloodCardLen",bloodCardVal);
 
         return map;
     }

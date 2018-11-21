@@ -55,12 +55,12 @@ public class ShiroConfiguration {
 
 
         filterChainDefinitionMap.put("/home/**", "authc");
-        filterChainDefinitionMap.put("/combine/**", "authc");
+        //filterChainDefinitionMap.put("/combine/**", "authc");
         filterChainDefinitionMap.put("/setmeal/**", "authc");
         filterChainDefinitionMap.put("/mb/**", "authc");
         filterChainDefinitionMap.put("/menu/**", "authc");
         filterChainDefinitionMap.put("/organization/**", "authc");
-        filterChainDefinitionMap.put("/reportQuery/**", "authc");
+        //filterChainDefinitionMap.put("/reportQuery/**", "authc");
         filterChainDefinitionMap.put("/role/**", "authc");
         filterChainDefinitionMap.put("/sendApplication/**", "authc");
         filterChainDefinitionMap.put("/signpic/**", "authc");

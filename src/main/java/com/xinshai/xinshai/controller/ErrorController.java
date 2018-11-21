@@ -1,3 +1,4 @@
+/*
 package com.xinshai.xinshai.controller;
 
 import org.slf4j.Logger;
@@ -22,3 +23,4 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     }
 
 }
+*/

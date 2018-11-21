@@ -1,3 +1,4 @@
+/*
 package com.xinshai.xinshai.schedule;
 
 import com.xinshai.xinshai.services.UserServices;
@@ -16,12 +17,15 @@ public class ClearTimerController {
     @Value("${dayLimitLoginError}")
     private Integer dayLimitLoginError;
 
-    /**
+    */
+/**
      * 每天定时将用户每天登录错误次数<=2次的字段重置为0
-     */
+     *//*
+
     @Scheduled(cron = "${jobs.schedule}")
     public void resetDayLoginError(){
         userServices.resetDayLoginError(dayLimitLoginError);
     }
 
 }
+*/

@@ -45,6 +45,12 @@ public class LoginController {
     @Value("${errorFreezing}")
     private Integer errorFreezing;
 
+
+    @RequestMapping("/pageHome")
+    public String pageHome() {
+        return view + "pageHome";
+    }
+
     @RequestMapping("/index")
     public String loginUser(Model model, String username,String password,HttpServletRequest request) {
         HttpSession session = request.getSession();

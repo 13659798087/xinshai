@@ -14,6 +14,26 @@ public class WeixinMenu {
 
     private String menukey;
 
+    private Integer orderNum;
+
+    private Double isDelete;
+
+    public Double getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Double isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
     public String getType() {
         return type;
     }

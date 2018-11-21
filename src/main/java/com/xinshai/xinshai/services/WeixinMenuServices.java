@@ -18,5 +18,20 @@ public class WeixinMenuServices {
         return weixinMenuDao.getWeixinMenu();
     }
 
+    public void updateLocalMenu(String id, String name, String type, String url, String menukey, String orderNum,String pid) {
+        weixinMenuDao.updateLocalMenu(id,name,type,url,menukey,orderNum,pid);
+    }
 
+    public void creatMenu(String id,String name,String type,String url,String menukey,String orderNum,String pid) {
+        weixinMenuDao.creatMenu(id,name,type,url,menukey,orderNum,pid);
+    }
+
+
+    public List<WeixinMenu> parentList() {
+        return weixinMenuDao.parentList();
+    }
+
+    public void updateMenuState(String id) {
+        weixinMenuDao.updateMenuState(id);
+    }
 }

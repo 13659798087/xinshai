@@ -25,20 +25,21 @@ public class ConfigServices {
         return configDao.validateName(cf_code);
     }
 
-    public void createConfig(String cf_code, Integer cf_flag, String cf_val, String cf_explain) {
-        configDao.createConfig(cf_code,cf_flag,cf_val,cf_explain);
+    public void createConfig(String cf_code, Integer cf_flag, String cf_val, String cf_explain,String orderNum) {
+        configDao.createConfig(cf_code,cf_flag,cf_val,cf_explain,orderNum);
     }
 
-    public void updateConfig(String cf_code, Integer cf_flag, String cf_val, String cf_explain) {
-        configDao.updateConfig(cf_code,cf_flag,cf_val,cf_explain);
+    public void updateConfig(String cf_code, Integer cf_flag, String cf_val, String cf_explain,String orderNum) {
+        configDao.updateConfig(cf_code,cf_flag,cf_val,cf_explain,orderNum);
     }
 
     public void deleteRow(String cf_code) {
         configDao.deleteRow(cf_code);
     }
 
-    public Config getBarcodeLength(String barcodeLength) {
-        return configDao.getBarcodeLength(barcodeLength);
+    public List<Config> getAllConfig() {
+        return configDao.getAllConfig();
     }
+
 
 }

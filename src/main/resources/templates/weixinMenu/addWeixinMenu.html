@@ -5,37 +5,33 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>DEMO</title>
-<link rel="stylesheet" type="text/css" href="../css/css.css" />
-<link href="../Content/bootstrap.min.css" rel="stylesheet" />
-<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
-<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
 <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-<script src="../js/jquery-3.2.0.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
 
 	<!--ztree的css、js -->
-	<link rel="stylesheet" href="../css/demo.css" type="text/css" />
-	<link rel="stylesheet" href="../css/zTreeStyle/zTreeStyle.css" type="text/css" />
-	<script type="text/javascript" src="../js/jquery.ztree.core.js"></script>
-	<script type="text/javascript" src="../js/jquery.ztree.excheck.js"></script>
-	<script type="text/javascript" src="../js/jquery.ztree.exedit.js"></script>
+	<link rel="stylesheet" href="/css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.exedit.js"></script>
 
 	<!-- 引入vue.js -->
-	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
 
-<!--模态框-->
-<link rel="stylesheet" href="../css/jquery.popup.css" />
-<script src="../js/jquery.popup.js"></script>
-<script src="../js/jquery.popup.dialog.js"></script>
-
+	<script src="/js/until.sdk.format.js"></script>
 
 	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
+	<!--<link rel="stylesheet"  href="/css/xcConfirm.css"/>
+	<script type='text/javascript'  src="/js/xcConfirm.js"  charset="utf-8"></script>
 	<style type="text/css">
 		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
 		.xcConfirm .popBox .ttBox {
@@ -44,12 +40,11 @@
 			padding: 14px 30px;
 			border-bottom: solid 1px #eef0f1;
 		}
-	</style>
+	</style>-->
 
 <style>
 	.leftTitle{float: left;width: 24%;text-align: right;}
 	.inputRight{width: 70%;float: left;}
-	.inputRight2{width: 30%;float: left;}
 
 	.footer{
 		height: 180px;
@@ -70,8 +65,6 @@
 		font-size: 14px;
 	}
 
-	.resetError{border-radius: 3px;padding: 6px 12px;font-size: 14px;margin-left: 1%;
-		background-color: #337ab7;cursor: pointer;color: white;}
 	.centerAdd {color: red;font-weight: bold;font-size: 16px;display: none;}
 	.centerEdit{color: red;font-weight: bold;font-size: 16px;display: none;}
 
@@ -86,9 +79,10 @@
 	<h3 style="display: inline;" th:if="${type=='a'}" th:id="${type}" class="add">新增用户</h3>
 	<h3 style="display: inline;" th:if="${type=='e'}" th:id="${type}" class="edit">编辑用户</h3>
 
-	<form action="/userPage/createUser"  id="signForm" method="post">
-		<input type="hidden"  th:value="${password}" id="hidPassword"  />
-		<input type="hidden"  th:value="${userId}" id="userId"  name="userId"/>
+	<form action="/open/weixinMenu/changeLocalMenu"  id="signForm" method="post">
+
+		<input type="hidden"  th:value="${id}" id="id"  name="id"/>
+		<input type="hidden"  th:value="${pid}" id="hidePid"  name="hidePid"/>
 
 		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
 			<div style="float: left;width: 45%;">
@@ -96,68 +90,48 @@
 				<input type="text"  name="name" id="name" th:value="${name}" class="form-control inputRight" />
 			</div>
 			<div style="float: left;width: 45%;">
-				<div class="leftTitle" >url地址：</div>
-				<input type="text" name="url" id="url" th:value="${url}" class="form-control inputRight" />
+				<div class="leftTitle" >响应类型：</div>
+				<select class="form-control inputRight"  name="type" id="type" >
+					<option value="" >请选择</option>
+					<option value="click" th:selected="${type=='click'}">click</option>
+					<option value="view" th:selected="${type=='view'}">view</option>
+					<option value="scancode_push" th:selected="${type=='scancode_push'}">scancode_push</option>
+					<option value="scancode_waitmsg" th:selected="${type=='scancode_waitmsg'}">scancode_waitmsg</option>
+					<option value="pic_sysphoto" th:selected="${type=='pic_sysphoto'}">pic_sysphoto</option>
+					<option value="pic_photo_or_album" th:selected="${type=='pic_photo_or_album'}">pic_photo_or_album</option>
+					<option value="pic_weixin"  th:selected="${type=='pic_weixin'}">pic_weixin</option>
+					<option value="location_select" th:selected="${type=='location_select'}">location_select</option>
+					<option value="media_id" th:selected="${type=='media_id'}">media_id</option>
+					<option value="view_limited" th:selected="${type=='view_limited'}">view_limited</option>
+				</select>
 			</div>
+
 		</div>
 		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
 			<div style="float: left;width: 45%;">
-				<div  class="leftTitle" >用户角色：</div>
-
-				<div class="dropdown" style="display: inline-block;">
-					<button class="btn btn-default dropdown-toggle" type="button" id="getRole" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						选择角色
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-						<!--<li style="text-align: center;" id="addRole"><a style="font-weight: bold;font-size: 16px;">确定</a></li>
-						<li role="separator" class="divider"></li>-->
-
-						<li v-for="r in role">
-							<a data-stopPropagation="true" href="#" >
-								<input type="checkbox" class="checkInput"  onclick="checkTo(this)"/>
-								<span class="roleLeft" :id="r.roleId">{{r.roleName}}</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<span id="sign1">
-                     <span v-for="r in yesRole" >
-                        <span class="pad1 yesSel" :name="r.roleId">{{r.roleName}}</span>
-                     </span>
-                </span>
-
-				<input type="hidden" id="roles" name="roles" />
-
+				<div class="leftTitle" >url地址：</div>
+				<input type="text" name="url" id="url" th:value="${url=='null'?'':url}" class="form-control inputRight" />
 			</div>
-			<div style="float: left;width: 45%;"  th:if="${userId!='1'}"  >
-				<div  class="leftTitle" >所属医院：</div>
-				<span id="organizationName"></span>
-				<input type="hidden" name="organizationId" id="organizationId" th:value="${organizationId}" />
-				<div class="dropdown" style="display: inline-block;">
-					<button class="btn btn-default dropdown-toggle" type="button" id="selectPart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						选择
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-						<li data-stopPropagation="true">
-							<div class="zTreeDemoBackground" >
-								<ul id="treeDemo" class="ztree" style="width: 100%;height:100%;border: none;overflow: auto;background:none; "></ul>
-							</div>
-						</li>
-						<!--<li role="separator" class="divider"></li>-->
-						<!--<li style="text-align: center;"><a id="eee" >确定</a></li>-->
-					</ul>
-				</div>
-
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >菜单key：</div>
+				<input type="text"  name="menukey" id="menukey" th:value="${menukey=='null'?'':menukey}"
+					   class="form-control inputRight" />
 			</div>
 		</div>
-		<div style="height: 30px;line-height: 30px;margin-top: 2%;" th:if="${type=='e'}">
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;" >
 			<div style="float: left;width: 45%;">
-				<div  class="leftTitle" >登录错误次数(天)：</div>
-				<input type="text"  name="dayLoginError"  id="dayLoginError"   class="form-control inputRight2"
-					   th:value="${dayLoginError}=='null'?0:${dayLoginError}"  />
-				<span class="resetError" th:if="${dayLoginError!='0'}" >重置</span>
+				<div  class="leftTitle" >排序：</div>
+				<input type="text"  name="orderNum"  id="orderNum"   class="form-control inputRight"
+					   th:value="${orderNum}"  />
+			</div>
+
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >父级菜单：</div>
+				<!--<input type="text" name="pId" id="pId" class="form-control inputRight" parentList/>-->
+				<select class="form-control inputRight"  id="pid" name="pid" v-model="varPid" >
+					<option value="">请选择</option>
+					<option v-for="p in parentList" :value="p.id">{{p.name}}</option>
+				</select>
 			</div>
 		</div>
 
@@ -177,6 +151,18 @@
 
 <script>
 
+    var map={
+        yesRole: [],
+        role: [],
+        parentList: [],
+        varPid:"",
+
+    }
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
 	$(function(){
 
 		var sign = $("#sign").val();
@@ -188,14 +174,10 @@
             $(".centerAdd").fadeOut(3000);
 		}
 
-        $(".resetError").click(function(){
-            $("#dayLoginError").val("0");
-        })
-
 	    if( $(".edit").attr("id")=='e' ){
             $("#password").val(  $("#hidPassword").val() );
             var userId = $("#userId").val();
-            $.get("/userPage/getRoleByUserId",{"userId":userId},function(data){
+           /* $.get("/userPage/getRoleByUserId",{"userId":userId},function(data){
                 map.yesRole = data;
                 var array = new Array();
                 $(data).each(function(i,e){
@@ -204,18 +186,19 @@
 
                 $("#roles").val( array.toString() );
             })
-
-            var organizationId = $("#organizationId").val();
+*/
+           /* var organizationId = $("#organizationId").val();
             $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
 
               // $("#organizationId").val(data.id);
                 $("#organizationName").text(data.name);
-            })
+            })*/
         }
 
-        $.get("/role/getAllRole",{},function(data){
-            map.role = data;
+        $.get("/open/weixinMenu/parentList",{},function(data){
+            map.parentList = data;
         })
+        map.varPid = $("#hidePid").val();
 
 	})
 
@@ -224,56 +207,28 @@
         e.stopPropagation();
     });
 
-	var map={
-	    yesRole: [],
-        role: [],
-      //  organization: {},
 
-
-	}
-	new Vue({
-		el: '#app',
-		data: map
-	})
 
 
 	$("#sureAdd").click(function(){
-	    var userName = $("#userName").val();
-        var password = $("#password").val();
-        var userRole = $("#sign1").text();
-        var organizationName = $("#organizationName").text();
 
-        var userId = $("#userId").val();
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var type = $("#type").val();
+        var url = $("#url").val();
+        var menukey = $("#menukey").val();
+        var orderNum = $("#orderNum").val();
 
-		if (userName.trim()==""){
-            var txt= "用户名不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+		if (name.trim()==""){
+            windowPoint("用户名不能为空！");
             return false;
 		}
-        if (password.trim()==""){
-            var txt= "用户名密码不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
-            return false;
-		}
-        if (userRole == ""){
-            var txt= "用户角色不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
-            return false;
-		}
-        if (organizationName=="" ){
-		    if( $("#userId").val()=="1" || userId!=""){
-                $("#signForm").submit();
-			}else{
-                var txt= "所属机构不能为空！";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
-                return false;
-			}
-		}
 
-        else if(userId==""){
+
+        /*else if(id==""){
 			//验证此单位是否已录入此用户
 			var organizationId = $("#organizationId").val();
-			$.get("/userPage/validateUser",{"organizationId":organizationId,"userName":userName},function(data){
+			$.get("/userPage/validateUser",{"organizationId":organizationId,"name":name},function(data){
 				if(data=='1'){
                     var txt= "此用户已存在";
                     window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
@@ -284,9 +239,9 @@
 			})
 		}
 
-        else if(userId!=""){
+        else if(id!=""){*/
             $("#signForm").submit();
-        }
+        /*}*/
 
 	})
 

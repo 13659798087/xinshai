@@ -1,7 +1,7 @@
 package com.xinshai.xinshai.controller;
 
-import com.sinosoft.demo.Util.WeixinUtil;
-import com.sinosoft.demo.servlet.TokenThread;
+import com.xinshai.xinshai.servlet.TokenThread;
+import com.xinshai.xinshai.util.WeixinUtil;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +29,7 @@ public class SendGroupMessage {
         int result = WeixinUtil.SendTextMessage(TokenThread.accessToken.getToken(),textMessage);
 
         if(result==0){
-            System.out.println("发送成功");
+            System.out.println("发送文本消息成功");
         }else {
             System.out.println("错误码" + result);
         }
@@ -48,7 +48,7 @@ public class SendGroupMessage {
     @RequestMapping("/DEF")
     public int DEF() throws KeyManagementException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
 
-        String path = "D:/view.png";
+        String path = "D:/dgfd.jpg";
         String media_id = WeixinUtil.upload(path, TokenThread.accessToken.getToken(),"image");
 
         String groupMessage = JSONObject.fromObject(WeixinUtil.initImageTextGroupMessage(media_id)).toString();
@@ -100,7 +100,7 @@ public class SendGroupMessage {
     @RequestMapping("/previewMessage")
     public int previewMessage() throws IOException {
 
-        String path = "D:/3.jpg";
+        String path = "E:/image/qwe.JPG";
         String media_id = WeixinUtil.upload(path, TokenThread.accessToken.getToken(),"image");
 
         String groupMessage = JSONObject.fromObject(WeixinUtil.initPreviewMessage(media_id)).toString();
@@ -116,6 +116,8 @@ public class SendGroupMessage {
         return result;
 
     }
+
+
 }
 
 

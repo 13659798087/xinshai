@@ -5,55 +5,41 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>DEMO</title>
-	<link rel="stylesheet" type="text/css" href="../css/css.css" />
-	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
-	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
-	<link href="../Content/jquery.validate.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="/css/css.css" />
+	<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="/Content/jquery.validate.css" rel="stylesheet" />
 	<!--[if lt IE 9]>
 	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
-	<script src="../js/jquery-3.2.0.min.js"></script>
+	<script src="/js/jquery-3.2.0.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
 
-	<link rel="stylesheet" href="../css/iconfont.css" />
+	<link rel="stylesheet" href="/css/iconfont.css" />
 
-	<link rel="stylesheet" href="../css/bootstrap-table.css" />
-	<script src="../js/bootstrap-table.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap-table.css" />
+	<script src="/js/bootstrap-table.js"></script>
 	<!-- 汉化文件，放在 bootstrap-table.js 后面 -->
-	<script src="../js/bootstrap-table-zh-CN.js"></script>
-	<script src="../js/bootstrap-table-export.js"></script>
+	<script src="/js/bootstrap-table-zh-CN.js"></script>
+	<script src="/js/bootstrap-table-export.js"></script>
 
-	<link rel='stylesheet'   href='../css/pagination.css'/>
-	<script type='text/javascript'   src='../js/jquery.pagination.js' ></script>
+	<link rel='stylesheet'   href='/css/pagination.css'/>
+	<script type='text/javascript'   src='/js/jquery.pagination.js' ></script>
 
 	<!-- 引入vue.js -->
-	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
 
 	<!--模态框-->
-	<link rel="stylesheet" href="../css/jquery.popup.css" />
-	<script src="../js/jquery.popup.js"></script>
-	<script src="../js/jquery.popup.dialog.js"></script>
+	<link rel="stylesheet" href="/css/jquery.popup.css" />
+	<script src="/js/jquery.popup.js"></script>
+	<script src="/js/jquery.popup.dialog.js"></script>
 
 	<!--格式化时间.控制input只能输入金额-->
-	<script src="../js/until.sdk.format.js"></script>
-
+	<script src="/js/until.sdk.format.js"></script>
 	<!--封装的样式-->
-	<link rel='stylesheet'   href='../css/table.height.css'/>
-
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<link rel='stylesheet'   href='/css/table.height.css'/>
 
 </head>
 <body>
@@ -85,8 +71,8 @@
 <script>
     /*<![CDATA[*/
     $("#btn_add").click(function(){
-       location.href="/config/addConfig?type=a";
-    })
+       location.href="/open/config/addConfig?type=a";
+    });
 
 	$("#submitSign").click(function(){
         var formData = new FormData($( "#uploadFile" )[0]);
@@ -98,14 +84,13 @@
             data:formData,
             async: false,
             error: function(request) {
-                var txt= "出错了";
-                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.error);
+                windowPoint("出错了");
             },
             success: function(data) {
                 $("#image").attr("src","/signpic/Pictureshows?id="+data.id);
             }
         });
-	})
+	});
 
 
     //创建用户
@@ -119,7 +104,7 @@
 	        $("#signForm").submit();
 		}
 
-	})
+	});
 
     var datagrid;
     var objDialog;
@@ -129,7 +114,7 @@
         //数据列表
         datagrid = $('#table');
         datagrid = datagrid.bootstrapTable({
-            url: "/config/configTable",//数据源
+            url: "/open/config/configTable",//数据源
             dataField: "rows",//服务端返回数据键值 就是说记录放的键值是rows，分页时使用总记录数的键值为total
             height:heights-374,//高度调整
             search: false,//是否搜索
@@ -218,14 +203,14 @@
                     sortable: true,//是否可排序
                     align: "center",//水平
                     valign: "middle",
-                    width: '15%',
+                    width: '10%',
                     visible:true
                 },
                 {
                     field: 'cf_val',
                     title: '值',
                     align: 'center',
-                    width: '15%',
+                    width: '10%',
                     valign: "middle",
 
                 },
@@ -237,10 +222,17 @@
                     valign: "middle",
                 },
                 {
+                    field: 'orderNum',
+                    title: '序号',
+                    align: 'center',
+                    width: '10%',
+                    valign: "middle",
+                },
+                {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
-                    width: '25%',
+                    width: '20%',
                     events: operateEvents,
                     formatter: operateFormatter
                 }
@@ -268,24 +260,21 @@
     window.operateEvents = {
         'click .RoleOfB': function (e, value, row, index) {
             var cf_code = row.cf_code;
-
-            var txt= "确定删除代码为+cf_code+的记录吗？";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("确定删除代码为+cf_code+的记录吗？");
 
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var mb_id = row.mb_id;
-                $.get("/config/deleteRow",{"cf_code":cf_code},function(data){
-                    var txt= "删除成功！";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.success);
+                $.get("/open/config/deleteRow",{"cf_code":cf_code},function(data){
+                    windowSuccess("删除成功！");
                     datagrid.bootstrapTable("refresh");
                 })
             },false);
         },
         'click .RoleOfEdit': function (e, value, row, index) {
-            location.href="/config/addConfig?type=e&cf_code="+row.cf_code+"&cf_flag="+row.cf_flag+"&cf_val="+row.cf_val
-			+"&cf_explain="+row.cf_explain;
+            location.href="/open/config/addConfig?type=e&cf_code="+row.cf_code+"&cf_flag="+row.cf_flag+"&cf_val="+row.cf_val
+			+"&cf_explain="+row.cf_explain+"&orderNum="+row.orderNum;
         }
-    }
+    };
 
 
     var app3 = new Vue({
@@ -293,7 +282,7 @@
         data: {
             seen: true
         }
-    })
+    });
 
     var map={
         message: '',

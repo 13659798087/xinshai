@@ -4,28 +4,35 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>输入查询信息</title>
-<link rel="stylesheet" type="text/css" href="../css/css.css" />
-<link href="../Content/bootstrap.min.css" rel="stylesheet" />
-<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
-<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
 <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-<script src="../js/jquery-3.2.0.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
 
 <!-- 引入vue.js -->
 <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
 
-<script src="../js/fastclick.js"></script>
-<script src="../js/jquery-weui.min.js"></script>
-<link href="../css/jquery-weui.min.css" rel="stylesheet" />
-<link href="../css/weui.min.css" rel="stylesheet" />
-<link href="../css/demos.css" rel="stylesheet" />
+<script src="/js/fastclick.js"></script>
+<script src="/js/jquery-weui.min.js"></script>
+<link href="/css/jquery-weui.min.css" rel="stylesheet" />
+<link href="/css/weui.min.css" rel="stylesheet" />
+<link href="/css/demos.css" rel="stylesheet" />
+
+<link href="/css/style.css" rel="stylesheet" />
+
+
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script src="/js/JS-SDK.js"></script>
+
 
 <style>
 
@@ -35,10 +42,7 @@
 </style>
 
 </head>
-<body ontouchstart>
-
-
-
+<body>
 
 <div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
 		<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
@@ -47,49 +51,53 @@
 		</div>
 	</div>
 
+
 <form action="/personalData/submitInformation" method="post">
 
 	<div>
+
 		<div class="weui-cell">
 			<div class="weui-cell__hd"><label class="weui-label">姓名：</label></div>
 			<div class="weui-cell__bd">
-				<input class="weui-input" name="p_name" type="text" placeholder="请输入母亲（或受检人）姓名">
+				<input class="weui-input" name="m_name" type="text" placeholder="母亲（或受检人）姓名">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">采血卡号：</label></div>
+			<div class="weui-cell__bd" >
+				<input class="weui-input" style="width: 75%;" name="bloodCard" id="bloodCardLen" type="text" placeholder="采血卡片上的条码">
+				<img id="scanQRCode2" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
 			</div>
 		</div>
 
 		<div class="weui-cell">
 			<div class="weui-cell__hd"><label class="weui-label">电话：</label></div>
 			<div class="weui-cell__bd">
-			<input class="weui-input" type="tel" name="p_tel" placeholder="请输入采血卡上的手机号码">
+			<input class="weui-input" type="tel" name="tel" placeholder="采血卡上的手机号码">
 		</div>
 		</div>
 
 		<div class="weui-cell">
 		<div class="weui-cell__hd"><label class="weui-label">日期：</label></div>
 		<div class="weui-cell__bd">
-			<input id="date" class="weui-input" type="date" name="s_birthday"  placeholder="填写小孩的出生日期" style="height:41px;overflow: hidden;">
+			<input id="date" class="weui-input" type="date" name="bithday"  placeholder="小孩的出生日期" style="height:41px;overflow: hidden;">
 		</div>
 	</div>
 
 		<br/><br/>
 		<div class='demos-content-padded'  >
-			<!--<a href="/personalData/submitInformation" class="weui-btn weui-btn_primary"  >确定提交</a>-->
-			<input type=submit name="submit1" value="确定提交" class="weui-btn weui-btn_primary"
-				   onclick="return check(this.form)">
+			<input type=submit name="submit1" onclick="return check(this.form)" value="确定提交" class="weui-btn weui-btn_primary" >
 		</div>
 		<br/>
-
-		<!--<span>温馨提示：请输入采血时在卡片上留下的手机号码与宝宝准确的出生日期。
-			如您多次未能绑定成功，请拔打中心电话 0757-82969720咨询。</span>-->
-
 		<div class="weui-footer">
 			<!--<p class="weui-footer__links">
 				<a href="javascript:void(0);" class="weui-footer__link">底部链接</a>
 			</p>-->
-			<p class="weui-footer__text" style="text-align: left;padding: 0px 20px;">
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;温馨提示：请输入采血时在卡片上留下的手机号码与宝宝准确的出生日期。
-				如您多次未能绑定成功，请拔打中心电话 <a href="tel://12345678">12345678</a>咨询。</p>
-
+			<p class="weui-footer__text"  id="searchMsg"  style="text-align: left;padding: 0px 20px;">
+				<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;温馨提示：请输入采血时在卡片上留下的手机号码与宝宝准确的出生日期。
+				如您多次未能绑定成功，请拔打中心电话 <a href="tel://12345678">12345678</a>咨询。-->
+			</p>
 		</div>
 	</div>
 
@@ -102,26 +110,84 @@
 </body>
 
 <script>
+	//采血卡片条码号
+    var bloodCardLen;
+
+    $(function() {
+        FastClick.attach(document.body);
+        debugger;
+        $.get("/open/config/barcodeLength",{},function(data){
+            bloodCardLen = data.bloodCardLen;
+        })
+
+        $.get("/open/dynamicConfig/searchMsg",{},function(data){
+            $("#searchMsg").append('<span>'+data+'</span>');
+        })
+
+    });
+
+
+    $("#scanQRCode2").click(function(){
+        wx.scanQRCode({
+            needResult: 1,
+            desc: 'scanQRCode desc',
+            scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有"qrCode"
+            success: function (res) {
+                //alert(JSON.stringify(res));
+                //alert(res.resultStr.split(",")[1]);
+                //var str = res.resultStr;
+                $("#bloodCardLen").val( res.resultStr.split(",")[1]  );
+            }
+        });
+    })
+
 
     function check(form) {
-        if(form.p_name.value=='') {
+
+        if(form.m_name.value=='') {
             $.alert("请输入母亲姓名", "提示！");
-            //alert("请输入母亲姓名!");
             //form.p_name.focus();
             return false;
         }
-        if(form.p_tel.value==''){
+        if(form.bloodCard.value=='') {
+            $.alert("请输入采血卡号", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.tel.value==''){
             $.alert("请输入采血卡号上的电话号码", "提示！");
-            //alert("请输入采血卡号上的电话号码!");
             //form.p_tel.focus();
             return false;
         }
-        if(form.s_birthday.value==''){
+        if(form.tel.value.length!=11){
+            $.alert("电话号码长度不正确", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+        if(form.bloodCard.value.length!=bloodCardLen){
+            $.alert("请输入"+bloodCardLen+"采血卡号", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+        if(form.bithday.value==''){
             $.alert("请输入小孩出生日期", "提示！");
-            //alert("请输入小孩出生日期!");
             //form.s_birthday.focus();
             return false;
         }
+        if(form.bithday.value==''){
+            $.alert("请输入小孩出生日期", "提示！");
+            //form.s_birthday.focus();
+            return false;
+        }
+        var a = form.bithday.value;
+        var date1 = new Date(a);//输入时间
+        var date2 = new Date();//当前时间
+        if(date1.getTime() > date2.getTime()){//转换成毫秒进行比较
+            //console.log('第一个大');
+            $.alert("输入日期不能大于当前时间", "提示！");
+            return false;
+        }
+
         return true;
     }
 
@@ -143,12 +209,10 @@
     $('.close-swipeout').click(function () {
         $(this).parents('.weui-cell').swipeout('close')
     })
-</script>
 
-<script>
-    $(function() {
-        FastClick.attach(document.body);
-    });
-</script>
 
+
+
+
+</script>
 </html>

@@ -1,6 +1,6 @@
 package com.xinshai.xinshai.controller;
 
-import com.sinosoft.demo.entity.UserInfo;
+import com.xinshai.xinshai.model.UserInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

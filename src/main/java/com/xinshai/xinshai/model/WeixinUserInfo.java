@@ -20,7 +20,6 @@ public class WeixinUserInfo {
     private String unionid;// 只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
     private String remark;// 公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注
     private int groupid;// 用户所在的分组ID（兼容旧的用户分组接口）
-    private String tagid_list; // 用户被打上的标签ID列表
 
     private String tagName_list; // 用户被打上的标签ID列表
 
@@ -138,14 +137,6 @@ public class WeixinUserInfo {
         this.groupid = groupid;
     }
 
-    public String getTagid_list() {
-        return tagid_list;
-    }
-
-    public void setTagid_list(String tagid_list) {
-        this.tagid_list = tagid_list;
-    }
-
     public String getTagName_list() {
         return tagName_list;
     }
@@ -154,23 +145,5 @@ public class WeixinUserInfo {
         this.tagName_list = tagName_list;
     }
 
-    /* private int openid;
 
-    private long CreateTime;
-
-    public long getCreateTime() {
-        return CreateTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        CreateTime = createTime;
-    }
-
-    public int getOpenid() {
-        return openid;
-    }
-
-    public void setOpenid(int openid) {
-        this.openid = openid;
-    }*/
 }

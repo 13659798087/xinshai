@@ -6,6 +6,15 @@ public class Config {
     private Integer cf_flag;// 标志。1为启用，0为不启用
     private String cf_val; //值
     private String cf_explain; //意义
+    private Integer orderNum;
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
 
     public String getCf_code() {
         return cf_code;

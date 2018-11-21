@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="/css/css.css" />
+	<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="/Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="/js/jquery-3.2.0.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="/css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.exedit.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
+
+	<!--格式化时间-->
+	<script src="/js/until.sdk.format.js"></script>
+
+	<!--弹出框-->
+	<link rel="stylesheet"  href="/css/xcConfirm.css"/>
+	<script type='text/javascript'  src="/js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>
+
+<style>
+	.leftTitle{float: left;width: 10%;text-align: right;}
+	.inputRight{width: 70%;float: left;}
+	.inputRight2{width: 30%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	a {text-decoration:none;}
+	body {
+		font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 14px;
+	}
+	.centerAdd {color: red;font-weight: bold;font-size: 16px;display: none;}
+	.centerEdit{color: red;font-weight: bold;font-size: 16px;display: none;}
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+	<input type="hidden" th:value="${sign}" id="sign" />
+
+	<h3 style="display: inline;" >编辑用户</h3>
+
+	<form action="/open/attention/createReply"  id="signForm" method="post">
+
+		<input type="hidden"  th:value="${type}" id="type"  name="type"/>
+		<input type="hidden"  th:value="${id}" id="id"  name="id"/>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width:98%;">
+				<div  class="leftTitle" >内容：</div>
+				<input type="text" name="content"  id="content" th:value="${content}" class="form-control inputRight" />
+			</div>
+
+		</div>
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 98%;">
+				<div class="leftTitle" >序号：</div>
+				<input type="text" name="orderNum" id="orderNum" th:value="${orderNum}" class="form-control inputRight"
+				  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" />
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/open/attention/attentionReply">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+
+    $(function(){
+
+        var sign = $("#sign").val();
+        if("edit"==sign){
+            $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+        }else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+        }
+
+
+    })
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+    var map={
+        yesRole: [],
+        role: [],
+        //  organization: {},
+    }
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
+    $("#sureAdd").click(function(){
+
+        var content = $("#content").val();
+        if(content==''){
+			windowPoint("输入的内容不能为空");
+		}
+        $("#newTagid").val( $("#roles").val() );
+		$("#signForm").submit();
+
+    })
+
+
+    $("#orderNum").keydown(function(event){
+        if(event.keyCode == 13){
+           alert('你按下了Enter');
+        }
+	});
+
+</script>
+
+</html>

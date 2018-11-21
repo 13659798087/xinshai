@@ -1,7 +1,12 @@
 package com.xinshai.xinshai.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.xinshai.xinshai.entiry.SemParams;
+import com.xinshai.xinshai.model.AttentionReply;
+import com.xinshai.xinshai.services.AttentionServices;
 import com.xinshai.xinshai.services.WeixinUserInfoServices;
 import com.xinshai.xinshai.servlet.TokenThread;
+import com.xinshai.xinshai.util.CheckUtil;
 import com.xinshai.xinshai.util.MessageUtil;
 import com.xinshai.xinshai.util.WeixinUtil;
 import net.sf.json.JSONObject;
@@ -18,6 +23,7 @@ import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,6 +33,9 @@ public class WeixinServlet extends HttpServlet {
 
 	@Resource
 	private WeixinUserInfoServices weixinUserInfoServices;
+
+	@Resource
+	private AttentionController attentionController;
 
 	@RequestMapping("/Index")
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -41,7 +50,11 @@ public class WeixinServlet extends HttpServlet {
 		if(CheckUtil.checkSignature(signature, timestamp, nonce)){
 			out.print(echostr);
 		}
-		System.out.println(echostr);*/
+		System.out.println("签名"+signature);
+		System.out.println("时间戳"+timestamp);
+		System.out.println("随机数"+nonce);
+		System.out.println("随机字符串"+echostr);*/
+
 
 
 		req.setCharacterEncoding("UTF-8");
@@ -54,7 +67,6 @@ public class WeixinServlet extends HttpServlet {
 			String msgType = map.get("MsgType");
 			String content = map.get("Content");
 			String createTime = map.get("CreateTime");
-
 
 			String message = null;
 			if("text".equals(msgType)){
@@ -79,8 +91,9 @@ public class WeixinServlet extends HttpServlet {
 					else if("?".equals(content) || "？".equals(content)){
 						//message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.secondMenu());
 						message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText());
-					}else { //其他都进入微信客服模式
-						//return req.transfer2CustomeqrService();
+					}else if("人工服务".equals(content)) { //其他都进入微信客服模式
+						msgType = "transfer_customer_service";
+						message = MessageUtil.initServer(toUserName,fromUserName,msgType);
 					}
 					//大家如果没有报错,但是微信公众号上显示"无法提供服务,请稍后再试",原因是,
 					//我们是使用开发测试号来进行开发的,需要登陆测试号，然后扫码关注在测试公众号上进行检验,
@@ -90,47 +103,55 @@ public class WeixinServlet extends HttpServlet {
 				String eventType = map.get("Event");
 				//关注
 				if(MessageUtil.MESSAGE_SUBSCRIBE.equals(eventType)){
-					message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText());
 
-					JSONObject job = WeixinUtil.getUserInfo(TokenThread.accessToken.getToken(),fromUserName);
+					//从数据库取数据
+					String replyMenu = attentionController.replyMenu();
 
-					String sex = null;//用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+					//message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText1()); //静态数据
+					message = MessageUtil.initText(toUserName, fromUserName, replyMenu);//动态数据
 
-					int i = job.getInt("sex");
-					switch (i){
-						case 1:
-							sex = "男";
-							break;
-						case 2:
-							sex = "女";
-						case 0:
-							sex = "未知";
-							break;
+					int m = weixinUserInfoServices.getByOpenid(fromUserName);
+
+					if(m==1){    //0-关注的用户,1-取消的用户
+						weixinUserInfoServices.UpdateConcerns(fromUserName,0);
+
+					}else{//如果查不到该用户的记录，说明用户之前没关注过该公众号，就往数据库插入一条记录
+						JSONObject job = WeixinUtil.getUserInfo(TokenThread.accessToken.getToken(),fromUserName);
+						String sex = null;//用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+						int i = job.getInt("sex");
+						switch (i){
+							case 1:
+								sex = "男";
+								break;
+							case 2:
+								sex = "女";
+							case 0:
+								sex = "未知";
+								break;
+						}
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						long time = Long.parseLong(job.getString("subscribe_time"));
+						long lt = new Long(time);
+						Date date = new Date(lt * 1000L);
+						Timestamp attentionTime = Timestamp.valueOf( sdf.format(date)  );//关注的时间
+
+						String openid = job.getString("openid");
+						String nickname = job.getString("nickname");
+						String language = job.getString("language");
+						String city = job.getString("city");//用户所在城市
+						String province = job.getString("province");//用户所在省份
+						String country = job.getString("country");//用户所在国家
+						String groupid = job.getString("groupid");//用户所在的分组ID（暂时兼容用户分组旧接口）
+						String remark =  job.getString("remark");//备注
+
+						weixinUserInfoServices.insertUserOpenid(openid,nickname,sex,language,city,province,country,groupid,attentionTime,remark);
 					}
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					long time = Long.parseLong(job.getString("subscribe_time"));
-					long lt = new Long(time);
-					Date date = new Date(lt * 1000L);
-					Timestamp attentionTime = Timestamp.valueOf( sdf.format(date)  );//关注的时间
 
-					String openid = job.getString("openid");
-					String nickname = job.getString("nickname");
-					String language = job.getString("language");
-					String city = job.getString("city");//用户所在城市
-					String province = job.getString("province");//用户所在省份
-					String country = job.getString("country");//用户所在国家
-					String groupid = job.getString("groupid");//用户所在的分组ID（暂时兼容用户分组旧接口）
-					String tagid_list = job.getString("tagid_list");
-					String remark =  job.getString("remark");;//备注
+				}else if(MessageUtil.MESSAGE_UNSUBSCRIBE.equals(eventType)){ //取消关注
 
-					weixinUserInfoServices.insertUserOpenid(openid,nickname,sex,language,city,province,country,groupid,attentionTime,tagid_list,remark);
-
-					//取消关注
-				}else if(MessageUtil.MESSAGE_UNSUBSCRIBE.equals(eventType)){
-					message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText());
-					//取消关注之后，将该用户存储在数据库的数据删除掉
-					weixinUserInfoServices.deleteUserInfo(fromUserName);
-					weixinUserInfoServices.deleteWeixinMsg(fromUserName);
+					//取消关注之后,不用用户删除数据，到时候要统计   0-关注的用户，1-取消的用户
+					weixinUserInfoServices.UpdateConcerns(fromUserName,1);
+					//weixinUserInfoServices.deleteWeixinMsg(fromUserName);
 
 				}else if(MessageUtil.MESSAGE_CLICK.equals(eventType)){
 					message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText());
@@ -144,8 +165,23 @@ public class WeixinServlet extends HttpServlet {
 			}else if(MessageUtil.MESSAGE_LOCATION.equals(msgType)){
 				String label = map.get("Label");
 				message = MessageUtil.initText(toUserName, fromUserName, label);
-			}
+			}else if(MessageUtil.MESSAGE_VOICE.equals(msgType)){
+				//String label = map.get("Label");
+				String recognition=map.get("Recognition");
 
+				SemParams p=new SemParams();
+				p.setAppid(WeixinUtil.APPID);
+				p.setCategory("weather");
+				p.setCity("广州");
+				p.setQuery(recognition);
+				p.setUid(fromUserName);
+
+				String msg = JSON.toJSONString(p);
+				String city=WeixinUtil.getWeatherSemInfo(TokenThread.accessToken.getToken(),msg);
+				String a = WeixinUtil.searchParam(TokenThread.accessToken.getToken(),msg);
+
+				message = MessageUtil.initText(toUserName, fromUserName, a);
+			}
 
 			//System.out.println(message);
 			out.print(message);//向微信公众号发送
@@ -156,7 +192,6 @@ public class WeixinServlet extends HttpServlet {
 		}finally{
 			out.close();
 		}
-
 
 
 

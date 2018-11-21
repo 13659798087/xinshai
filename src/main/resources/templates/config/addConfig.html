@@ -5,38 +5,30 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>DEMO</title>
-<link rel="stylesheet" type="text/css" href="../css/css.css" />
-<link href="../Content/bootstrap.min.css" rel="stylesheet" />
-<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
-<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
 <!--[if lt IE 9]>
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-<script src="../js/jquery-3.2.0.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
 
 	<!-- 引入vue.js -->
-	<script type='text/javascript'   src='../js/vue.min.js' ></script>
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
 
-<!--模态框-->
-<link rel="stylesheet" href="../css/jquery.popup.css" />
-<script src="../js/jquery.popup.js"></script>
-<script src="../js/jquery.popup.dialog.js"></script>
+	<!--模态框-->
+	<link rel="stylesheet" href="/css/jquery.popup.css" />
+	<script src="/js/jquery.popup.js"></script>
+	<script src="/js/jquery.popup.dialog.js"></script>
 
-	<!--弹出框-->
-	<link rel="stylesheet"  href="../css/xcConfirm.css"/>
-	<script type='text/javascript'  src="../js/xcConfirm.js"  charset="utf-8"></script>
-	<style type="text/css">
-		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
-		.xcConfirm .popBox .ttBox {
-			height: 60px;
-			line-height: 30px;
-			padding: 14px 30px;
-			border-bottom: solid 1px #eef0f1;
-		}
-	</style>
+	<!--封装的方法-->
+	<script src="/js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='/css/table.height.css'/>
 
 	<style>
 	.leftTitle{float: left;width: 19%;text-align: right;}
@@ -64,7 +56,7 @@
 	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增模板字典</h3>
 	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑模板字典</h3>
 
-	<form  action="/config/createConfig"  id="signForm"  method="post">
+	<form  action="/open/config/createConfig"  id="signForm"  method="post">
 
 		<input type="hidden"  th:value="${cf_code}" id="hide_code"  name="hide_code"/>
 		<input type="hidden" name="type"  th:value="${type}"  id="type" />
@@ -102,13 +94,21 @@
 			</div>
 		</div>
 
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >排序：</div>
+				<div class="star1">&nbsp;</div>
+				<input type="text"  name="orderNum" id="orderNum"  th:value="${orderNum}" class="form-control inputRight" />
+			</div>
+		</div>
+
 		<br/><br/><br/>
 		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
 		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
 
 		<div style="width: 20%;margin-left: 40%;" class="footer">
 			<span class="btn btn-primary" id="sureAdd" >确定</span>
-			<a class="btn btn-default" style="margin-left: 10%;"  href="/config/listConfig">返回</a>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/open/config/listConfig">返回</a>
 		</div>
 
 	</form>
@@ -135,12 +135,12 @@
             var roleId = $("#roleId").val();
             $.get("/role/getMenuByRoleId",{"roleId":roleId},function(data){
                 map.yesMenu = data;
-                var array = new Array();
+                var array = [];
                 $(data).each(function(i,e){
                     array.push(e.menuId);
-                })
+                });
                 $("#menus").val( array.toString() );
-            })
+            });
             var organizationId = $("#organizationId").val();
             $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
                 $("#organizationName").text(data.name);
@@ -150,7 +150,7 @@
             map.menu = data;
         })
 
-	})
+	});
 
 	//bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
     $("body").on('click','[data-stopPropagation]',function (e) {
@@ -161,11 +161,11 @@
         yesMenu: [],
         menu: [],
       //  organization: {},
-	}
+	};
 	new Vue({
 		el: '#app',
 		data: map
-	})
+	});
 
 
     $("#sureAdd").click(function(){
@@ -174,21 +174,18 @@
         var cf_code = $("#cf_code").val();
         var cf_val = $("#cf_val").val();
         if (cf_code.trim()==""){
-            var txt= "代码不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("代码不能为空！");
             return false;
         }
         if (cf_val.trim()==""){
-            var txt= "值不能为空！";
-            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            windowPoint("值不能为空！");
             return false;
         }
         else if('a'==type){
             //验证此单位是否已录入此用户
-            $.get("/config/validateName",{"cf_code":cf_code},function(data){
+            $.get("/open/config/validateName",{"cf_code":cf_code},function(data){
                 if(data=='1'){
-                    var txt= "代码已存在";
-                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                    windowPoint("代码已存在");
                 }
                 else{
                     $("#signForm").submit();
@@ -200,7 +197,7 @@
             $("#signForm").submit();
         }
 
-    })
+    });
 
     $("#getRole").click(function(){
         $(".yesSel").each(function(i,e1){
@@ -213,12 +210,12 @@
             })
         })
 
-	})
+	});
 
 	$("#addMenu").click(function(){
 	    $("#sign1").html('');
 
-	    var array = new Array();
+	    var array = [];
 
 	    $(".checkInput").each(function(i,e){
 	        if(e.checked==true){
@@ -226,11 +223,11 @@
                 array.push( $(e).next().attr("id") );
 				$("#sign1").append('<span class="label label-success pad1" >'+val+'</span>');
 			}
-		})
+		});
 
         $("#menus").val( array.toString() );
 
-	})
+	});
 
 
 
@@ -243,7 +240,7 @@
 
 
 
-	})
+	});
 
 
     //以下是zTree的js代码
@@ -274,8 +271,7 @@
     function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
         debugger;
         alert(msg);
-    };
-
+    }
     var log, className = "dark";
 
     function getTime() {

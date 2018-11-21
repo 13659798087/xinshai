@@ -1,6 +1,7 @@
 package com.xinshai.xinshai.util;
 
 import com.xinshai.xinshai.entiry.AccessToken;
+import com.xinshai.xinshai.entiry.JsapiTicket;
 import com.xinshai.xinshai.entiry.User_list;
 import com.xinshai.xinshai.entiry.groupMessage.ImageTextMessage;
 import com.xinshai.xinshai.entiry.groupMessage.PreviewMessage;
@@ -23,6 +24,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -39,12 +41,19 @@ public class WeixinUtil {
     //private static final String APPSECRET = "07ed82e301b278362d73de49d9672794";
 
     //联兆母婴健康
-    private static final String APPID = "wx362203c9bf705039";
+    public static final String APPID = "wx362203c9bf705039";
     private static final String APPSECRET = "d03fb25dda90c511d6becde4bf9a3cbf";
 
+    //token
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
 
+    //jsapi_ticket
+    private static final String JSAPI_TICKET = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
+
+    //上传临时素材
     private static final String UPLOAD_URL = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
+    //获取临时素材
+    private static final String GET_TEMP_MEDIA = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
 
     private static final String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
 
@@ -60,6 +69,7 @@ public class WeixinUtil {
 
     private static final String GET_OPENID_URL =  "https://api.weixin.qq.com/sns/oauth2/access_token?appid=AppId&secret=AppSecret&code=CODE&grant_type=authorization_code";
 
+    //获取用户信息
     private static final String GET_USER_LIST1 = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=ACCESS_TOKEN";//10000条以下
     private static final String GET_USER_LIST2 = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=ACCESS_TOKEN&next_openid=NEXT_OPENID";//10000条以上
 
@@ -96,6 +106,10 @@ public class WeixinUtil {
 
     //添加客服账号
     private static final String ADD_CUSTOMER = "https://api.weixin.qq.com/customservice/kfaccount/add?access_token=ACCESS_TOKEN";
+
+    //发送语义理解请求
+    private static final String SEARCH_PARAM = "https://api.weixin.qq.com/semantic/semproxy/search?access_token=ACCESS_TOKEN";
+
 
 
 
@@ -243,6 +257,88 @@ public class WeixinUtil {
         return mediaId;
     }
 
+    public static JSONObject upload1(String filePath, String accessToken,String type) throws IOException {
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()) {
+            throw new IOException("文件不存在");
+        }
+
+        String url = UPLOAD_URL.replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
+
+        URL urlObj = new URL(url);
+        //连接
+        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
+
+        con.setRequestMethod("POST");
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setUseCaches(false);
+
+        //设置请求头信息
+        con.setRequestProperty("Connection", "Keep-Alive");
+        con.setRequestProperty("Charset", "UTF-8");
+
+        //设置边界
+        String BOUNDARY = "----------" + System.currentTimeMillis();
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("--");
+        sb.append(BOUNDARY);
+        sb.append("\r\n");
+        sb.append("Content-Disposition: form-data;name=\"file\";filename=\"" + file.getName() + "\"\r\n");
+        sb.append("Content-Type:application/octet-stream\r\n\r\n");
+
+        byte[] head = sb.toString().getBytes("utf-8");
+
+        //获得输出流
+        OutputStream out = new DataOutputStream(con.getOutputStream());
+        //输出表头
+        out.write(head);
+
+        //文件正文部分
+        //把文件已流文件的方式 推入到url中
+        DataInputStream in = new DataInputStream(new FileInputStream(file));
+        int bytes = 0;
+        byte[] bufferOut = new byte[1024];
+        while ((bytes = in.read(bufferOut)) != -1) {
+            out.write(bufferOut, 0, bytes);
+        }
+        in.close();
+
+        //结尾部分
+        byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");//定义最后数据分隔线
+
+        out.write(foot);
+
+        out.flush();
+        out.close();
+
+        StringBuffer buffer = new StringBuffer();
+        BufferedReader reader = null;
+        String result = null;
+        try {
+            //定义BufferedReader输入流来读取URL的响应
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+            if (result == null) {
+                result = buffer.toString();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+
+        JSONObject jsonObj = JSONObject.fromObject(result);
+
+        return jsonObj;
+    }
 
     /**
      * 获取access_token
@@ -257,6 +353,22 @@ public class WeixinUtil {
             token.setExpires_in(jsonObject.getInt("expires_in"));
         }
         return token;
+    }
+
+
+    /**
+     * 获取jsapi_ticket
+     * @return
+     */
+    public static JsapiTicket getTsapiTicket(String token){
+        JsapiTicket ticket = new JsapiTicket();
+        String url = JSAPI_TICKET.replace("ACCESS_TOKEN", token);
+        JSONObject jsonObject = doGetStr(url);
+        if(jsonObject!=null){
+            ticket.setTicket(jsonObject.getString("ticket"));
+            ticket.setExpires_in(jsonObject.getInt("expires_in"));
+        }
+        return ticket;
     }
 
 
@@ -280,7 +392,7 @@ public class WeixinUtil {
         ViewButton button13 = new ViewButton();
         button13.setName("筛查项目");
         button13.setType("view");
-        button13.setUrl(DomainUrl.getUrl() + "/combine/listCombine");
+        button13.setUrl(DomainUrl.getUrl() + "combine/listCombine");
 
         List<Button> sub_button1 = new ArrayList<Button>();
         sub_button1.add(button11);
@@ -298,9 +410,6 @@ public class WeixinUtil {
         button21.setUrl("http://www.lznsn.com/");
 
         ViewButton button22 = new ViewButton();
-       /* button22.setName("地理位置");
-        button22.setType("location_select");
-        button22.setKey("32");*/
         button22.setName("位置导航");
         button22.setType("view");
         button22.setUrl("http://map.baidu.com/mobile");
@@ -310,10 +419,16 @@ public class WeixinUtil {
         button23.setType("view");
         button23.setUrl("http://www.mama.cn/z/art/8736/");
 
+        ClickButton button24 = new ClickButton();
+        button24.setName("地理位置");
+        button24.setType("location_select");
+        button24.setKey("32");
+
         List<Button> sub_button2 = new ArrayList<Button>();
         sub_button2.add(button21);
         sub_button2.add(button22);
         sub_button2.add(button23);
+        sub_button2.add(button24);
 
         Button button2 = new Button();
         button2.setName("服务咨询");
@@ -323,17 +438,17 @@ public class WeixinUtil {
         ViewButton button31 = new ViewButton();
         button31.setName("报告寄送");
         button31.setType("view");
-        button31.setUrl(DomainUrl.getUrl() + "/combine/listCombine");
+        button31.setUrl(DomainUrl.getUrl() + "combine/listCombine");
 
         ViewButton button32 = new ViewButton();
         button32.setName("我的信息");
         button32.setType("view");
-        button32.setUrl(DomainUrl.getUrl() + "/personalData/personal");
+        button32.setUrl(DomainUrl.getUrl() + "personalData/personal");
 
         ViewButton button33 = new ViewButton();
         button33.setName("筛查报告");
         button33.setType("view");
-        button33.setUrl(DomainUrl.getUrl() + "/personalData/queryReport");
+        button33.setUrl(DomainUrl.getUrl() + "personalData/queryReport");
 
         ClickButton button34 = new ClickButton();
         button34.setName("扫码事件");
@@ -374,7 +489,7 @@ public class WeixinUtil {
         ViewButton button13 = new ViewButton();
         button13.setName("筛查项目");
         button13.setType("view");
-        button13.setUrl(DomainUrl.getUrl() + "/combine/listCombine");
+        button13.setUrl(DomainUrl.getUrl() + "combine/listCombine");
 
         Button button1 = new Button();
         button1.setName("筛查中心");
@@ -407,17 +522,17 @@ public class WeixinUtil {
         ViewButton button31 = new ViewButton();
         button31.setName("报告寄送");
         button31.setType("view");
-        button31.setUrl(DomainUrl.getUrl() + "/combine/listCombine");
+        button31.setUrl(DomainUrl.getUrl() + "combine/listCombine");
 
         ViewButton button32 = new ViewButton();
         button32.setName("我的信息");
         button32.setType("view");
-        button32.setUrl(DomainUrl.getUrl() + "/personalData/personal");
+        button32.setUrl(DomainUrl.getUrl() + "personalData/personal");
 
         ViewButton button33 = new ViewButton();
         button33.setName("筛查报告");
         button33.setType("view");
-        button33.setUrl(DomainUrl.getUrl() + "/personalData/queryReport");
+        button33.setUrl(DomainUrl.getUrl() + "personalData/queryReport");
 
         ClickButton button34 = new ClickButton();
         button34.setName("扫码事件");
@@ -446,12 +561,17 @@ public class WeixinUtil {
         textMessage.setTouser(list);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("content", "hello，<a href='https://www.baidu.com/'>百度一下</a>");//格式是键值对
+        map.put("content", "测试链接，<a href='https://www.baidu.com/'>点我去百度</a>");//格式是键值对
         textMessage.setText(map);
 
         textMessage.setMsgtype("text");
 
         return textMessage;
+
+        //错误码：45065
+        //群发消息ID重复，微信返回错误信息:"clientmsgid exist"
+        //常见原因:
+        //1、发送太频繁，建议发送间隔长一点,至少15秒
 
     }
 
@@ -459,13 +579,9 @@ public class WeixinUtil {
         ImageTextMessage imageTextMessage = new ImageTextMessage();
         Map<String,Object> mpnews = new HashMap<String,Object>();
         mpnews.put("media_id",media);
-        //private String[] touser;
-        /*String string = "ofhhXxOY8b05I4uZ9UazShDaaDsM,ofhhXxFRKiAg5NJgPCSe1qlbirS8";
-        String [] stringArr= string.split(",");
-        ImageTextMessage.setTouser(stringArr);*/
         List<String> list = new ArrayList<String>();
-        list.add("ofhhXxL2vkgs9uCef9ylLareMcHA");
-        list.add("ofhhXxGAyTWp93hUNWdk7YhgoCJk");
+        list.add("ofhhXxFRKiAg5NJgPCSe1qlbirS8");
+        list.add("ofhhXxOY8b05I4uZ9UazShDaaDsM");
         imageTextMessage.setTouser(list);
 
         imageTextMessage.setMpnews(mpnews);
@@ -918,5 +1034,60 @@ public class WeixinUtil {
         }
         return result;
     }
+
+    /**获取临时素材*/
+    public static int getTempMedia(String token,String media_id) throws IOException {
+        int result = 0;
+        String url = GET_TEMP_MEDIA.replace("ACCESS_TOKEN", token).replace("MEDIA_ID",media_id);
+
+        JSONObject jsonObject = doGetStr(url);
+
+        if(jsonObject != null){
+            if (0 != jsonObject.getInt("errcode")) {
+                result = jsonObject.getInt("errcode");
+                System.out.println("错误 errcode:{} errmsg:{},"+ jsonObject.getInt("errcode")+","+jsonObject.get("errmsg").toString());
+            }
+        }
+        return result;
+    }
+
+
+
+    /**发送语义理解请求*/
+    public static String searchParam (String token,String ta){
+        String url = SEARCH_PARAM.replace("ACCESS_TOKEN", token);
+        JSONObject jsonObject = doPostStr(url, ta);
+
+        /*if(jsonObject != null){
+            if (0 != jsonObject.getInt("errcode")) {
+                result = jsonObject.getInt("errcode");
+                System.out.println("错误 errcode:{} errmsg:{},"+ jsonObject.getInt("errcode")+","+jsonObject.get("errmsg").toString());
+            }
+        }*/
+        return jsonObject.toString();
+    }
+
+
+
+
+    public static String getWeatherSemInfo(String accessToken,String reqJson){
+        String requestUrl="https://api.weixin.qq.com/semantic/semproxy/search?access_token=YOUR_ACCESS_TOKEN";
+        requestUrl=requestUrl.replace("ACCESS_TOKEN", accessToken);
+        JSONObject json= doPostStr(requestUrl, reqJson);
+
+        String city="广州";
+        int errcode=json.getInt("errcode");
+        if(0==errcode){
+            JSONObject semantic=json.getJSONObject("semantic");
+            JSONObject details=semantic.getJSONObject("details");
+            JSONObject location=details.getJSONObject("location");
+            city=location.getString("city");
+        }else{
+            System.out.println("语义理解失败");
+        }
+
+        return city;
+    }
+
 
 }

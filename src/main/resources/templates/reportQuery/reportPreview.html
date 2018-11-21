@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="/js/fastclick.js"></script>
+<script src="/js/jquery-weui.min.js"></script>
+<link href="/css/jquery-weui.min.css" rel="stylesheet" />
+<link href="/css/weui.min.css" rel="stylesheet" />
+<link href="/css/demos.css" rel="stylesheet" />
+
+<link href="/css/style.css" rel="stylesheet" />
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script src="/js/JS-SDK.js"></script>
+
+</head>
+<body>
+
+<div>
+
+    <input type="hidden"  id="c_id"  th:value="${c_id}"  />
+    <input type="hidden"  id="authorHospital"  th:value="${authorHospital}" />
+    <input type="hidden"  id="c_code"  th:value="${c_code}" />
+    <img src="" id="previewImage" width="98%" style="margin-left: 1%;margin-top: 1%;"  />
+
+</div>
+
+</body>
+
+<script>
+
+	$(function(){
+        var c_id = $("#c_id").val();
+        var c_code =$("#c_code").val();
+        var authorHospital = $("#authorHospital").val();
+       /* var c_id = "地贫180705080";
+        var c_code = "地贫";
+        var authorHospital = "宜春市产前筛查中心";*/
+
+        $("#previewImage").attr("src","/message/printReport?c_id="+c_id+"&c_code="+c_code+"&authorHospital="+authorHospital);
+       // $("#A4").click();
+
+	})
+
+	$("#previewImage").click(function(){
+
+        var url= 'http://'+location.host+ window.encodeURI( $("#previewImage").attr("src") );
+        var urlList=[];
+        urlList.push(url);
+        wx.previewImage({
+            current: url,
+            urls: urlList
+        });
+
+    })
+
+    $("#scanQRCode2").click(function(){
+        wx.scanQRCode({
+            needResult: 1,
+            desc: 'scanQRCode desc',
+            scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有"qrCode"
+            success: function (res) {
+                //alert(JSON.stringify(res));
+                //alert(res.resultStr.split(",")[1]);
+                //var str = res.resultStr;
+                $("#bloodCardLen").val( res.resultStr.split(",")[1]  );
+            }
+        });
+    })
+
+
+</script>
+</html>

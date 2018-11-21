@@ -1,7 +1,8 @@
 package com.xinshai.xinshai.services;
 
 import com.xinshai.xinshai.dao.PersonalDataDao;
-import com.xinshai.xinshai.model.WeixinMsg;
+import com.xinshai.xinshai.model.PersonBinding;
+import com.xinshai.xinshai.model.ResultPushMsg;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,11 +15,11 @@ public class PersonalDataServices {
     @Resource
     private PersonalDataDao personalDataDao;
 
-    public void createWeixinMsg(String id, String openId, String p_name, String p_tel, Timestamp s_birthday) {
-        personalDataDao.createWeixinMsg(id,openId,p_name,p_tel,s_birthday);
+    public void createWeixinMsg(String id, String openId, String m_name, String bloodCard,String tel, String bithday) {
+        personalDataDao.createWeixinMsg(id,openId,m_name,bloodCard,tel,bithday);
     }
 
-    public List<WeixinMsg> getMsgByOpenid(String openId) {
+    public List<PersonBinding> getMsgByOpenid(String openId) {
         return personalDataDao.getMsgByOpenid(openId);
     }
 
@@ -26,4 +27,7 @@ public class PersonalDataServices {
         personalDataDao.deleteBind(id);
     }
 
+    public List<ResultPushMsg> getResultItem(String openId) {
+        return personalDataDao.getResultItem(openId);
+    }
 }

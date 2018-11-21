@@ -87,38 +87,6 @@
 				<input type="text" name="remark" id="remark" th:value="${remark}" class="form-control inputRight" />
 			</div>
 		</div>
-		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
-			<div style="float: left;width: 45%;">
-				<div  class="leftTitle" >用户标签：</div>
-
-				<div class="dropdown" style="display: inline-block;">
-					<button class="btn btn-default dropdown-toggle" type="button" id="getRole" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						选择标签
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-						<li v-for="r in role">
-							<a data-stopPropagation="true" href="#" >
-								<input type="checkbox" class="checkInput"  onclick="checkTo(this)"/>
-								<span class="roleLeft" :id="r.id">{{r.name}}</span>
-							</a>
-						</li>
-					</ul>
-				</div>
-
-				<span id="sign1">
-                     <span v-for="r in yesRole" >
-                        <span class="pad1 yesSel" :name="r.id">{{r.name}}</span>
-                     </span>
-                </span>
-
-				<input type="hidden" name="oldTagid" id="tagid_list" th:value="${tagid_list}" />
-
-				<input type="hidden" id="roles" name="roles" />
-			</div>
-
-		</div>
-
 
 		<br/><br/><br/>
 		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>

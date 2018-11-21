@@ -154,6 +154,10 @@ public class CombineController {
         combineServices.deleteCombine(c_code);
     }
 
+    @RequestMapping("/toCombine")
+    public String toCombine(){
+        return view+"toCombine";
+    }
 
 
 }

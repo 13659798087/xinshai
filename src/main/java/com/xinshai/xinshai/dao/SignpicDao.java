@@ -1,10 +1,10 @@
 package com.xinshai.xinshai.dao;
 
-
 import com.xinshai.xinshai.model.Signpic;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+
 
 @Mapper
 public interface SignpicDao {
