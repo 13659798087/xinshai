@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title></title>
+<title>报告单</title>
 <link rel="stylesheet" type="text/css" href="/css/css.css" />
 <link href="/Content/bootstrap.min.css" rel="stylesheet" />
 <link href="/Content/jquery.fileupload.css" rel="stylesheet" />
@@ -36,11 +36,14 @@
 <body>
 
 <div>
-
-    <input type="hidden"  id="c_id"  th:value="${c_id}"  />
-    <input type="hidden"  id="authorHospital"  th:value="${authorHospital}" />
-    <input type="hidden"  id="c_code"  th:value="${c_code}" />
-    <img src="" id="previewImage" width="98%" style="margin-left: 1%;margin-top: 1%;"  />
+    <div class="weui-loadmore" >
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+    <input type="hidden"  id="c_sid"  th:value="${c_sid}"  />
+    <input type="hidden"  id="rptno"  th:value="${rptno}" />
+    <input type="hidden"  id="c_combine"  th:value="${c_combine}" />
+    <img src="" id="previewImage" width="98%" style="margin-left: 1%;margin-top: 1%;" />
 
 </div>
 
@@ -49,16 +52,14 @@
 <script>
 
 	$(function(){
-        var c_id = $("#c_id").val();
-        var c_code =$("#c_code").val();
-        var authorHospital = $("#authorHospital").val();
-       /* var c_id = "地贫180705080";
-        var c_code = "地贫";
-        var authorHospital = "宜春市产前筛查中心";*/
 
-        $("#previewImage").attr("src","/message/printReport?c_id="+c_id+"&c_code="+c_code+"&authorHospital="+authorHospital);
-       // $("#A4").click();
+        var c_sid = $("#c_sid").val();
+        var c_combine =$("#c_combine").val();
+        var rptno = $("#rptno").val();
 
+        $("#previewImage").attr("src","/message/printReport?c_sid="+c_sid+"&c_combine="+c_combine+"&rptno="+rptno);
+        $(".weui-loadmore").show();
+        $(".weui-loadmore").fadeOut(1000);
 	})
 
 	$("#previewImage").click(function(){

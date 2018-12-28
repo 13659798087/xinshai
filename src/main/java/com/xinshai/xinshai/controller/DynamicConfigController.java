@@ -96,7 +96,7 @@ public class DynamicConfigController {
     @RequestMapping(value="uploadPicture",headers="content-type=multipart/*" ,method= RequestMethod.POST)
     public Map uploadPicture(@RequestParam("file")MultipartFile file,String id,String page,String pageContent,String type)throws Exception{
         String sign = "";
-        Map map=new HashMap<>();
+        Map map=new HashMap();
         DynamicConfig dynamic = new DynamicConfig();
         String name = file.getOriginalFilename();
         long filesize  = file.getSize();

@@ -1,3 +1,4 @@
+/*
 package com.xinshai.xinshai.util;
 
 
@@ -6,28 +7,18 @@ public class DomainUrl {
 
     public static final String getUrl(){
         //natapp生成的域名
-        //return "http://bwarpz.natappfree.cc/";
-
+        //return "localhost:8070/";
+        //return "http://p5fvsu.natappfree.cc/";
         return "http://wx.lznsn.com/";
     }
 
-    //报告结果模板id
-    public static final String getTemplate_id1(){
-        return "Jmc_jhErPawrrhzzy5rAseLRVeKRVqrGqQYXsKmfTIw";
+    public static final String appid(){
+        return "wx362203c9bf705039";
     }
 
-    //绑定通知模板id
-    public static final String getTemplate_id2(){
-        return "4xQI0mhkgwTR3n-C0UbV0jWTx8Yr5ywmzWxtzdxg7QA";
+    public static final String appsecret(){
+        return "d316f130b69e3b511a84aca1b50185fa";
     }
-
-    //个人消息验证是否通过提醒
-    public static final String getTemplate_id3(){
-        return "9jtS7J5MN55eq5oS_lWu836rmY09HSR5uLqvniBqs8U";
-    }
-
-
-
-
 
 }
+*/

@@ -3,11 +3,14 @@ package com.xinshai.xinshai.controller;
 import com.alibaba.fastjson.JSON;
 import com.xinshai.xinshai.entiry.LocationParams;
 import com.xinshai.xinshai.entiry.SemParams;
+import com.xinshai.xinshai.services.HospitalServices;
 import com.xinshai.xinshai.servlet.TokenThread;
 import com.xinshai.xinshai.util.WeixinUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
 
 @Controller
 @RequestMapping("/fet")
@@ -21,6 +24,8 @@ public class SearchController {
             "uid":"123456"
     }
 */
+   @Resource
+   private HospitalServices hospitalServices;
 
     @ResponseBody
     @RequestMapping("/fet")
@@ -30,7 +35,7 @@ public class SearchController {
         sem.setQuery("查一下明天从北京到上海的南航机票");
         sem.setCity("北京");
         sem.setCategory("flight,hotel");
-        sem.setAppid(WeixinUtil.APPID);
+        sem.setAppid( hospitalServices.getAppid() );
         sem.setUid("ofhhXxFRKiAg5NJgPCSe1qlbirS8");
         String msg = JSON.toJSONString(sem);
         return WeixinUtil.searchParam(TokenThread.accessToken.getToken(),msg);

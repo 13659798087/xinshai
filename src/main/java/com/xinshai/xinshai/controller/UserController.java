@@ -47,11 +47,7 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/getUserRole")
-    public Map<String,Object> getUserRole(String pageNumber, String rowNumber, String sortName,
-                                          String sortOrder,String userName,String organizationName,HttpServletRequest request){
-        //在缓存session中取医院的id
-        String organizationId = (String) request.getSession().getAttribute("organizationId");
-        String userId = (String) request.getSession().getAttribute("userId");
+    public Map<String,Object> getUserRole(String pageNumber,String rowNumber,String sortName,String sortOrder,String userName){
 
         List<UserInfo> userInfo = new ArrayList<UserInfo>();
 
@@ -66,9 +62,9 @@ public class UserController {
         pageResults.setOrderBy(orderBy);
         pageResults.setOrder(order);
 
-        userInfo = userServices.getUserMessage((pageNo-1)*pageSize+1, pageNo*pageSize,userName,organizationName);
+        userInfo = userServices.getUserMessage((pageNo-1)*pageSize+1, pageNo*pageSize,userName);
 
-        long totalCount = userServices.getUserCount((pageNo-1)*pageSize+1, pageNo*pageSize,userName,organizationName);
+        long totalCount = userServices.getUserCount((pageNo-1)*pageSize+1,pageNo*pageSize,userName);
 
         pageResults.setResult(userInfo);
         pageResults.setTotalCount(totalCount);

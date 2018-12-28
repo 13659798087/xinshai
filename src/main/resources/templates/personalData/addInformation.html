@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title></title>
+<title>输入查询资料</title>
 <link rel="stylesheet" type="text/css" href="/css/css.css" />
 <link href="/Content/bootstrap.min.css" rel="stylesheet" />
 <link href="/Content/jquery.fileupload.css" rel="stylesheet" />
@@ -29,7 +29,12 @@
 
 <link href="/css/style.css" rel="stylesheet" />
 
+	<!-- 获取ip -->
+	<script type='text/javascript'  src="http://pv.sohu.com/cityjson?ie=utf-8" ></script>
+	<!-- 获取设备名称和型号 -->
+	<script src="/js/mobile-detect.js"></script>
 
+	<!--微信js-->
 	<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 	<script src="/js/JS-SDK.js"></script>
 
@@ -42,27 +47,23 @@
 </style>
 
 </head>
-<body>
+<body style="background-color: white;">
 
 <div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
-		<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
-		<div class="weui-cell__bd">
-			<span style="font-size: 18px;">输入查询资料</span>
+		<div class="weui-cell__hd">
+			<img  id="img1"  style="width: 40px;">
 		</div>
-	</div>
+		<div class="weui-cell__bd">
+			<span style="font-size: 20px;font-weight: 500;">输入个人资料</span>
+		</div>
+</div>
 
 
 <form action="/personalData/submitInformation" method="post">
+	<input  type="hidden" name="deviceName"  id="deviceName" />
+	<input  type="hidden" name="ipAddress"   id="ipAddress" />
 
 	<div>
-
-		<div class="weui-cell">
-			<div class="weui-cell__hd"><label class="weui-label">姓名：</label></div>
-			<div class="weui-cell__bd">
-				<input class="weui-input" name="m_name" type="text" placeholder="母亲（或受检人）姓名">
-			</div>
-		</div>
-
 		<div class="weui-cell">
 			<div class="weui-cell__hd"><label class="weui-label">采血卡号：</label></div>
 			<div class="weui-cell__bd" >
@@ -70,22 +71,25 @@
 				<img id="scanQRCode2" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
 			</div>
 		</div>
-
 		<div class="weui-cell">
-			<div class="weui-cell__hd"><label class="weui-label">电话：</label></div>
+			<div class="weui-cell__hd"><label class="weui-label">母亲姓名：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" name="m_name" type="text" placeholder="母亲（或受检人）姓名">
+			</div>
+		</div>
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">联系电话：</label></div>
 			<div class="weui-cell__bd">
 			<input class="weui-input" type="tel" name="tel" placeholder="采血卡上的手机号码">
 		</div>
 		</div>
-
 		<div class="weui-cell">
-		<div class="weui-cell__hd"><label class="weui-label">日期：</label></div>
+		<div class="weui-cell__hd"><label class="weui-label">出生日期：</label></div>
 		<div class="weui-cell__bd">
 			<input id="date" class="weui-input" type="date" name="bithday"  placeholder="小孩的出生日期" style="height:41px;overflow: hidden;">
 		</div>
 	</div>
 
-		<br/><br/>
 		<div class='demos-content-padded'  >
 			<input type=submit name="submit1" onclick="return check(this.form)" value="确定提交" class="weui-btn weui-btn_primary" >
 		</div>
@@ -110,12 +114,17 @@
 </body>
 
 <script>
+
 	//采血卡片条码号
     var bloodCardLen;
 
     $(function() {
+        $.get("/signpic/getSignpicId",{},function(data){
+            $("#img1").attr("src","/signpic/Pictureshows?id="+data );
+        })
+
         FastClick.attach(document.body);
-        debugger;
+
         $.get("/open/config/barcodeLength",{},function(data){
             bloodCardLen = data.bloodCardLen;
         })
@@ -123,6 +132,41 @@
         $.get("/open/dynamicConfig/searchMsg",{},function(data){
             $("#searchMsg").append('<span>'+data+'</span>');
         })
+
+        var ipAddress = returnCitySN.cip;//获取ip
+
+        var deviceName = "";
+
+        Array.prototype.contains = function(needle) {
+            for (i in this) {
+                if (this[i].indexOf(needle) > 0)
+                    return i;
+            }
+            return -1;
+        }
+
+        var device_type = navigator.userAgent;//获取userAgent信息
+        //document.write(device_type);//打印到页面
+        var md = new MobileDetect(device_type);//初始化mobile-detect
+        var os = md.os();//获取系统
+        var model = "";
+        if (os == "iOS") {//ios系统的处理
+            os = md.os() + md.version("iPhone");
+            model = md.mobile();
+        } else if (os == "AndroidOS") {//Android系统的处理
+            os = md.os() + md.version("Android");
+            var sss = device_type.split(";");
+            var i = sss.contains("Build/");
+            if (i > -1) {
+                model = sss[i].substring(0, sss[i].indexOf("Build/"));
+            }
+        }
+        //alert(os + "---" + model);//打印系统版本和手机型号
+
+        deviceName = os + "---" + model;
+
+        $("#ipAddress").val(ipAddress);
+        $("#deviceName").val(deviceName);
 
     });
 
@@ -143,17 +187,18 @@
 
 
     function check(form) {
-
-        if(form.m_name.value=='') {
-            $.alert("请输入母亲姓名", "提示！");
-            //form.p_name.focus();
-            return false;
-        }
+        debugger
         if(form.bloodCard.value=='') {
             $.alert("请输入采血卡号", "提示！");
             //form.p_name.focus();
             return false;
         }
+        if(form.m_name.value=='') {
+            $.alert("请输入母亲姓名", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+
         if(form.tel.value==''){
             $.alert("请输入采血卡号上的电话号码", "提示！");
             //form.p_tel.focus();
@@ -191,8 +236,6 @@
         return true;
     }
 
-
-
     $("#date").on("input",function(){
         debugger;
         if($(this).val().length>0){
@@ -213,6 +256,20 @@
 
 
 
+    /* for(var i=0;i<10;i++){
+         if(ipAddress=='' || ipAddress==null){
+             ipAddress =  returnCitySN.cip;
+         }else{
+             break;
+         }
+     }
+     for(var i=0;i<10;i++){
+         if(deviceName=='' || deviceName==null){
+             deviceName();
+         }else{
+             break;
+         }
+     }*/
 
 </script>
 </html>

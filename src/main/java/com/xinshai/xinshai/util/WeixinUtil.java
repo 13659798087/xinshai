@@ -11,6 +11,8 @@ import com.xinshai.xinshai.entiry.menu.Button;
 import com.xinshai.xinshai.entiry.menu.ClickButton;
 import com.xinshai.xinshai.entiry.menu.Menu;
 import com.xinshai.xinshai.entiry.menu.ViewButton;
+import com.xinshai.xinshai.services.HospitalServices;
+import com.xinshai.xinshai.servlet.TokenThread;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -21,7 +23,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -33,16 +40,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Component
 public class WeixinUtil {
 
-    //测试号
-    //private static final String APPID = "wxe81e2b9596f72534";
-    //private static final String APPSECRET = "07ed82e301b278362d73de49d9672794";
+    private static Logger log = LoggerFactory.getLogger(WeixinUtil.class);
+
+    private static HospitalServices hospitalServices;
+    @Resource
+    public void setVerificDao(HospitalServices hospitalServices) {
+        this.hospitalServices = hospitalServices;
+    }
 
     //联兆母婴健康
-    public static final String APPID = "wx362203c9bf705039";
-    private static final String APPSECRET = "d03fb25dda90c511d6becde4bf9a3cbf";
+    //public static final String APPID = "wx362203c9bf705039";
+    //private static final String APPSECRET = "d316f130b69e3b511a84aca1b50185fa";
+
 
     //token
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
@@ -346,7 +358,7 @@ public class WeixinUtil {
      */
     public static AccessToken getAccessToken(){
         AccessToken token = new AccessToken();
-        String url = ACCESS_TOKEN_URL.replace("APPID",APPID).replace("APPSECRET",APPSECRET);
+        String url = ACCESS_TOKEN_URL.replace("APPID",hospitalServices.getAppid()).replace("APPSECRET",hospitalServices.getAppsecret());
         JSONObject jsonObject = doGetStr(url);
         if(jsonObject!=null){
             token.setToken(jsonObject.getString("access_token"));
@@ -360,22 +372,28 @@ public class WeixinUtil {
      * 获取jsapi_ticket
      * @return
      */
+      /* 成功返回：{"errcode":0,"errmsg":"ok","ticket":"kgt8ON7yVITDhtdwci0qeRF-aCFSukkcxZDA_VsTfCZRfu5yvb6cKe7oX2xp2CfxU0NP9iBB7zWLR7P8i3cZTQ","expires_in":7200}
+           失败返回  {"errcode":42001,"errmsg":"access_token expired hint: [XtMpia03474693!]"}*/
     public static JsapiTicket getTsapiTicket(String token){
         JsapiTicket ticket = new JsapiTicket();
         String url = JSAPI_TICKET.replace("ACCESS_TOKEN", token);
         JSONObject jsonObject = doGetStr(url);
         if(jsonObject!=null){
-            ticket.setTicket(jsonObject.getString("ticket"));
-            ticket.setExpires_in(jsonObject.getInt("expires_in"));
+            int result = jsonObject.getInt("errcode");
+            if(  0 == result ) {
+                ticket.setTicket(jsonObject.getString("ticket"));
+                ticket.setExpires_in(jsonObject.getInt("expires_in"));
+            }
+            else {
+                System.out.println("-------------错误码："+jsonObject.getString("errcode")+",错误信息："+jsonObject.getString("errmsg")+",token过期-------------");
+                log.info("-------------错误码："+jsonObject.getString("errcode")+",错误信息："+jsonObject.getString("errmsg")+",token过期-------------");
+            }
+
         }
         return ticket;
     }
 
 
-    /**
-     * 组装菜单
-     * @return
-     */
     public static Menu initMenu(){
         Menu menu = new Menu();
 
@@ -387,17 +405,154 @@ public class WeixinUtil {
         ViewButton button12 = new ViewButton();
         button12.setName("筛查告知");
         button12.setType("view");
-        button12.setUrl("https://www.fsfy.com/Content-34013.html");
+        button12.setUrl(hospitalServices.getDomainUrl() + "/informing/informing");
 
         ViewButton button13 = new ViewButton();
         button13.setName("筛查项目");
         button13.setType("view");
-        button13.setUrl(DomainUrl.getUrl() + "combine/listCombine");
+        button13.setUrl(hospitalServices.getDomainUrl() + "combine/toCombine");
+
+        ViewButton button14 = new ViewButton();
+        button14.setName("筛查流程");
+        button14.setType("view");
+        button14.setUrl("https://mp.weixin.qq.com/s/cFFTCkcRMr4wTKUPr2UzUw");
+
+        ViewButton button15 = new ViewButton();
+        button15.setName("联系我们");
+        button15.setType("view");
+        button15.setUrl("https://mp.weixin.qq.com/s/cFFTCkcRMr4wTKUPr2UzUw");
 
         List<Button> sub_button1 = new ArrayList<Button>();
         sub_button1.add(button11);
         sub_button1.add(button12);
         sub_button1.add(button13);
+        sub_button1.add(button14);
+        sub_button1.add(button15);
+
+        Button button1 = new Button();
+        button1.setName("筛查中心");
+        button1.setSub_button(sub_button1);
+
+
+        ViewButton button21 = new ViewButton();
+        button21.setName("最新资讯");
+        button21.setType("view");
+        button21.setUrl("http://www.lznsn.com/");
+
+        ViewButton button22 = new ViewButton();
+        button22.setName("位置导航");
+        button22.setType("view");
+        button22.setUrl("http://map.baidu.com/mobile");
+
+        ViewButton button23 = new ViewButton();
+        button23.setName("注意事项");
+        button23.setType("view");
+        button23.setUrl("http://www.mama.cn/z/art/8736/");
+
+        ClickButton button24 = new ClickButton();
+        button24.setName("地理位置");
+        button24.setType("location_select");
+        button24.setKey("32");
+
+        List<Button> sub_button2 = new ArrayList<Button>();
+        sub_button2.add(button21);
+        sub_button2.add(button22);
+        sub_button2.add(button23);
+        sub_button2.add(button24);
+
+        Button button2 = new Button();
+        button2.setName("服务咨询");
+        button2.setSub_button(sub_button2);
+
+
+        ViewButton button31 = new ViewButton();
+        button31.setName("报告寄送");
+        button31.setType("view");
+        button31.setUrl( hospitalServices.getDomainUrl() + "combine/listCombine");
+
+        /*ViewButton button32 = new ViewButton();
+        button32.setName("我的信息");
+        button32.setType("view");
+        button32.setUrl(DomainUrl.getUrl() + "personalData/personal");*/
+
+        ClickButton button32 = new ClickButton();
+        button32.setName("系统拍照发图");
+        button32.setType("pic_sysphoto");
+        button32.setKey("33");
+
+        ViewButton button33 = new ViewButton();
+        button33.setName("筛查报告");
+        button33.setType("view");
+        button33.setUrl( hospitalServices.getDomainUrl() + "reportQuery/reportByOpenid");
+
+        ClickButton button34 = new ClickButton();
+        button34.setName("扫码事件");
+        button34.setType("scancode_push");
+        button34.setKey("31");
+
+        ViewButton button35 = new ViewButton();
+        button35.setName("微信sdk测试");
+        button35.setType("view");
+        button35.setUrl( hospitalServices.getDomainUrl() + "personalData/sdkTest");
+
+        List<Button> sub_button3 = new ArrayList<Button>();
+        sub_button3.add(button31);
+        sub_button3.add(button32);
+        sub_button3.add(button33);
+        sub_button3.add(button34);
+        sub_button3.add(button35);
+
+        Button button = new Button();
+        button.setName("筛查结果");
+        button.setSub_button(sub_button3);
+
+        List<Button> list=new ArrayList<Button>();
+        list.add(button1);
+        list.add(button2);
+        list.add(button);
+
+        menu.setButton(list);
+        return menu;
+    }
+
+    /**
+     * 组装菜单
+     * @return
+     */
+   /* public static Menu initMenu(){
+        Menu menu = new Menu();
+
+        ViewButton button11 = new ViewButton();
+        button11.setName("中心简介");
+        button11.setType("view");
+        button11.setUrl("http://yc.jxcdc.cn/show.aspx?id=25&cid=20");
+
+        ViewButton button12 = new ViewButton();
+        button12.setName("筛查告知");
+        button12.setType("view");
+        button12.setUrl(DomainUrl.getUrl() + "/informing/informing");
+
+        ViewButton button13 = new ViewButton();
+        button13.setName("筛查项目");
+        button13.setType("view");
+        button13.setUrl(DomainUrl.getUrl() + "combine/toCombine");
+
+        ViewButton button14 = new ViewButton();
+        button14.setName("筛查流程");
+        button14.setType("view");
+        button14.setUrl("https://mp.weixin.qq.com/s/cFFTCkcRMr4wTKUPr2UzUw");
+
+        ViewButton button15 = new ViewButton();
+        button15.setName("联系我们");
+        button15.setType("view");
+        button15.setUrl("https://mp.weixin.qq.com/s/cFFTCkcRMr4wTKUPr2UzUw");
+
+        List<Button> sub_button1 = new ArrayList<Button>();
+        sub_button1.add(button11);
+        sub_button1.add(button12);
+        sub_button1.add(button13);
+        sub_button1.add(button14);
+        sub_button1.add(button15);
 
         Button button1 = new Button();
         button1.setName("筛查中心");
@@ -448,18 +603,24 @@ public class WeixinUtil {
         ViewButton button33 = new ViewButton();
         button33.setName("筛查报告");
         button33.setType("view");
-        button33.setUrl(DomainUrl.getUrl() + "personalData/queryReport");
+        button33.setUrl(DomainUrl.getUrl() + "reportQuery/reportByOpenid");
 
         ClickButton button34 = new ClickButton();
         button34.setName("扫码事件");
         button34.setType("scancode_push");
         button34.setKey("31");
 
+        ViewButton button35 = new ViewButton();
+        button35.setName("微信sdk测试");
+        button35.setType("view");
+        button35.setUrl(DomainUrl.getUrl() + "personalData/sdkTest");
+
         List<Button> sub_button3 = new ArrayList<Button>();
         sub_button3.add(button31);
         sub_button3.add(button32);
         sub_button3.add(button33);
         sub_button3.add(button34);
+        sub_button3.add(button35);
 
         Button button = new Button();
         button.setName("筛查结果");
@@ -472,7 +633,9 @@ public class WeixinUtil {
 
         menu.setButton(list);
         return menu;
-    }
+    }*/
+
+
 /*    public static Menu initMenu(){
         Menu menu = new Menu();
 
@@ -771,7 +934,7 @@ public class WeixinUtil {
      * @return
      */
     public static String getOpendId(String code) throws ParseException {
-        String url = GET_OPENID_URL.replace("AppId", APPID).replace("AppSecret", APPSECRET).replace("CODE", code);
+        String url = GET_OPENID_URL.replace("AppId", hospitalServices.getAppid() ).replace("AppSecret", hospitalServices.getAppsecret() ).replace("CODE", code);
         JSONObject jsonObject = doGetStr(url);
         String openid = "";
         if (jsonObject.get("openid")!=null) {

@@ -41,5 +41,8 @@ public class ConfigServices {
         return configDao.getAllConfig();
     }
 
+    public String getConfigByCode(String jumpPage) {
+        return configDao.getConfigByCode(jumpPage);
+    }
 
 }

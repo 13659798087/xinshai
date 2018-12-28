@@ -7,6 +7,7 @@ import com.xinshai.xinshai.services.SignpicServices;
 import com.xinshai.xinshai.util.Guid;
 import com.xinshai.xinshai.util.Paging;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +34,15 @@ public class SignpicController {
     private SignpicServices signpicServices;
 
     private String view = "signpic/";
+
+    @Value("${signpicId}")
+    private String signpicId;
+
+    @ResponseBody
+    @RequestMapping("/getSignpicId")
+    public String getSignpicId(){
+        return signpicId;
+    }
 
     @RequestMapping("/signpic")
     public String signpic(){
@@ -72,7 +82,7 @@ public class SignpicController {
     @RequestMapping(value="uploadPicture",headers="content-type=multipart/*" ,method= RequestMethod.POST)
     public Map uploadPicture(@RequestParam("file")MultipartFile file,String sp_name,String id, HttpServletRequest request)throws Exception{
         String sign = "";
-        Map map=new HashMap<>();
+        Map map=new HashMap();
 
         Signpic signpic = new Signpic();
 

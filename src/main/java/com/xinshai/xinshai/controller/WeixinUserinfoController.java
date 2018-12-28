@@ -207,17 +207,16 @@ public class WeixinUserinfoController {
         String result = WeixinUtil.getBatchUser(TokenThread.accessToken.getToken(),groupMessage);
         JSONArray array=JSONArray.fromObject(result);
 
-        String openid = null;//用户的标识，对当前公众号唯一
         String nickname = null;//用户的昵称
         String sex = null;//用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
-        String language = null;//用户的语言，简体中文为zh_CN
-        String city = null;//用户所在城市
-        String province = null;//用户所在省份
-        String country = null;//用户所在国家
-        String groupid = null;//用户所在的分组ID（暂时兼容用户分组旧接口）
-        String remark = null;//备注
+
+        List<WeixinUserInfo> listUserInfo = new ArrayList<WeixinUserInfo>();
+
 
         for(int i=0;i<array.size();i++){
+
+            WeixinUserInfo wu = new WeixinUserInfo();
+
             JSONObject job = array.getJSONObject(i);
             switch (job.getInt("sex")){
                 case 1:
@@ -234,37 +233,30 @@ public class WeixinUserinfoController {
             long lt = new Long(time);
             Date date = new Date(lt * 1000L);
             Timestamp t = Timestamp.valueOf( sdf.format(date)  );//关注的时间
-            openid = job.getString("openid");
             nickname = job.getString("nickname");
             //处理昵称中有空格的
             if(nickname.contains(" ")){
                 nickname = nickname.replace(" ","&nbsp;");
             }
-            language = job.getString("language");
-            city = job.getString("city");
-            province = job.getString("province");
-            country = job.getString("country");
-            groupid = job.getString("groupid");
-            remark = job.getString("remark");
 
-            weixinUserInfoServices.insertUserOpenid(openid,nickname,sex,language,city,province,country,groupid,t,remark);
+            wu.setOpenid( job.getString("openid") );
+            wu.setNickname( nickname );
+            wu.setSex(sex);
+            wu.setLanguage( job.getString("language") );
+            wu.setCity( job.getString("city") );
+            wu.setProvince( job.getString("province") );
+            wu.setCountry( job.getString("country") );
+            wu.setGroupid( job.getString("groupid") );
+            wu.setAttentionTime(t);
 
+            listUserInfo.add(wu);
         }
-        return "拉取用户列表成功，改接口最多拉去100条，可多次拉去，考录到前期关注的人少，先这样处理";
+
+        weixinUserInfoServices.insertBatchUser(listUserInfo);
+       // weixinUserInfoServices.insertUserOpenid(openid,nickname,sex,language,city,province,country,groupid,t,remark);
+
+        return "拉取用户列表成功，改接口最多拉取100条，可多次拉去，考录到前期关注的人少，先这样处理";
     }
-
-    /*@ResponseBody
-    @RequestMapping("/validateUser")
-    public Integer validateUser(HttpServletRequest request,String userName, String organizationId){
-
-        int i = userServices.validateUser(userName,organizationId);
-        if(i>0)
-            i=1;
-        else
-            i=0;
-        return i;
-    }*/
-
 
 
 }

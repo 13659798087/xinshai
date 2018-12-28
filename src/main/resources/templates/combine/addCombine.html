@@ -47,7 +47,7 @@
 	.inputRight2{width: 30%;float: left;}
 
 	.footer{
-		height: 180px;
+		height: 50px;
 		width: 100%;
 		position: fixed;
 		bottom: 0;
@@ -109,7 +109,7 @@
 			<div style="float: left;width: 45%;">
 				<div  class="leftTitle" >报告单标题：</div>
 				<div class="star1">&nbsp;</div>
-				<input type="text"  name="c_rpt_title" id="c_rpt_title"  th:value="${c_rpt_title}" class="form-control inputRight" />
+				<input type="text"  name="c_rpt_title" id="c_rpt_title"  th:value="${c_rpt_title=='null'?'':c_rpt_title}" class="form-control inputRight" />
 			</div>
 			<div style="float: left;width: 45%;">
 				<div  class="leftTitle" >报表名称：</div>
@@ -124,18 +124,50 @@
 
 		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
 			<div style="float: left;width: 45%;">
-				<div  class="leftTitle" >报告单标注1：</div>
-				<div class="star1">&nbsp;</div>
-				<input th:value="${c_rpt_bz1}"  type="text" name="c_rpt_bz1" id="c_rpt_bz1" class="form-control inputRight" />
+				<div  class="leftTitle" >报表名称2：</div>
+				<div class="star1">*</div>
+				<select class="form-control inputRight"  name="c_rpt2" id="c_rpt2" v-model="combine.c_rpt2">
+					<option v-for="d in listCombine" >
+						<span :value="d.d.c_rpt" >{{d.c_rpt}}</span>
+					</option>
+				</select>
 			</div>
 			<div style="float: left;width: 45%;">
-				<div  class="leftTitle" >报告单标注2：</div>
+				<div  class="leftTitle" >报表名称3：</div>
+				<div class="star1">*</div>
+				<select class="form-control inputRight"  name="c_rpt3" id="c_rpt3" v-model="combine.c_rpt3">
+					<option v-for="d in listCombine" >
+						<span :value="d.d.c_rpt" >{{d.c_rpt}}</span>
+					</option>
+				</select>
+			</div>
+		</div>
+
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报表名称4：</div>
+				<div class="star1">*</div>
+				<select class="form-control inputRight"  name="c_rpt4" id="c_rpt4" v-model="combine.c_rpt4">
+					<option v-for="d in listCombine" >
+						<span :value="d.d.c_rpt" >{{d.c_rpt}}</span>
+					</option>
+				</select>
+			</div>
+
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报告单标注1：</div>
 				<div class="star1">&nbsp;</div>
-				<input type="text"  name="c_rpt_bz2" id="c_rpt_bz2" th:value="${c_rpt_bz2}" class="form-control inputRight" />
+				<input th:value="${c_rpt_bz1=='null'?'':c_rpt_bz1}"  type="text" name="c_rpt_bz1" id="c_rpt_bz1" class="form-control inputRight" />
 			</div>
 		</div>
 
 		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >报告单标注2：</div>
+				<div class="star1">&nbsp;</div>
+				<input type="text"  name="c_rpt_bz2" id="c_rpt_bz2" th:value="${c_rpt_bz2=='null'?'':c_rpt_bz2}" class="form-control inputRight" />
+			</div>
 			<div style="float: left;width: 45%;">
 				<div  class="leftTitle" >纸张类型：</div>
 				<div class="star1">*</div>
@@ -146,7 +178,7 @@
 			</div>
 		</div>
 
-		<br/><br/><br/>
+		<br/><br/>
 		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
 		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
 
@@ -174,29 +206,6 @@
             $(".centerAdd").fadeOut(3000);
         }
 
-	    if( $(".edit").attr("id")=='e' ){
-            var c_code = $("#hide_code").val();
-            $.get("/combine/getCombineById",{"c_code":c_code},function(data){
-                debugger;
-                //查出所有的组别
-                map.yesRole = data;
-                var array = new Array();
-                $(data).each(function(i,e){
-                    debugger;
-					array.push( e.c_code);
-                })
-
-                $("#roles").val( array.toString() );
-            })
-
-            var organizationId = $("#organizationId").val();
-            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
-
-              // $("#organizationId").val(data.id);
-                $("#organizationName").text(data.name);
-            })
-        }
-
         $.get("/combine/getCombine",{},function(data){
             map.listCombine = data;
         })
@@ -213,7 +222,6 @@
     });
 
 	var map={
-	    yesRole: [],
         listCombine: [],
 		combine:{},
       //  organization: {},
@@ -279,54 +287,7 @@
 
 	})
 
-    $("#getRole").click(function(){
-        $(".yesSel").each(function(i,e1){
 
-            $(".roleLeft").each(function(i,e2){
-
-                if(e2.id==$(e1).attr("name")){
-                    $(e2).prev().prop("checked",true);
-                }
-            })
-        })
-
-	})
-
-	$("#addRole").click(function(){
-	    $("#sign1").html('');
-
-	    var array = new Array();
-
-	    $(".checkInput").each(function(i,e){
-	        if(e.checked==true){
-                var val = $(e).next().text();
-                array.push( $(e).next().attr("id") );
-				$("#sign1").append('<span class="label label-success pad1" >'+val+'</span>');
-			}
-		})
-
-        $("#roles").val( array.toString() );
-
-	})
-
-
-
-	$("#selectPart").click(function(){
-		$.get("/organization/getTree",{},function(zNodes){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-			$("#selectAll").bind("click", selectAll);
-		})
-
-	})
-
-
-    function checkTo(e){
-        if( $(e).find("input").is(":checked")==true ){  //jquery
-            $(e).find("input").attr("checked",false);
-        }else{
-            $(e).find("input").attr("checked",true);
-        }
-    }
 
 	/*]]>*/
 </script>

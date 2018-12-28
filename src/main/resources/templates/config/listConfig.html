@@ -198,15 +198,6 @@
                     valign: "middle",
                 },
                 {
-                    title: "是否启用",
-                    field: "cf_flag",
-                    sortable: true,//是否可排序
-                    align: "center",//水平
-                    valign: "middle",
-                    width: '10%',
-                    visible:true
-                },
-                {
                     field: 'cf_val',
                     title: '值',
                     align: 'center',
@@ -220,6 +211,15 @@
                     align: 'center',
                     width: '30%',
                     valign: "middle",
+                },
+                {
+                    title: "是否启用",
+                    field: "cf_flag",
+                    sortable: true,//是否可排序
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '10%',
+                    visible:true
                 },
                 {
                     field: 'orderNum',
@@ -260,7 +260,7 @@
     window.operateEvents = {
         'click .RoleOfB': function (e, value, row, index) {
             var cf_code = row.cf_code;
-            windowPoint("确定删除代码为+cf_code+的记录吗？");
+            windowPoint("确定删除代码为"+cf_code+"的记录吗？");
 
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 var mb_id = row.mb_id;

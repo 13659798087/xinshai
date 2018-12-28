@@ -38,34 +38,26 @@ public interface UserDao {
     @Select("select * from userinfo where parentId=#{userId} ")
     List<UserInfo> getUserByParentId(String userId);
 
-    @Select("<script>  SELECT * FROM ( " +
-            "SELECT ROW_NUMBER() OVER(ORDER BY u.createTime DESC) AS num, u.*,o.name, (SELECT '['+r.roleName+']' FROM userRole ur " +
-            "left join  role r  on ur.roleId=r.roleId " +
-            "and ur.userId=u.userId  FOR xml path ('') ) listRole " +
-            "from userinfo u left join organization o on u.organizationId=o.id where 1=1 " +
+    @Select("<script> SELECT * FROM (\n" +
+            "            SELECT ROW_NUMBER() OVER(ORDER BY u.createTime DESC) AS num, u.*,\n" +
+            "            (SELECT '['+r.roleName+']' FROM userRole ur\n" +
+            "            left join  role r  on ur.roleId=r.roleId\n" +
+            "            and ur.userId=u.userId  FOR xml path ('') ) listRole from userinfo u where 1=1 \n" +
             "<if test='userName !=null &amp;&amp; userName !=\"\"'> and userName like '%${userName}%' </if>"+
-            "<if test='organizationName !=null &amp;&amp; organizationName !=\"\"'> and o.name like '%${organizationName}%' </if>"+
-            ")AS t WHERE  t.num BETWEEN #{pageNo} AND #{pageSize} </script> ")
+            "            )AS t WHERE  t.num BETWEEN #{pageNo} AND #{pageSize} </script> ")
     List<UserInfo> getUserMessage(@Param(value = "pageNo") int pageNo,
                                   @Param(value = "pageSize") int pageSize,
-                                  @Param(value = "userName") String userName,
-                                  @Param(value = "organizationName") String organizationName);
-
-
+                                  @Param(value = "userName") String userName);
 
     @Select("<script>  SELECT count(1) FROM ( " +
-            "SELECT ROW_NUMBER() OVER(ORDER BY u.createTime DESC) AS num, u.*,o.name, (SELECT '['+r.roleName+']' FROM userRole ur " +
+            "SELECT ROW_NUMBER() OVER(ORDER BY u.createTime DESC) AS num, u.*, (SELECT '['+r.roleName+']' FROM userRole ur " +
             "left join  role r  on ur.roleId=r.roleId " +
-            "and ur.userId=u.userId  FOR xml path ('') ) listRole " +
-            "from userinfo u left join organization o on u.organizationId=o.id where 1=1 " +
+            "and ur.userId=u.userId  FOR xml path ('') ) listRole from userinfo u where 1=1 " +
             "<if test='userName !=null &amp;&amp; userName !=\"\"'> and userName like '%${userName}%' </if>"+
-            "<if test='organizationName !=null &amp;&amp; organizationName !=\"\"'> and o.name like '%${organizationName}%' </if>"+
             ")AS t </script> ")
     long getUserCount(@Param(value = "pageNo") int pageNo,
                       @Param(value = "pageSize") int pageSize,
-                      @Param(value = "userName") String userName,
-                      @Param(value = "organizationName") String organizationName);
-
+                      @Param(value = "userName") String userName);
 
     @Delete("delete from userinfo where userId = #{userId}")
     void deleteUser(String userId);

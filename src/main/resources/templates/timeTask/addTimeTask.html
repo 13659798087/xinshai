@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="/css/css.css" />
+	<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="/Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="/js/jquery-3.2.0.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="/css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.exedit.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="/css/jquery.popup.css" />
+	<script src="/js/jquery.popup.js"></script>
+	<script src="/js/jquery.popup.dialog.js"></script>
+
+	<style>
+		.leftTitle{float: left;width: 24%;text-align: right;}
+		.inputRight{width: 70%;float: left;}
+		.inputRight2{width: 30%;float: left;}
+
+		.footer{
+			height: 180px;
+			width: 100%;
+			position: fixed;
+			bottom: 0;
+		}
+		a {text-decoration:none;}
+		body {
+			font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 14px;
+		}
+
+		.centerAdd {color: red;font-weight: bold;font-size: 16px;display: none;}
+		.centerEdit{color: red;font-weight: bold;font-size: 16px;display: none;}
+
+	</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+
+	<h3 style="display: inline;" >编辑定时任务</h3>
+
+	<form action="/timeTask/editTimeTask"  id="signForm" method="post">
+
+		<input type="hidden" th:value="${timeTaskId}" id="timeTaskId" name="timeTaskId" />
+		<input type="hidden" th:value="${type}" id="type" name="type" />
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >任务描述：</div>
+				<input type="text" name="taskDescription" id="taskDescription" th:value="${taskDescription}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >cron表达式：</div>
+				<input type="text" name="cronExpressions" id="cronExpressions" th:value="${cronExpressions}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/timeTask/timeTask">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+
+	$(function(){
+        $("#sureAdd").click(function(){
+            debugger;
+            var taskDescription = $("#taskDescription").val();
+            var cronExpressions = $("#cronExpressions").val();
+            var timeTaskId = $("#timeTaskId").val();
+            var type = $("#type").val();
+
+            if (taskDescription.trim()==""){
+                var txt = "任务描述不能为空";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                return false;
+            }
+            if (cronExpressions.trim()==""){
+                var txt = "任务周期不能为空";
+                window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                return false;
+            }
+
+            if(type == "e"){
+                $("#signForm").submit();
+            }
+
+        })
+	})
+
+
+</script>
+
+</html>

@@ -4,7 +4,7 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>宜春市新生儿筛查中心</title>
+	<title>我的信息</title>
 	<link rel="stylesheet" type="text/css" href="../css/css.css" />
 	<link href="../Content/bootstrap.min.css" rel="stylesheet" />
 	<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
@@ -40,21 +40,21 @@
 
 <div id="app">
 
-		<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
-			<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
-			<div class="weui-cell__bd">
-				<span style="font-size: 18px;">我的信息</span>
-			</div>
-			<!--<div class="weui-cell__ft">说明文字</div>-->
+	<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5;padding: 5px 15px;">
+		<div class="weui-cell__hd">
+			<img  id="img1"  style="width: 40px;">
 		</div>
+		<div class="weui-cell__bd">
+			<span style="font-size: 20px;font-weight: 500;">我的信息</span>
+		</div>
+		<!--<div class="weui-cell__ft">说明文字</div>-->
+	</div>
 
 	<div style="text-align: center;">
 		<img class="demos-title" src="../img/person.png" />
-
 		<div class="weui-cell__bd"  style="text-align: center;font-size: 14px;color: darkgray;margin: 8px 20px;">
 			<span>查询结果请先准确输入小孩做筛查时留下的手机号码等信息！</span>
 		</div>
-
 	</div>
 
 	<!--<div class="weui-cell" >
@@ -63,19 +63,23 @@
 		</div>
 	</div>-->
 
-	<div class='demos-content-padded'  >
-		<a href="/personalData/addInformation" class="weui-btn weui-btn_primary"  >添加个人信息</a>
+	<div class='demos-content-padded' >
+		<a  th:if="${pageParam=='0'}"  href="/personalData/addInformation" class="weui-btn weui-btn_primary"  >添加个人信息</a>
+		<a  th:if="${pageParam=='1'}"  href="/personalData/xinShaiAdd" class="weui-btn weui-btn_primary"  >新筛信息登记</a>
 	</div>
 
-
 </div>
-
 
 </body>
 
 
 <script>
 
+	$(function(){
+	    $.get("/signpic/getSignpicId",{},function(data){
+            $("#img1").attr("src","/signpic/Pictureshows?id="+data );
+		})
+	})
 
     var map={
         message: '',

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>DEMO</title>
+	<link rel="stylesheet" type="text/css" href="/css/css.css" />
+	<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+	<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+	<link href="/Content/jquery.validate.css" rel="stylesheet" />
+	<!--[if lt IE 9]>
+	<script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<script src="/js/jquery-3.2.0.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="/css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.exedit.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="/css/jquery.popup.css" />
+	<script src="/js/jquery.popup.js"></script>
+	<script src="/js/jquery.popup.dialog.js"></script>
+
+	<style>
+		.leftTitle{float: left;width: 24%;text-align: right;}
+		.inputRight{width: 70%;float: left;}
+		.inputRight2{width: 30%;float: left;}
+
+		.footer{
+			height: 80px;
+			width: 100%;
+			position: fixed;
+			bottom: 0;
+		}
+
+		.pad1{padding: 0px 4px;font-size: 14px;color: white;border-radius: 4px;display: inline-block;
+			margin-left: 0.6%;background-color: #337ab7;cursor: pointer;margin-top: 0.3%;}
+
+		.roleLeft{margin-left: 12%;}
+
+
+		a {text-decoration:none;}
+		body {
+			font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 14px;
+		}
+
+		.centerAdd {color: red;font-weight: bold;font-size: 16px;display: none;}
+		.centerEdit{color: red;font-weight: bold;font-size: 16px;display: none;}
+
+	</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+	<input type="hidden" th:value="${sign}" id="sign" />
+
+	<h3 style="display: inline;" >编辑用户</h3>
+
+	<form action="/resultPushMsg/createEditMsg"  id="signForm" method="post">
+
+		<input type="hidden" th:value="${id}"  id="id"  name="id" />
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >openId：</div>
+				<input type="text" name="openId"  id="openId" th:value="${openId}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >病人id：</div>
+				<input type="text" name="patientId" id="patientId" th:value="${patientId}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >模板id：</div>
+				<input type="text" name="tid"  id="tid" th:value="${tid}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >first：</div>
+				<input type="text" name="first" id="first" th:value="${first}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >keyword1：</div>
+				<input type="text" name="keyword1"  id="keyword1" th:value="${keyword1}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >keyword1：</div>
+				<input type="text" name="keyword2" id="keyword2" th:value="${keyword2}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >keyword3：</div>
+				<input type="text" name="keyword3"  id="keyword3" th:value="${keyword3}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >keyword4：</div>
+				<input type="text" name="keyword4" id="keyword4" th:value="${keyword4}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >keyword5：</div>
+				<input type="text" name="keyword5"  id="keyword5" th:value="${keyword5}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >备注：</div>
+				<input type="text" name="remark" id="remark" th:value="${remark}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/resultPushMsg/resultPushMsg">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+
+    $(function(){
+
+        debugger;
+        var sign = $("#sign").val();
+        if("edit"==sign){
+            $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+        }else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+        }
+
+    })
+
+    //bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+    var map={
+        yesRole: [],
+        role: [],
+        //  organization: {},
+    }
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
+
+
+    $("#sureAdd").click(function(){
+
+        /*var c_code = $("#c_code").val();
+        var c_name = $("#c_name").val();
+        var c_price = $("#c_price").val();
+        var c_rpt = $("#c_rpt").val();
+        var c_rpt_title = $("#c_rpt_title").val();
+*/
+        /*if (c_code.trim()==""){
+            var txt= "代码不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+        if (c_name.trim()==""){
+            var txt= "套餐名称不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+
+        if (c_rpt=="" || c_rpt==null){
+            var txt= "报表名称不能为空！";
+            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+            return false;
+        }
+*/
+
+		$("#signForm").submit();
+
+
+
+    })
+
+
+</script>
+
+</html>

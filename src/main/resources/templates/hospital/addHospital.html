@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
+
+	<!--模态框-->
+	<link rel="stylesheet" href="/css/jquery.popup.css" />
+	<script src="/js/jquery.popup.js"></script>
+	<script src="/js/jquery.popup.dialog.js"></script>
+
+	<!--封装的方法-->
+	<script src="/js/until.sdk.format.js"></script>
+	<!--封装的样式-->
+	<link rel='stylesheet'   href='/css/table.height.css'/>
+
+	<style>
+	.leftTitle{float: left;width: 19%;text-align: right;}
+	.inputRight{width: 70%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+	<input type="hidden" th:value="${sign}" id="sign" />
+	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增地理微信</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑地理位置</h3>
+
+	<form  action="/hospital/editHospital"  id="signForm"  method="post">
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >筛查中心：</div>
+				<input type="text" name="h_name" id="hospital"  th:value="${h_name}" class="form-control inputRight" />
+			</div>
+
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >位置名称：</div>
+				<input type="text" name="h_address_name" id="name" th:value="${h_address_name}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >地址详情说明：</div>
+				<input  type="text"  name="h_address" id="address"  th:value="${h_address}" class="form-control inputRight"  />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >纬度：</div>
+				<input type="text"  name="h_latitude" id="latitude"  th:value="${h_latitude}" class="form-control inputRight" />
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >经度：</div>
+				<input type="text" name="h_longitude" id="longitude" th:value="${h_longitude}"  class="form-control inputRight"/>
+			</div>
+
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >地图缩放级别：</div>
+				<input type="text" name="h_scale" id="scale" th:value="${h_scale}"  class="form-control inputRight"/>
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >链接：</div>
+				<input type="text" name="h_infoUrl" id="infoUrl" th:value="${h_infoUrl}"  class="form-control inputRight"/>
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >公众号名称：</div>
+				<input type="text" name="weixinName" id="weixinName" th:value="${weixinName}"  class="form-control inputRight"/>
+			</div>
+		</div>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >APPID：</div>
+				<input type="text" name="appid" id="appid" th:value="${appid}"  class="form-control inputRight"/>
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >APPSECRET：</div>
+				<input type="text" name="appsecret" id="appsecret" th:value="${appsecret}"  class="form-control inputRight"/>
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/hospital/hospital">返回</a>
+		</div>
+	</form>
+
+</div>
+</body>
+
+<script>
+    /*<![CDATA[*/
+
+	$(function(){
+        var sign = $("#sign").val();
+        if("edit"==sign){
+            $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+        }else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+        }
+
+	});
+
+
+	var map={
+        yesMenu: [],
+        menu: [],
+      //  organization: {},
+	};
+	new Vue({
+		el: '#app',
+		data: map
+	});
+
+    $("#sureAdd").click(function(){
+        var name = $("#name").val();
+        var address = $("#address").val();
+        var latitude = $("#latitude").val();
+        var longitude = $("#longitude").val();
+        var scale = $("#scale").val();
+        var infoUrl = $("#infoUrl").val();
+        var hospital = $("#hospital").val();
+
+        if (name.trim()==""){
+            windowPoint("位置名称不能为空！");
+            return false;
+        }
+        if (address.trim()==""){
+            windowPoint("地址详情说明不能为空！");
+            return false;
+        }
+        if (latitude.trim()==""){
+            windowPoint("纬度不能为空！");
+            return false;
+        }
+        if (longitude.trim()==""){
+            windowPoint("经度不能为空！");
+            return false;
+        }
+        if (scale.trim()==""){
+            windowPoint("地图缩放级别不能为空！");
+            return false;
+        }
+        if (infoUrl.trim()==""){
+            windowPoint("链接不能为空！");
+            return false;
+        }
+        if (hospital.trim()==""){
+            windowPoint("筛查中心不能为空！");
+            return false;
+        }
+
+		$("#signForm").submit();
+
+    });
+
+	/*]]>*/
+</script>
+
+</html>

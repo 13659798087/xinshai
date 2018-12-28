@@ -44,8 +44,6 @@ public class RoleController {
     public Map<String,Object> getUserRole(String pageNumber, String rowNumber, String sortName,
                                           String sortOrder, String roleName, HttpServletRequest request){
 
-        String organizationId = SSO.getOrganizationId();//医院的id
-
         List<Role> role = new ArrayList<Role>();
 
         int pageNo = Integer.parseInt((pageNumber == null || pageNumber =="0") ? "1":pageNumber);

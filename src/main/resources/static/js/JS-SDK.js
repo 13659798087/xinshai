@@ -14,7 +14,7 @@
 $.get("/personalData/get1",{"url":window.location.href},function(data){
     wx.config({
         debug: false, // false开启调试模式
-        appId: 'wx362203c9bf705039', // 必填，公众号的唯一标识
+        appId: data.APPID, // 必填，公众号的唯一标识
         timestamp: data.timestamp, // 必填，生成签名的时间戳
         nonceStr: data.noncestr, // 必填，生成签名的随机串
         signature: data.signature,// 必填，签名
@@ -56,11 +56,11 @@ $.get("/personalData/get1",{"url":window.location.href},function(data){
         ] });
 
     wx.ready(function(){
-        //alert("获取签名成功");
+        alert("获取签名成功");
     });
 
     wx.error(function(res){
-        //alert("获取签名失败");
+        alert("获取签名失败");
     });
 })
 

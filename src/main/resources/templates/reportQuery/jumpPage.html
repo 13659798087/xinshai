@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="/js/fastclick.js"></script>
+<script src="/js/jquery-weui.min.js"></script>
+<link href="/css/jquery-weui.min.css" rel="stylesheet" />
+<link href="/css/weui.min.css" rel="stylesheet" />
+<link href="/css/demos.css" rel="stylesheet" />
+
+<link href="/css/style.css" rel="stylesheet" />
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script src="/js/JS-SDK.js"></script>
+
+
+    <!-- 获取ip -->
+    <script type='text/javascript'  src="http://pv.sohu.com/cityjson?ie=utf-8" ></script>
+    <!-- 获取设备名称和型号 -->
+    <script src="/js/mobile-detect.js"></script>
+
+</head>
+<body>
+
+<div>
+
+    <input type="hidden"  id="c_sid"  th:value="${c_sid}"  />
+    <input type="hidden"  id="rptno"  th:value="${rptno}" />
+    <input type="hidden"  id="c_combine"  th:value="${c_combine}" />
+
+</div>
+
+</body>
+
+<script>
+
+	$(function(){
+
+        var ipAddress = returnCitySN.cip;//获取ip
+
+        var deviceName = "";
+
+        Array.prototype.contains = function(needle) {
+            for (i in this) {
+                if (this[i].indexOf(needle) > 0)
+                    return i;
+            }
+            return -1;
+        }
+
+        var device_type = navigator.userAgent;//获取userAgent信息
+        //document.write(device_type);//打印到页面
+        var md = new MobileDetect(device_type);//初始化mobile-detect
+        var os = md.os();//获取系统
+        var model = "";
+        if (os == "iOS") {//ios系统的处理
+            os = md.os() + md.version("iPhone");
+            model = md.mobile();
+        } else if (os == "AndroidOS") {//Android系统的处理
+            os = md.os() + md.version("Android");
+            var sss = device_type.split(";");
+            var i = sss.contains("Build/");
+            if (i > -1) {
+                model = sss[i].substring(0, sss[i].indexOf("Build/"));
+            }
+        }
+        //alert(os + "---" + model);//打印系统版本和手机型号
+
+        deviceName = os + "---" + model;
+
+        var c_sid = $("#c_sid").val();
+        var c_combine =$("#c_combine").val();
+        var rptno = $("#rptno").val();
+
+        location.href="/reportQuery/middlePage?c_sid="+c_sid+"&c_combine="+c_combine+"&rptno="
+                             +rptno+"&ipAddress="+ipAddress+"&deviceName="+deviceName;
+
+	})
+
+</script>
+</html>

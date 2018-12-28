@@ -48,7 +48,7 @@
 			padding: 14px 30px;
 			border-bottom: solid 1px #eef0f1;
 		}
-		.changeWechatMenu{float: left;margin:1%;}
+		.changeWechatMenu{float: left;margin:0.8% 1%;}
 	</style>
 
 </head>
@@ -57,7 +57,7 @@
 <button  class="btn btn-primary changeWechatMenu" >更新公众号关注用户</button>
 <div class="tableDiv">
 	<div id="toolbar" class="btn-group">
-		<div class="queryList" style="width: 150%;margin-top: 0.9%;">
+		<div class="queryList" style="width: 150%;margin-top: 1.5%;">
 
 			<div class="myLabel-content queryText" >用户名：</div>
 			<div class="myText-content" style="float: left;">
@@ -399,7 +399,7 @@
                     align: "center",//水平
                     valign: "middle",
                     visible:true,
-                    width: '15%',
+                    width: '7%',
                     titleTooltip: "微信用户昵称",
 
                 },
@@ -410,7 +410,7 @@
                     align: "center",//水平
                     valign: "middle",
                     titleTooltip: "关注时间",
-                    width: '12%',
+                    width: '7%',
                     visible:true,
                     formatter: function(value,row,index){
                         if(value!="" && value!=null){
@@ -422,21 +422,21 @@
                 },
                 {
                     title: "是否关注",
-                    field: "sex",
+                    field: "concerns",
                     sortable: true,//是否可排序
                     align: "center",//水平
                     valign: "middle",
                     visible:true,
                     width: '5%',
                     formatter: function(value,row,index){
-                        if(value = '0'){
+                        if(value == 0){
                             return "关注";
                         }else{
                             return "取消关注";
                         }
                     }
                 },
-                {
+               /* {
                     title: "备注",
                     field: "remark",
                     sortable: true,//是否可排序
@@ -451,7 +451,7 @@
                             return"-";
                         }
                     }
-                },
+                },*/
                 {
                     title: "性别",
                     field: "sex",

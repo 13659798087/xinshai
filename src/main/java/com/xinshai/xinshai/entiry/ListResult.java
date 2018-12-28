@@ -1,17 +1,15 @@
 package com.xinshai.xinshai.entiry;
 
-import com.xinshai.xinshai.model.Template;
-
-import java.sql.Timestamp;
-
 public class ListResult {
 
+    private String id;
     private String openId;
     private String patientId;
     private String tid;
-    private Integer type;
-    private Timestamp createTime;
     private String templateId;
+    private Integer flag;
+    private Integer type;
+    private Integer success;
     private String first;
     private String keyword1;
     private String keyword2;
@@ -22,14 +20,65 @@ public class ListResult {
     private String keyCount;
     private String bloodCard;
     private String m_name;
-    private Integer isPass;
+    private String c_id;
+    private String c_combine_code;
+    private String authorHospital;
 
-    public Integer getIsPass() {
-        return isPass;
+
+    public Integer getSuccess() {
+        return success;
     }
 
-    public void setIsPass(Integer isPass) {
-        this.isPass = isPass;
+    public void setSuccess(Integer success) {
+        this.success = success;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getAuthorHospital() {
+        return authorHospital;
+    }
+
+    public void setAuthorHospital(String authorHospital) {
+        this.authorHospital = authorHospital;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getC_id() {
+        return c_id;
+    }
+
+    public void setC_id(String c_id) {
+        this.c_id = c_id;
+    }
+
+    public String getC_combine_code() {
+        return c_combine_code;
+    }
+
+    public void setC_combine_code(String c_combine_code) {
+        this.c_combine_code = c_combine_code;
     }
 
     public String getOpenId() {
@@ -62,22 +111,6 @@ public class ListResult {
 
     public void setType(Integer type) {
         this.type = type;
-    }
-
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(String templateId) {
-        this.templateId = templateId;
     }
 
     public String getFirst() {

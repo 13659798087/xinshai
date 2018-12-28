@@ -22,9 +22,6 @@ public class SignUtil {
         //3、时间戳和随机字符串
         String noncestr = create_nonce_str();
         String timestamp = create_timestamp();
-
-        //System.out.println("accessToken:"+accessToken+"\njsapi_ticket:"+jsapi_ticket+"\n时间戳："+timestamp+"\n随机字符串："+noncestr);
-
         //4、获取url
         //String url="http://wx.lznsn.com/personalData/personal";
         /*根据JSSDK上面的规则进行计算，这里比较简单，我就手动写啦

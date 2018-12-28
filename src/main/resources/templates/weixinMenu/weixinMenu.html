@@ -54,6 +54,8 @@
 			color: red;
 		}
 		.changeWechatMenu{float: left;margin:1%;}
+
+		td {white-space:nowrap;}
 	</style>
 
 </head>
@@ -77,7 +79,11 @@
 	        windowPoint("确定更新微信公众号微信菜单？")
             document.getElementsByClassName("ok")[0].addEventListener("click",function(event){
                 $.get("/open/weixinMenu/updateWeChatMenu",{},function(data){
-                    windowSuccess("更新微信公众号菜单成功");
+                    if(data==0){
+                        windowSuccess("更新微信公众号菜单成功");
+					}else{
+                        windowError("新微信公众号菜单失败")
+					}
                 })
             },false);
 
@@ -102,10 +108,14 @@
 
     $(function () {
         var heights=window.innerHeight;
+
+        /*alert(window.innerHeight);
+        alert( $(window).height());*/
+
 		var $table = $('#table');
         $table.bootstrapTable({
             url: '/open/weixinMenu/getData',
-            height: $(window).height()*0.7,
+            height: $(window).height()*0.8,
             striped: true,
             sidePagination: 'server',
             idField: 'id',
@@ -123,7 +133,8 @@
                 },
                 {
                     field: 'name',
-                    title: '名称'
+                    title: '名称',
+                    width: '25%',
                 },
                 {
                     field: 'type',
@@ -140,19 +151,20 @@
                     title: '菜单key',
                     align: 'center',
                 },
-                /*{
-                    field: 'status',
-                    title: '状态',
+                {
+                    field: 'mainName',
+                    title: '拼接域名',
                     sortable: true,
                     align: 'center',
-                    formatter: 'statusFormatter'  },*/
-                {
+                    formatter: 'statusFormatter'  },
+                /*{
                     field: 'permissionValue',
                     title: '权限值'
-                },
+                },*/
                 { field: 'operate',
                     title: '操作',
                     align: 'center',
+                    width: '15%',
                     events : operateEvents,
                     formatter: 'operateFormatter'
                 }
@@ -192,10 +204,11 @@
     }
     // 格式化状态
     function statusFormatter(value, row, index) {
+        debugger
         if (value === 1) {
-            return '<span class="label label-success">正常</span>';
-        } else {
-            return '<span class="label label-default">锁定</span>';
+            return '<span class="label label-default">否</span>';
+        }if (value === 0) {
+            return '<span class="label label-success">是</span>';
         }
     }
 

@@ -37,8 +37,11 @@
 <div id="app">
 
 	<div class='demos-content-padded'  >
-		<a href="javascript:" class="weui-btn weui-btn_primary" v-for="c in listCombine" >{{c.c_code}}</a>
+		<a  v-for="c in listCombine"  :href="c.src"  class="weui-btn weui-btn_primary" >
+			 {{c.c_name}}
+		</a>
 	</div>
+
 
 
 <!--	<div class="myText-content" style="float: left;width: 115px;">

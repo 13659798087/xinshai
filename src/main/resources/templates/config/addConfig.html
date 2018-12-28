@@ -53,8 +53,8 @@
 
 <div style="margin: 2%;" id="app" >
 	<input type="hidden" th:value="${sign}" id="sign" />
-	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增模板字典</h3>
-	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑模板字典</h3>
+	<h3 style="display: inline;" th:if="${type=='a'}"  th:id="${type}"  class="add">新增系统配置</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}"  th:id="${type}"  class="edit">编辑系统配置</h3>
 
 	<form  action="/open/config/createConfig"  id="signForm"  method="post">
 
@@ -75,8 +75,9 @@
 				<div class="star1">&nbsp;</div>
 				<!--<input type="text"  name="cf_flag" id="cf_flag"  th:value="${cf_flag}" class="form-control inputRight" />-->
 				<select  name="cf_flag" id="cf_flag"  th:value="${cf_flag}" class="form-control inputRight">
-					<option>1</option>
-					<option>0</option>
+					<option value="" >请选择</option>
+					<option value="1" th:selected="${cf_flag=='1'}" >1</option>
+					<option value="0" th:selected="${cf_flag=='0'}">0</option>
 				</select>
 			</div>
 		</div>
@@ -85,7 +86,8 @@
 			<div style="float: left;width: 45%;">
 				<div  class="leftTitle" >值：</div>
 				<div class="star1">*</div>
-				<input type="text"  name="cf_val" id="cf_val"  th:value="${cf_val}" class="form-control inputRight" />
+				<input  type="text"  name="cf_val" id="cf_val"  th:value="${cf_val}" class="form-control inputRight"
+					onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" />
 			</div>
 			<div style="float: left;width: 45%;">
 				<div class="leftTitle" >意义：</div>
@@ -98,7 +100,8 @@
 			<div style="float: left;width: 45%;">
 				<div class="leftTitle" >排序：</div>
 				<div class="star1">&nbsp;</div>
-				<input type="text"  name="orderNum" id="orderNum"  th:value="${orderNum}" class="form-control inputRight" />
+				<input type="text"  name="orderNum" id="orderNum" th:value="${orderNum=='null'?'':orderNum}"  class="form-control inputRight"
+					   onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"/>
 			</div>
 		</div>
 
@@ -141,15 +144,8 @@
                 });
                 $("#menus").val( array.toString() );
             });
-            var organizationId = $("#organizationId").val();
-            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
-                $("#organizationName").text(data.name);
-            })
-        }
-        $.get("/menu/getAllMenu",{},function(data){
-            map.menu = data;
-        })
 
+        }
 	});
 
 	//bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
@@ -198,116 +194,6 @@
         }
 
     });
-
-    $("#getRole").click(function(){
-        $(".yesSel").each(function(i,e1){
-
-            $(".roleLeft").each(function(i,e2){
-
-                if(e2.id==$(e1).attr("name")){
-                    $(e2).prev().prop("checked",true);
-                }
-            })
-        })
-
-	});
-
-	$("#addMenu").click(function(){
-	    $("#sign1").html('');
-
-	    var array = [];
-
-	    $(".checkInput").each(function(i,e){
-	        if(e.checked==true){
-                var val = $(e).next().text();
-                array.push( $(e).next().attr("id") );
-				$("#sign1").append('<span class="label label-success pad1" >'+val+'</span>');
-			}
-		});
-
-        $("#menus").val( array.toString() );
-
-	});
-
-
-
-	$("#selectPart").click(function(){
-		$.get("/organization/getTree",{},function(zNodes){
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-			$("#selectAll").bind("click", selectAll);
-		})
-
-
-
-
-	});
-
-
-    //以下是zTree的js代码
-
-    /*zTree   start */
-
-    var setting = {
-
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        callback: {
-			onClick:onClick,
-            onAsyncSuccess: zTreeOnAsyncSuccess
-
-        }
-    };
-
-    function onClick(e,treeId, treeNode){
-        debugger;
-        //将选中的单位的id赋给隐藏的input框
-        $("#organizationId").val(treeNode.id);
-        $("#organizationName").text(treeNode.name);
-    }
-
-    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
-        debugger;
-        alert(msg);
-    }
-    var log, className = "dark";
-
-    function getTime() {
-        var now= new Date(),
-            h=now.getHours(),
-            m=now.getMinutes(),
-            s=now.getSeconds(),
-            ms=now.getMilliseconds();
-        return (h+":"+m+":"+s+ " " +ms);
-    }
-
-    function selectAll() {
-        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
-    }
-
-    /*zTree   end */
-
-
-
-	/*function checkTo(e){
-	    if( $(e).find("input").get(0).checked==true ){  //js
-            $(e).find("input").attr("checked",false);
-		}else{
-            $(e).find("input").attr("checked",true);
-		}
-	}*/
-
-    function checkTo(e){
-        if( $(e).find("input").is(":checked")==true ){  //jquery
-            $(e).find("input").attr("checked",false);
-        }else{
-            $(e).find("input").attr("checked",true);
-        }
-    }
-
 
 	/*]]>*/
 </script>

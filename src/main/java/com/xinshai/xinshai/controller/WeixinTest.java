@@ -24,12 +24,13 @@ public class WeixinTest {
 
     public static void main(String[] args) throws IOException {
 
-            AccessToken token = WeixinUtil.getAccessToken();
-
+            /*AccessToken token = WeixinUtil.getAccessToken();
             System.out.println("------------票据----------------"+token.getToken());
             System.out.println("------------有效时间------------"+token.getExpires_in());
+            String path = "E:/image/asd.jpg";*/
 
-            String path = "E:/image/asd.jpg";
+
+
             //String media = WeixinUtil.upload(path,token.getToken(),"image");
 
             //String media = WeixinUtil.upload(path,token.getToken(),"thumb");

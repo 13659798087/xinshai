@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>新筛信息录入</title>
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="/js/fastclick.js"></script>
+<script src="/js/jquery-weui.min.js"></script>
+<link href="/css/jquery-weui.min.css" rel="stylesheet" />
+<link href="/css/weui.min.css" rel="stylesheet" />
+<link href="/css/demos.css" rel="stylesheet" />
+
+<link href="/css/style.css" rel="stylesheet" />
+
+
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script src="/js/JS-SDK.js"></script>
+
+
+<style>
+
+	input[type="date"]:before{color:#A9A9A9;content:attr(placeholder);}
+	input[type="date"].full:before {color:black;content:""!important;}
+
+</style>
+
+</head>
+<body style="background-color: white;">
+
+<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+		<div class="weui-cell__hd">
+			<img  id="img1"  style="width: 40px;">
+		</div>
+		<div class="weui-cell__bd">
+			<span style="font-size: 20px;font-weight: 500;">新生儿筛查信息登记</span>
+		</div>
+	</div>
+
+
+<form action="/personalData/submitInformation" method="post">
+
+	<div>
+		<div class="weui-cell" style="padding: 0px 15px;">
+			<div class="weui-cell__hd"><label class="weui-label">胎儿数：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<div class="weui-cells weui-cells_radio" style="margin-top: 0px;">
+					<label class="weui-cell weui-check__label" for="x11" style="padding: 10px 0px;float: left;width:29%;" >
+						<div class="weui-cell__bd" >
+							单胎
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="tes" value="1"  id="x11" checked="checked">
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width:20%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x12" style="padding: 10px 0px;float:left;width:29%;">
+						<div class="weui-cell__bd">
+							双胎
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="tes" value="2" id="x12" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 20%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x13" style="padding: 10px 0px;float:left;width: 29%;">
+						<div class="weui-cell__bd">
+							三胎
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="tes" value="3" id="x13" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 20%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x14" style="padding: 10px 0px;float:left;width: 29%;">
+						<div class="weui-cell__bd">
+							四胎
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="tes" value="4" id="x14" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="weui-cell class11"  >
+			<div class="weui-cell__hd"><label class="weui-label">采血卡号：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input class="weui-input scanQRCode11" style="width: 75%;" name="bloodCard" id="bloodCardLen" type="text"
+				 placeholder="采血卡片上的条码">
+				<img id="scanQRCode" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
+			</div>
+		</div>
+
+		<div class="weui-cell class11" >
+			<div class="weui-cell__hd"><label class="weui-label">孕周：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input id="w" class="weui-input" placeholder="孕周" name="pregnancyWeek"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>周</span>
+			<span style="width: 15%;">&nbsp;</span>
+			<div class="weui-cell__bd" >
+				<input id="w1" class="weui-input"  placeholder="孕天" name="pregnancyDay"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>天</span>
+			<span style="width: 20%;">&nbsp;</span>
+		</div>
+
+		<div class="weui-cell class11" >
+			<div class="weui-cell__hd"><label class="weui-label">出生日期：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input date" type="date" name="bithday"  placeholder="小孩的出生日期" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+		<div class="weui-cell class11" style="padding: 0px 15px;" >
+			<div class="weui-cell__hd"><label class="weui-label">婴儿性别：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<div class="weui-cells weui-cells_radio" style="margin-top: 0px;">
+					<label class="weui-cell weui-check__label" for="x21" style="padding: 10px 0px;float: left;width: 25%;" >
+						<div class="weui-cell__bd" >
+							男
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex" value="1" id="x21" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x22" style="padding: 10px 0px;float:left;width: 25%;">
+						<div class="weui-cell__bd">
+							女
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex" value="2" id="x22" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="weui-cell class11" >
+			<div class="weui-cell__hd"><label class="weui-label" style="padding-right: 15px;">婴儿出生体重（克）：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="weigh" name="weigh"  placeholder="婴儿出生体重" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+
+
+
+		<div  class="class11" style="height: 3px;background-color: green;width: 100%;">&nbsp;</div>
+
+		<div class="weui-cell class22" style="display: none;">
+			<div class="weui-cell__hd"><label class="weui-label">采血卡号2：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd"  >
+				<input class="weui-input scanQRCode211" style="width: 75%;" name="bloodCard2" id="bloodCardLen2" type="text"
+					    placeholder="采血卡片2的条码">
+				<img  id="scanQRCode2" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
+			</div>
+		</div>
+
+		<div class="weui-cell class22"  style="display:none;">
+			<div class="weui-cell__hd"><label class="weui-label">孕周2：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input  class="weui-input" placeholder="孕周" name="pregnancyWeek2"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>周</span>
+			<span style="width: 15%;">&nbsp;</span>
+			<div class="weui-cell__bd" >
+				<input class="weui-input"  placeholder="孕天" name="pregnancyDay2"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>天</span>
+			<span style="width: 20%;">&nbsp;</span>
+		</div>
+		<div class="weui-cell class22"  style="display:none;" >
+			<div class="weui-cell__hd"><label class="weui-label">出生日期：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input date" type="date" name="bithday2"  placeholder="婴儿2的出生日期" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+		<div class="weui-cell class22" style="padding: 0px 15px;display: none;"  >
+			<div class="weui-cell__hd"><label class="weui-label">婴儿2性别：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<div class="weui-cells weui-cells_radio" style="margin-top: 0px;">
+					<label class="weui-cell weui-check__label" for="x23" style="padding: 10px 0px;float: left;width: 25%;" >
+						<div class="weui-cell__bd" >
+							男
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex2" value="1" id="x23" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x24" style="padding: 10px 0px;float:left;width: 25%;">
+						<div class="weui-cell__bd">
+							女
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex2" value="2" id="x24" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="weui-cell class22" style="display:none;">
+			<div class="weui-cell__hd"><label class="weui-label" style="padding-right: 15px;">婴儿2出生体重（克）：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input" type="" name="weigh2"  placeholder="婴儿3出生体重" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+
+
+
+		<div  class="class22" style="height: 3px;display: none;background-color: green;width: 100%;">&nbsp; </div>
+
+		<div class="weui-cell class33"  style="display: none;">
+			<div class="weui-cell__hd"><label class="weui-label">采血卡号3：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input class="weui-input scanQRCode311"  style="width: 75%;" name="bloodCard3" id="bloodCardLen3" type="text"
+					  placeholder="采血卡片3的条码">
+				<img id="scanQRCode3" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
+			</div>
+		</div>
+
+		<div class="weui-cell class33"  style="display:none;" >
+			<div class="weui-cell__hd"><label class="weui-label">孕周3：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input  class="weui-input" placeholder="孕周" name="pregnancyWeek3"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>周</span>
+			<span style="width: 15%;">&nbsp;</span>
+			<div class="weui-cell__bd" >
+				<input class="weui-input"  placeholder="孕天" name="pregnancyDay3"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>天</span>
+			<span style="width: 20%;">&nbsp;</span>
+		</div>
+
+		<div class="weui-cell class33"  style="display:none;" >
+			<div class="weui-cell__hd"><label class="weui-label">出生日期：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input date" type="date" name="bithday3"  placeholder="婴儿3的出生日期" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+		<div class="weui-cell class33" style="padding: 0px 15px;display: none;"   >
+			<div class="weui-cell__hd"><label class="weui-label">婴儿3性别：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<div class="weui-cells weui-cells_radio" style="margin-top: 0px;">
+					<label class="weui-cell weui-check__label" for="x25" style="padding: 10px 0px;float: left;width: 25%;" >
+						<div class="weui-cell__bd" >
+							男
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex3" value="1" id="x25" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x26" style="padding: 10px 0px;float:left;width: 25%;">
+						<div class="weui-cell__bd">
+							女
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex3" value="2" id="x26" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="weui-cell class33" style="display:none;">
+			<div class="weui-cell__hd"><label class="weui-label" style="padding-right: 15px;">婴儿3出生体重（克）：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input" type="" name="weigh3"  placeholder="婴儿3出生体重" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+
+
+		<div  class="class33" style="height: 3px;display: none;background-color: green;width: 100%;"> &nbsp;</div>
+
+		<div class="weui-cell class44"  style="display: none;">
+			<div class="weui-cell__hd"><label class="weui-label">采血卡号4：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input class="weui-input scanQRCode411" style="width: 75%;" name="bloodCard4" id="bloodCardLen4" type="text"
+					  placeholder="采血卡片4的条码">
+				<img id="scanQRCode4" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
+			</div>
+		</div>
+
+		<div class="weui-cell class44"  style="display:none;" >
+			<div class="weui-cell__hd"><label class="weui-label">孕周4：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd" >
+				<input  class="weui-input" placeholder="孕周" name="pregnancyWeek4"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>周</span>
+			<span style="width: 15%;">&nbsp;</span>
+			<div class="weui-cell__bd" >
+				<input  class="weui-input"  placeholder="孕天" name="pregnancyDay4"  style="height:41px;overflow: hidden;">
+			</div>
+			<span>天</span>
+			<span style="width: 20%;">&nbsp;</span>
+		</div>
+
+		<div class="weui-cell class44"  style="display:none;" >
+			<div class="weui-cell__hd"><label class="weui-label">出生日期：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input date" type="date" name="bithday4"  placeholder="婴儿4的出生日期" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+		<div class="weui-cell class44" style="padding: 0px 15px;display: none;"  >
+			<div class="weui-cell__hd"><label class="weui-label">婴儿4性别：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<div class="weui-cells weui-cells_radio" style="margin-top: 0px;">
+					<label class="weui-cell weui-check__label" for="x27" style="padding: 10px 0px;float: left;width: 25%;" >
+						<div class="weui-cell__bd" >
+							男
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex4" value="1" id="x27" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+
+					<label class="weui-cell weui-check__label" for="x28" style="padding: 10px 0px;float:left;width: 25%;">
+						<div class="weui-cell__bd">
+							女
+						</div>
+						<div class="weui-cell__ft">
+							<input type="radio" class="weui-check" name="sex4" value="2" id="x28" >
+							<span class="weui-icon-checked"></span>
+						</div>
+					</label>
+					<span style="width: 25%;float:left;">&nbsp;</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="weui-cell class44" style="display:none;">
+			<div class="weui-cell__hd"><label class="weui-label" style="padding-right: 15px;">婴儿4出生体重（克）：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input  class="weui-input" type="" name="weigh4"  placeholder="婴儿4出生体重" style="height:41px;overflow: hidden;">
+			</div>
+		</div>
+
+
+		<div  class="class44" style="height: 3px;display: none;background-color: green;width: 100%;"> &nbsp;</div>
+
+
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">住院号：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" name="hospitalNo" type="text" placeholder="住院号">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">母亲姓名：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" name="m_name" type="text" placeholder="母亲姓名">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">母亲手机：<span style="color: red;">*</span></label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="tel" name="tel" placeholder="母亲手机">
+			</div>
+		</div>
+
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">母亲年龄：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="" name="m_age" placeholder="母亲年龄">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">父亲姓名：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" name="f_name" type="text" placeholder="父亲姓名">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">父亲手机：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="tel" name="tel_2" placeholder="父亲手机">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">居住地址：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="" name="address" placeholder="居住地址">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label" style="padding-right: 15px;">经历过几次怀孕：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="" name="pregnanciesNum" placeholder="怀孕次数">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label" style="padding-right: 15px;">这是第几次分娩：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="" name="deliverNum" placeholder="分娩次数">
+			</div>
+		</div>
+
+
+
+		<div class='demos-content-padded'  >
+			<input type=submit name="submit1" onclick="return check(this.form)" value="确定提交" class="weui-btn weui-btn_primary" >
+		</div>
+		<br/>
+		<div class="weui-footer">
+			<!--<p class="weui-footer__links">
+				<a href="javascript:void(0);" class="weui-footer__link">底部链接</a>
+			</p>-->
+			<p class="weui-footer__text"  id="searchMsg"  style="text-align: left;padding: 0px 20px;">
+				<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;温馨提示：请输入采血时在卡片上留下的手机号码与宝宝准确的出生日期。
+				如您多次未能绑定成功，请拔打中心电话 <a href="tel://12345678">12345678</a>咨询。-->
+			</p>
+		</div>
+	</div>
+
+</form>
+<div>
+
+
+</div>
+
+</body>
+
+<script>
+
+	$("#x11,#x12,#x13,#x14").click(function(){
+
+		if(this.value=='1'){
+            $(".class11").show();
+			$(".class22").hide();
+            $(".class33").hide();
+            $(".class44").hide();
+		}
+        if(this.value=='2'){
+            $(".class11").show();
+            $(".class22").show();
+            $(".class33").hide();
+            $(".class44").hide();
+        }
+        if(this.value=='3'){
+            $(".class11").show();
+            $(".class22").show();
+            $(".class33").show();
+            $(".class44").hide();
+        }
+        if(this.value=='4'){
+            $(".class11").show();
+            $(".class22").show();
+            $(".class33").show();
+            $(".class44").show();
+        }
+	})
+
+
+
+	//采血卡片条码号
+    var bloodCardLen;
+
+    $(function() {
+
+        $.get("/signpic/getSignpicId",{},function(data){
+            $("#img1").attr("src","/signpic/Pictureshows?id="+data );
+        })
+
+        FastClick.attach(document.body);
+        $.get("/open/config/barcodeLength",{},function(data){
+            bloodCardLen = data.bloodCardLen;
+        })
+
+        $.get("/open/dynamicConfig/searchMsg",{},function(data){
+            $("#searchMsg").append('<span>'+data+'</span>');
+        })
+
+    });
+
+    $("#scanQRCode,#scanQRCode2,#scanQRCode3,#scanQRCode4").click(function(e){
+        wx.scanQRCode({
+            needResult: 1,
+            desc: 'scanQRCode desc',
+            scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有"qrCode"
+            success: function (res) {
+                //alert(JSON.stringify(res));
+                //alert(res.resultStr.split(",")[1]);
+                //var str = res.resultStr;
+                //$(".scanQRCode").val( res.resultStr.split(",")[1]  );
+				var aa = res.resultStr.split(",")[1];
+                var id = $(e.target).attr("id")+"11";
+                $("."+id).val( aa );
+            }
+        });
+    })
+
+/*
+
+	$(".scanQRCode").on("click",".scanQRCode",function(){      //只需要找到你点击的是哪个ul里面的就行
+
+		alert($(this));
+	});
+*/
+
+
+    function check(form) {
+
+            //alert(form.tes.value);
+
+        if(form.bloodCard.value=='') {
+            $.alert("请扫一扫采血卡号上的条形码", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.m_name.value=='') {
+            $.alert("请输入母亲姓名", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.tel.value==''){
+            $.alert("请输入母亲手机号码", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+        if(form.tel.value.length!=11){
+            $.alert("电话号码长度不正确", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+        if(form.pregnancyWeek.value=='') {
+            $.alert("请输入孕周", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.pregnancyDay.value=='') {
+            $.alert("请输入孕天", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+
+        if(form.sex.value=='') {
+            $.alert("请选中婴儿性别", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.bithday.value==''){
+            $.alert("请输入小孩出生日期", "提示！");
+            //form.s_birthday.focus();
+            return false;
+        }
+        if(form.weigh.value==''){
+            $.alert("请输入婴儿出生体重", "提示！");
+            //form.s_birthday.focus();
+            return false;
+        }
+        var a = form.bithday.value;
+        var date1 = new Date(a);//输入时间
+        var date2 = new Date();//当前时间
+        if(date1.getTime() > date2.getTime()){//转换成毫秒进行比较
+            //console.log('第一个大');
+            $.alert("输入日期不能大于当前时间", "提示！");
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+    $(".date").on("input",function(){
+        if($(this).val().length>0){
+            $(this).addClass("full");
+        }
+        else{
+            $(this).removeClass("full");
+        }
+    });
+
+    $('.delete-swipeout').click(function () {
+        $(this).parents('.weui-cell').remove()
+    });
+    $('.close-swipeout').click(function () {
+        $(this).parents('.weui-cell').swipeout('close')
+    })
+
+
+
+
+
+</script>
+</html>

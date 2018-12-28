@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>报告结果</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<link href="../css/style.css" rel="stylesheet" />
+
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script src="../js/JS-SDK.js"></script>
+
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+    <script src="../js/fastclick.js"></script>
+    <script src="../js/jquery-weui.min.js"></script>
+    <link href="../css/jquery-weui.min.css" rel="stylesheet" />
+    <link href="../css/weui.min.css" rel="stylesheet" />
+    <link href="../css/demos.css" rel="stylesheet" />
+
+</head>
+<body style="background-color: white;">
+
+    <div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+        <div class="weui-cell__hd"><img src="../img/yichun.png"></div>
+        <div class="weui-cell__bd">
+            <span style="font-size: 18px;color: #1A9E39;">新生儿疾病筛查</span>
+        </div>
+    </div>
+
+    <center style="margin-top: 15%;" th:if="${listSize==0}">
+        <div>
+            <img src="../img/report.png" />
+        </div>
+        <div style="margin-top: 15%">暂时没查找到报告明细！</div>
+    </center>
+
+<!--    th:href="@{/reportQuery/personReport(patientId=${a.patientId})}"-->
+
+    <div th:each="a:${list}" style="color:black;" >
+        <div class="weui-cells" style="border: 3px solid #1A9E39;border-radius: 12px;color: black;margin: 10px 15px;">
+            <a th:href="@{/reportQuery/jumpPage(c_sid=${a.c_sid},c_combine=${a.c_combine},rptno=${a.rptno})}" class="weui-cell weui-cell_access"  >
+                <div class="weui-cell__bd">
+                    <div>
+                        <label>报告类型：</label><span th:text="${a.bgtype}"></span>
+                    </div>
+                    <div>
+                        <label>报告项目：</label><span  th:text="${a.bgname}"></span>
+                    </div>
+                </div>
+                <div class="weui-cell__ft">
+                    查看
+                </div>
+            </a>
+        </div>
+    </div>
+
+</body>
+
+<script>
+
+</script>
+</html>

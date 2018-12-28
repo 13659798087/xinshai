@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<link href="../css/style.css" rel="stylesheet" />
+
+	<!-- 获取ip -->
+	<script type='text/javascript'  src="http://pv.sohu.com/cityjson?ie=utf-8" ></script>
+	<!-- 获取设备名称和型号 -->
+	<script src="../js/mobile-detect.js"></script>
+
+	<!--微信js-->
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script src="../js/JS-SDK.js"></script>
+
+
+<style>
+
+	input[type="date"]:before{color:#A9A9A9;content:attr(placeholder);}
+	input[type="date"].full:before {color:black;content:""!important;}
+
+</style>
+
+</head>
+<body style="background-color: white;">
+
+<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+		<div class="weui-cell__hd">
+			<img  id="img1"  style="width: 40px;">
+		</div>
+		<div class="weui-cell__bd">
+			<span style="font-size: 20px;font-weight: 500;">输入查询资料</span>
+		</div>
+	</div>
+
+
+<form action="/reportQuery/submitQuery" id="formSubmit" method="post">
+	<input  type="hidden" name="deviceName"  id="deviceName" />
+	<input  type="hidden" name="ipAddress"   id="ipAddress" />
+
+	<div>
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">采血卡号：</label></div>
+			<div class="weui-cell__bd" >
+				<input class="weui-input" style="width: 75%;" name="bloodCard" id="bloodCardLen" type="text" placeholder="采血卡片上的条码">
+				<img id="scanQRCode2" src="../img/scanCode.png" style="width: 28px;margin-left: 2%;"/>
+			</div>
+		</div>
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">母亲姓名：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" name="m_name" type="text" placeholder="母亲（或受检人）姓名">
+			</div>
+		</div>
+
+		<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label">出生日期：</label></div>
+		<div class="weui-cell__bd">
+			<input id="date" class="weui-input" type="date" name="bithday"  placeholder="小孩的出生日期" style="height:41px;overflow: hidden;">
+		</div>
+	    </div>
+
+		<div class="weui-cell weui-cell_vcode">
+			<div class="weui-cell__hd"><label class="weui-label">验证码：</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="text" id="validCode" placeholder="请输入验证码">
+			</div>
+			<div class="weui-cell__ft" >
+				<img class="weui-vcode-img" name="validCode" id="img" onclick="refresh()"  style="width: 90%;margin-right: 20%;" src="/login/queryValidateCode" /> <!--src="../img/images/vcode.jpg"-->
+			</div>
+		</div>
+
+		<div class='demos-content-padded'  >
+			<input type="button" onclick="return check(this.form)" value="查询" class="weui-btn weui-btn_primary" >
+		</div>
+		<br/>
+
+	</div>
+
+
+	<div class="weui-cell" >
+		<div class="weui-cell__bd"  style="text-align: center;font-size: 14px;color: darkgray;">
+			<span>采血卡号为必填，母亲姓名和出生日期至少要填写一个</span>
+		</div>
+	</div>
+
+</form>
+<div>
+
+
+</div>
+
+</body>
+
+<script>
+
+    function refresh() {
+        var url = "/login/queryValidateCode?number="+Math.random();
+        $("#img").attr("src",url);
+    }
+
+
+	//采血卡片条码号
+    var bloodCardLen;
+
+    $(function() {
+        $.get("/signpic/getSignpicId",{},function(data){
+            $("#img1").attr("src","/signpic/Pictureshows?id="+data );
+        })
+
+        FastClick.attach(document.body);
+
+        $.get("/open/config/barcodeLength",{},function(data){
+            bloodCardLen = data.bloodCardLen;
+        })
+
+        $.get("/open/dynamicConfig/searchMsg",{},function(data){
+            $("#searchMsg").append('<span>'+data+'</span>');
+        })
+
+        var ipAddress = returnCitySN.cip;//获取ip
+
+        var deviceName = "";
+
+        Array.prototype.contains = function(needle) {
+            for (i in this) {
+                if (this[i].indexOf(needle) > 0)
+                    return i;
+            }
+            return -1;
+        }
+
+        var device_type = navigator.userAgent;//获取userAgent信息
+        //document.write(device_type);//打印到页面
+        var md = new MobileDetect(device_type);//初始化mobile-detect
+        var os = md.os();//获取系统
+        var model = "";
+        if (os == "iOS") {//ios系统的处理
+            os = md.os() + md.version("iPhone");
+            model = md.mobile();
+        } else if (os == "AndroidOS") {//Android系统的处理
+            os = md.os() + md.version("Android");
+            var sss = device_type.split(";");
+            var i = sss.contains("Build/");
+            if (i > -1) {
+                model = sss[i].substring(0, sss[i].indexOf("Build/"));
+            }
+        }
+        //alert(os + "---" + model);//打印系统版本和手机型号
+
+        deviceName = os + "---" + model;
+
+        $("#ipAddress").val(ipAddress);
+        $("#deviceName").val(deviceName);
+
+    });
+
+
+    $("#scanQRCode2").click(function(){
+        wx.scanQRCode({
+            needResult: 1,
+            desc: 'scanQRCode desc',
+            scanType: ["barCode"], // 可以指定扫二维码还是一维码，默认二者都有"qrCode"
+            success: function (res) {
+                //alert(JSON.stringify(res));
+                //alert(res.resultStr.split(",")[1]);
+                //var str = res.resultStr;
+                $("#bloodCardLen").val( res.resultStr.split(",")[1]  );
+            }
+        });
+    })
+
+
+    function check(form) {
+        debugger
+        if(form.bloodCard.value=='') {
+            $.alert("请输入采血卡号", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.m_name.value=='' && form.bithday.value=='') {
+            $.alert("母亲姓名和出生日期要选填一个", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.bloodCard.value.length!=bloodCardLen){
+            $.alert("请输入"+bloodCardLen+"采血卡号", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+       /* if(form.bithday.value==''){
+            $.alert("请输入小孩出生日期", "提示！");
+            //form.s_birthday.focus();
+            return false;
+        }*/
+        var a = form.bithday.value;
+        var date1 = new Date(a);//输入时间
+        var date2 = new Date();//当前时间
+        if(date1.getTime() > date2.getTime()){//转换成毫秒进行比较
+            //console.log('第一个大');
+            $.alert("输入日期不能大于当前时间", "提示！");
+            return false;
+        }
+
+       if(form.validCode.value==''){
+            $.alert("请输入验证码", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+
+        $.get("/login/validateForCode",{"validCode":$("#validCode").val()},function(data){
+			if(data!='1'){
+                $.alert("输入的验证码错误", "提示！");
+                refresh();
+                return false;
+			}else{
+                $("#formSubmit").submit();
+			}
+		})
+
+
+
+    }
+
+    $("#date").on("input",function(){
+        debugger;
+        if($(this).val().length>0){
+            $(this).addClass("full");
+        }
+        else{
+            $(this).removeClass("full");
+        }
+    });
+
+    $('.delete-swipeout').click(function () {
+        $(this).parents('.weui-cell').remove()
+    });
+    $('.close-swipeout').click(function () {
+        $(this).parents('.weui-cell').swipeout('close')
+    })
+
+
+
+
+    /* for(var i=0;i<10;i++){
+         if(ipAddress=='' || ipAddress==null){
+             ipAddress =  returnCitySN.cip;
+         }else{
+             break;
+         }
+     }
+     for(var i=0;i<10;i++){
+         if(deviceName=='' || deviceName==null){
+             deviceName();
+         }else{
+             break;
+         }
+     }*/
+
+</script>
+</html>

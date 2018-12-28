@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DEMO</title>
+<link rel="stylesheet" type="text/css" href="/css/css.css" />
+<link href="/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="/Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="/Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="/js/jquery-3.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+	<!--ztree的css、js -->
+	<link rel="stylesheet" href="/css/demo.css" type="text/css" />
+	<link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+	<script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
+	<script type="text/javascript" src="/js/jquery.ztree.exedit.js"></script>
+
+	<!-- 引入vue.js -->
+	<script type='text/javascript'   src='/js/vue.min.js' ></script>
+
+	<script src="/js/until.sdk.format.js"></script>
+
+	<!--弹出框-->
+	<!--<link rel="stylesheet"  href="/css/xcConfirm.css"/>
+	<script type='text/javascript'  src="/js/xcConfirm.js"  charset="utf-8"></script>
+	<style type="text/css">
+		/*调整弹出框的样式，其他页面可能不用加，受样式影响，控件的样式已好看*/
+		.xcConfirm .popBox .ttBox {
+			height: 60px;
+			line-height: 30px;
+			padding: 14px 30px;
+			border-bottom: solid 1px #eef0f1;
+		}
+	</style>-->
+
+<style>
+	.leftTitle{float: left;width: 24%;text-align: right;}
+	.inputRight{width: 70%;float: left;}
+
+	.footer{
+		height: 180px;
+		width: 100%;
+		position: fixed;
+		bottom: 0;
+	}
+
+	.pad1{padding: 0px 4px;font-size: 14px;color: white;border-radius: 4px;display: inline-block;
+		margin-left: 0.6%;background-color: #337ab7;cursor: pointer;margin-top: 0.3%;}
+
+	.roleLeft{margin-left: 12%;}
+
+
+	a {text-decoration:none;}
+	body {
+		font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 14px;
+	}
+
+	.centerAdd {color: red;font-weight: bold;font-size: 16px;display: none;}
+	.centerEdit{color: red;font-weight: bold;font-size: 16px;display: none;}
+
+</style>
+</head>
+<body>
+
+<div style="margin: 2%;" id="app" >
+
+	<input type="hidden" th:value="${sign}" id="sign" />
+
+	<h3 style="display: inline;" th:if="${type=='a'}" th:id="${type}" class="add">新增用户</h3>
+	<h3 style="display: inline;" th:if="${type=='e'}" th:id="${type}" class="edit">编辑用户</h3>
+
+	<form action="/menu/changeMenu"  id="signForm" method="post">
+
+		<input type="hidden"  th:value="${id}" id="id"  name="id"/>
+		<input type="hidden"  th:value="${pid}" id="hidePid"  name="hidePid"/>
+
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >菜单名称：</div>
+				<input type="text"  name="name" id="name" th:value="${name}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >url地址：</div>
+				<input type="text" name="url" id="url" th:value="${url=='null'?'':url}" class="form-control inputRight" />
+			</div>
+
+		</div>
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;">
+			<div style="float: left;width: 45%;">
+				<div class="leftTitle" >菜单图标：</div>
+				<input type="text" name="icons" id="icons" th:value="${icons=='null'?'':icons}" class="form-control inputRight" />
+			</div>
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >排序：</div>
+				<input type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"
+					     name="orderNum"  id="orderNum" class="form-control inputRight"  th:value="${orderNum=='null'?'':orderNum}" />
+
+			</div>
+		</div>
+		<div style="height: 30px;line-height: 30px;margin-top: 2%;" >
+			<div style="float: left;width: 45%;">
+				<div  class="leftTitle" >父级菜单：</div>
+				<!--<input type="text" name="pId" id="pId" class="form-control inputRight" parentList/>-->
+				<select class="form-control inputRight"  id="pid" name="pid" v-model="varPid" >
+					<option value="">请选择</option>
+					<option v-for="p in parentList" :value="p.menuId">{{p.menuName}}</option>
+				</select>
+			</div>
+		</div>
+
+		<br/><br/><br/>
+		<center class="centerAdd" style="color: red;font-weight: bold;font-size: 16px;display: none;">新增成功</center>
+		<center class="centerEdit" style="color: red;font-weight: bold;font-size: 16px;display: none;">修改成功</center>
+
+		<div style="width: 20%;margin-left: 40%;" class="footer">
+			<span class="btn btn-primary" id="sureAdd" >确定</span>
+			<a class="btn btn-default" style="margin-left: 10%;"  href="/menu/menuTree">返回</a>
+		</div>
+
+	</form>
+
+</div>
+</body>
+
+<script>
+
+    var map={
+        yesRole: [],
+        role: [],
+        parentList: [],
+        varPid:"",
+
+    }
+    new Vue({
+        el: '#app',
+        data: map
+    })
+
+	$(function(){
+
+		var sign = $("#sign").val();
+		if("edit"==sign){
+		    $(".centerEdit").show();
+            $(".centerEdit").fadeOut(3000);
+		}else if("add"==sign){
+            $(".centerAdd").show();
+            $(".centerAdd").fadeOut(3000);
+		}
+
+	    if( $(".edit").attr("id")=='e' ){
+            $("#password").val(  $("#hidPassword").val() );
+            var userId = $("#userId").val();
+           /* $.get("/userPage/getRoleByUserId",{"userId":userId},function(data){
+                map.yesRole = data;
+                var array = new Array();
+                $(data).each(function(i,e){
+					array.push( e.roleId);
+                })
+
+                $("#roles").val( array.toString() );
+            })
+*/
+           /* var organizationId = $("#organizationId").val();
+            $.get("/organization/getOrg",{"organizationId":organizationId},function(data){
+
+              // $("#organizationId").val(data.id);
+                $("#organizationName").text(data.name);
+            })*/
+        }
+
+        $.get("/menu/parentList",{},function(data){
+            map.parentList = data;
+        })
+        map.varPid = $("#hidePid").val();
+
+	})
+
+	//bootstrap中常用到的下拉菜单dropdown-menu默认是当点击下拉菜单的任一位置就会关闭下拉菜单框了
+    $("body").on('click','[data-stopPropagation]',function (e) {
+        e.stopPropagation();
+    });
+
+
+
+
+	$("#sureAdd").click(function(){
+
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var type = $("#type").val();
+        var url = $("#url").val();
+        var icons = $("#icons").val();
+        var orderNum = $("#orderNum").val();
+
+		if (name.trim()==""){
+            windowPoint("用户名不能为空！");
+            return false;
+		}
+
+
+        /*else if(id==""){
+			//验证此单位是否已录入此用户
+			var organizationId = $("#organizationId").val();
+			$.get("/userPage/validateUser",{"organizationId":organizationId,"name":name},function(data){
+				if(data=='1'){
+                    var txt= "此用户已存在";
+                    window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+				}
+				else{
+                    $("#signForm").submit();
+				}
+			})
+		}
+
+        else if(id!=""){*/
+            $("#signForm").submit();
+        /*}*/
+
+	})
+
+    $("#getRole").click(function(){
+        $(".yesSel").each(function(i,e1){
+
+            $(".roleLeft").each(function(i,e2){
+
+                if(e2.id==$(e1).attr("name")){
+                    $(e2).prev().prop("checked",true);
+                }
+            })
+        })
+
+	})
+
+
+
+
+	$("#selectPart").click(function(){
+		$.get("/organization/getTree",{},function(zNodes){
+			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+			$("#selectAll").bind("click", selectAll);
+		})
+
+
+
+
+	})
+
+
+    //以下是zTree的js代码
+    /*zTree   start */
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+			onClick:onClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+    function onClick(e,treeId, treeNode){
+
+        //将选中的单位的id赋给隐藏的input框
+        $("#organizationId").val(treeNode.id);
+        $("#organizationName").text(treeNode.name);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+
+        alert(msg);
+    };
+    var log, className = "dark";
+    function selectAll() {
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
+    }
+    /*zTree   end */
+
+    function checkTo(e){
+        var array = new Array();
+        if( $(e).is(":checked")==true ){  //jquery
+            $("#sign1").html('');
+            $(".checkInput").each(function(i,e){
+                if(e.checked==true){
+                    var val = $(e).next().text();
+                    array.push( $(e).next().attr("id") );
+                    $("#sign1").append('<span class="pad1" >'+val+'</span>');
+                }
+            })
+        }else{
+            $("#sign1").html('');
+            $(".checkInput").each(function(i,e){
+                if(e.checked==true){
+                    var val = $(e).next().text();
+                    array.push( $(e).next().attr("id") );
+                    $("#sign1").append('<span class="pad1" >'+val+'</span>');
+                }
+            })
+        }
+
+        $("#roles").val( array.toString() );
+    }
+
+
+</script>
+
+</html>

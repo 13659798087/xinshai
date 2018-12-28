@@ -1,6 +1,5 @@
 package com.xinshai.xinshai.controller;
 
-import com.xinshai.xinshai.model.Organization;
 import com.xinshai.xinshai.model.UserInfo;
 import com.xinshai.xinshai.services.UserRoleMenuServices;
 import com.xinshai.xinshai.services.UserServices;
@@ -67,7 +66,7 @@ public class LoginController {
             session.setMaxInactiveInterval(60 * 60 * 12);//设置session有效时间为12小时，session有效时间单位是分
             //int a = request.getSession().getMaxInactiveInterval();//可以查看session时间
 
-            Organization organization = new Organization();
+            /*Organization organization = new Organization();
 
             Organization authorizeorganization = null;
 
@@ -92,13 +91,12 @@ public class LoginController {
                     session.setAttribute("AuthorizeId",AuthorizeId);//授权单位Id
 
                 }
-
-            }
+            }*/
 
             model.addAttribute("userName",username);
-            model.addAttribute("organizationName",organization.getName());
-            model.addAttribute("password",password);
-            model.addAttribute("AuthorizeName",AuthorizeName);
+            //model.addAttribute("organizationName",organization.getName());
+            //model.addAttribute("password",password);
+            //model.addAttribute("AuthorizeName",AuthorizeName);
 
             if(user!=null){
                 if(StringUtils.isEmpty(user.getUpdateTime()) ){//如果更新时间为null,说明此用户没登录过，就跳到修改密码的页面
@@ -143,6 +141,7 @@ public class LoginController {
         // 输出打web页面
         ImageIO.write(util.getImage(), "jpg", response.getOutputStream());
     }
+
 
     /**
      * shiro
@@ -245,10 +244,36 @@ public class LoginController {
         }
     }*/
 
+    //生成查询处的验证码
+    @RequestMapping("/queryValidateCode")
+    public void queryValidateCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 通知浏览器不要缓存
+        response.setHeader("Expires", "-1");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "-1");
+        CaptchaUtil util = CaptchaUtil.Instance();
+        // 将验证码输入到session中，用来验证
+        String validateCode = util.getString();
+        request.getSession().setAttribute("validateCode", validateCode);
+        // 输出打web页面
+        ImageIO.write(util.getImage(), "jpg", response.getOutputStream());
+    }
 
 
-
-
+    //验证验证码输入是否正确
+    @ResponseBody
+    @RequestMapping("/validateForCode")
+    public String validateForCode(HttpSession session,String validCode) {
+        String a = "0";
+        String validateCode = (String) session.getAttribute("validateCode");
+        if(!StringUtils.isEmpty(validCode)){
+            if(validCode.equalsIgnoreCase(validateCode)){
+                a = "1";//验证码正确
+            }
+        }
+        System.out.println(a);
+        return a;
+    }
 
 
 }

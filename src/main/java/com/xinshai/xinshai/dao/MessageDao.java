@@ -1,5 +1,6 @@
 package com.xinshai.xinshai.dao;
 
+import com.xinshai.xinshai.model.Hospital;
 import com.xinshai.xinshai.model.MessagePush;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public interface MessageDao {
     @Update("update messagePush set meaning=#{meaning},dayCount=#{dayCount},updateTime=getDate() where id=#{id} ")
     void updatePush(@Param(value="id")String id,@Param(value="meaning")String meaning,@Param(value="dayCount")String dayCount);
 
-    @Delete("DELETE * FROM messagePush WHERE id = #{messagePush} ")
+    @Delete("DELETE FROM messagePush WHERE id = #{id} ")
     void deletePush(String id);
 
     @Insert("insert into messagePush (id,meaning,dayCount,createTime) values (#{id},#{meaning},#{dayCount},getDate() ) ")
@@ -31,5 +32,7 @@ public interface MessageDao {
     @Select("select dayCount from messagePush where id = #{dayConutId} ")
     int getDayCount(int dayConutId);
 
+    @Select("select * from hospital ")
+    Hospital select1();
 
 }

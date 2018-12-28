@@ -2,10 +2,8 @@ package com.xinshai.xinshai.dao;
 
 import com.xinshai.xinshai.model.Menu;
 import com.xinshai.xinshai.model.UserRoleMenu;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.xinshai.xinshai.model.WeixinMenu;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +15,7 @@ public interface MenuDao {
     List<Menu> getAllMenu();
 
 
-    @Select("SELECT * FROM (SELECT *,ROW_NUMBER() OVER(ORDER BY menuName DESC) AS num FROM menu " +
+    @Select("SELECT * FROM (SELECT *,ROW_NUMBER() OVER(ORDER BY orderNum DESC) AS num FROM menu " +
             "where menuName like '%${menuName}%' )AS t WHERE  t.num BETWEEN #{pageNo} AND #{pageSize} ")
     List<Menu> getMenuByNum(@Param(value = "menuName") String menuName,
                             @Param(value = "pageNo") int pageNo,
@@ -38,8 +36,30 @@ public interface MenuDao {
             "LEFT JOIN  menu m on rm.menuId=m.menuId where r.roleId=#{roleId} ")
     List<UserRoleMenu> getRoleByUserId(String roleId);
 
-    @Select("select menuId id,menuName name,parentId pId from menu")
+    @Select("select menuId id,menuName name,parentId pId from menu where isDelete = 0 ")
     List<Map<String,Object>> getMenuTree();
+
+    @Select(" SELECT menuId id,menuName name,parentId pid,url,icons,orderNum,isDelete from menu where isDelete=0 order by orderNum ")
+    List<Menu> menuDisplay();
+
+    @Select("SELECT menuId,menuName from menu where parentId is null and isDelete = 0 order by orderNum")
+    List<Menu> parentList();
+
+    @Update("UPDATE menu SET menuName=#{name},url=#{url},icons=#{icons}," +
+            "orderNum=#{orderNum},parentId=#{pid} where menuId=#{id}")
+    void updateLocalMenu(@Param(value="id")String id,@Param(value="name") String name,
+                         @Param(value="url")String url, @Param(value="icons") String icons,
+                         @Param(value="orderNum")String orderNum,@Param(value="pid") String pid);
+
+
+    @Insert("INSERT into menu (menuId,menuName,url,icons,orderNum,parentId) " +
+            " VALUES (#{id},#{name},#{url},#{icons},#{orderNum},#{pid})")
+    void creatMenu(@Param(value="id")String id,@Param(value="name")String name,
+                   @Param(value="url")String url,@Param(value="icons")String icons,
+                   @Param(value="orderNum")String orderNum,@Param(value="pid")String pid);
+
+    @Update("UPDATE menu SET isDelete=1 where menuId = #{id}")
+    void updateMenuState(String id);
 
 
 }

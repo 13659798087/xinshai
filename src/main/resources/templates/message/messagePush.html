@@ -64,26 +64,22 @@
 
   <div class="tableDiv">
 	  <div id="toolbar" class="btn-group">
-		  <div class="queryList" style="width: 150%;margin-top: 0.9%;">
-
-			  <div class="myLabel-content queryText" >用户名：</div>
+		  <div class="queryList" style="width: 150%;margin:10%;"><!--margin-top: 0.9%;-->
+			  <!--<div class="myLabel-content queryText" >用户名：</div>
 			  <div class="myText-content" style="float: left;">
 				  <input id="userName" type="text" class="form-control" placeholder="用户名">
 			  </div>
-
-
 			  <div class="myLabel-content" style="float: left;height:34px;line-height: 34px;margin-left: 2%;font-weight: bold;">所属单位：</div>
 			  <div class="myText-content" style="float: left;">
 				  <input id="organizationName" type="text" class="form-control" placeholder="所属单位">
 			  </div>
-
 			  <div style="float: left;width: 5%;">&nbsp;</div>
 			  <button class="btn btn-default" id="btn_search"  onclick="query()">
 				  <span class="glyphicon glyphicon-search"></span> 查询
 			  </button>
 			  <button   class="btn btn-default" id="btn_ret"  onclick="reset()">
 				  <span class="glyphicon glyphicon-refresh"></span> 重置
-			  </button>
+			  </button>-->
 			  <button class="btn btn-default" id="btn_add"  >
 				  <span class="glyphicon glyphicon-plus-sign"></span> 添加
 			  </button>
@@ -182,7 +178,7 @@
             toolbar: "#toolbar",//指定工具栏
             toolbarAlign: "left",//工具栏对齐方式/
             columns: [
-                {
+                /*{
                     //title: '编号',
                    // field: "编号",
                     align: "center",//水平
@@ -196,7 +192,7 @@
                         return pageSize * (pageNumber - 1) + index + 1;    //返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
                         //$('#table').bootstrapTable("getOptions"); //返回各项的object
                     }
-                },
+                },*/
                 {
                     title: "id",
                     field: "id",
@@ -204,7 +200,7 @@
                     align: "center",//水平
                     valign: "middle",
                     visible:true,
-                    width: '10%',
+                    width: '3%',
                 },
                 {
                     title: "意义",
@@ -217,7 +213,7 @@
 
                 },
                 {
-                    title: "天数",
+                    title: "值",
                     field: "dayCount",
                     sortable: true,//是否可排序
                     align: "center",//水平

@@ -39,12 +39,12 @@ public class UserServices {
         return userDao.getUserByParentId(userId);
     }
 
-    public List<UserInfo> getUserMessage( int pageNo, int pageSize, String userName, String organizationName) {
-        return userDao.getUserMessage(pageNo,pageSize,userName,organizationName);
+    public List<UserInfo> getUserMessage( int pageNo, int pageSize, String userName) {
+        return userDao.getUserMessage(pageNo,pageSize,userName);
     }
 
-    public long getUserCount(int pageNo, int pageSize, String userName, String organizationName) {
-        return userDao.getUserCount(pageNo,pageSize,userName,organizationName);
+    public long getUserCount(int pageNo, int pageSize, String userName) {
+        return userDao.getUserCount(pageNo,pageSize,userName);
     }
 
     public void deleteUser(String userId) {

@@ -1,6 +1,7 @@
 package com.xinshai.xinshai.services;
 
 import com.xinshai.xinshai.dao.MessageDao;
+import com.xinshai.xinshai.model.Hospital;
 import com.xinshai.xinshai.model.MessagePush;
 import com.xinshai.xinshai.model.UserInfo;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,9 @@ public class MessageServices {
         return messageDao.getDayCount(dayConutId);
     }
 
+
+    public Hospital select1() {
+        return messageDao.select1();
+    }
 
 }

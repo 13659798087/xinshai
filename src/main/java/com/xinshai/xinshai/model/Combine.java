@@ -23,6 +23,16 @@ public class Combine {
     private Timestamp update_time;
     private String paper_size;// 纸张类型
 
+    private String src;//跳转地址
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
     public String getPaper_size() {
         return paper_size;
     }

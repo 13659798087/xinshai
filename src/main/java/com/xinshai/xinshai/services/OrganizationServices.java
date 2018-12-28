@@ -30,9 +30,6 @@ public class OrganizationServices {
         organizationDao.removeNode(id);
     }
 
-    public Organization getOrg(String id) {
-        return organizationDao.getOrg(id);
-    }
 
     public List<Organization> getOrganization() {
         return organizationDao.getOrganization();

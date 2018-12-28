@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>个人条码信息</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<link href="../css/style.css" rel="stylesheet" />
+
+
+	<script src="../js/JsBarcode.all.min.js"></script>
+<style>
+
+	input[type="date"]:before{color:#A9A9A9;content:attr(placeholder);}
+	input[type="date"].full:before {color:black;content:""!important;}
+	title{background-color: #0e86E1;}
+</style>
+
+</head>
+<body style="background-color: #0e86E1;">
+
+<!--<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+	&lt;!&ndash;<div class="weui-cell__hd">
+		<img  id="img1"  style="width: 40px;">
+	</div>&ndash;&gt;
+	<div class="weui-cell__bd">
+		<span style="font-size: 20px;font-weight: 500;color: white;">个人条码信息</span>
+	</div>
+</div>-->
+
+	<div class="weui-form-preview" style="border: 3px solid #00b4ef;border-radius: 8px;position: relative;margin:2%;background-color: white;">
+
+		<center>
+		    <img id="imgcode" style="width: 96%;height: 150px;" />
+		</center>
+
+		<br/>
+		<div class="weui-form-preview__item">
+			<label class="weui-form-preview__label" style="margin-left: 5%;">母亲姓名：</label>
+			<span class="weui-form-preview__value"  th:text="${m_name}"></span>
+		</div>
+
+		<input type="hidden"  th:value="${bloodCard}" id="bloodCard" />
+
+	</div>
+
+
+
+
+<!--<svg id="svgcode"></svg>
+<canvas id="canvascode"></canvas>
+<img id="imgcode" />-->
+
+<script>
+
+    $(function() {
+        $.get("/signpic/getSignpicId", {}, function (data) {
+            $("#img1").attr("src", "/signpic/Pictureshows?id=" + data);
+        })
+    })
+
+    $("#imgcode").JsBarcode( $("#bloodCard").val() );//or JsBarcode("#imgcode", "I'm huangenai!");
+
+    /*$("#svgcode").JsBarcode('Hi!');//or JsBarcode("#svgcode", "Hi!");
+
+    $("#canvascode").JsBarcode( $("#bloodCard").text() );//or JsBarcode("#canvascode", "Hello world!");
+
+    $("#imgcode").JsBarcode("I'm huangenai!");//or JsBarcode("#imgcode", "I'm huangenai!");*/
+
+</script>
+
+
+</body>
+
+</html>

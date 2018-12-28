@@ -43,10 +43,10 @@ public interface ConfigDao {
     @Delete("delete from config where cf_code = #{cf_code} ")
     void deleteRow(String cf_code);
 
-
     @Select("select * from config ")
     List<Config> getAllConfig();
 
-
+    @Select("select cf_val from config where cf_code=#{jumpPage} ")
+    String getConfigByCode(String jumpPage);
 
 }

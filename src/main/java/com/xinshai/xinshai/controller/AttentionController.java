@@ -26,7 +26,7 @@ public class AttentionController {
     private AttentionServices attentionServices;
 
     @RequestMapping("/attentionReply")
-    private String attentionReply(){
+    public String attentionReply(){
         return view+"attentionReply";
     }
 
@@ -97,7 +97,7 @@ public class AttentionController {
         StringBuffer sb = new StringBuffer();
         int i = 1;
         for(AttentionReply r : reply){
-            sb.append( i+"、"+r.getContent());
+            sb.append( r.getContent()+"\n\n");
             i++;
         }
         return sb.toString();

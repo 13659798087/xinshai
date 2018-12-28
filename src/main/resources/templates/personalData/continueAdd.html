@@ -38,32 +38,96 @@
 <body ontouchstart>
 
 	<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
-		<div class="weui-cell__hd"><img src="../img/yichun.png"></div>
+		<div class="weui-cell__hd">
+			<!--<img src="../img/yichun.png">-->
+			<img  id="img1"  style="width: 40px;">
+		</div>
 		<div class="weui-cell__bd">
-			<span style="font-size: 18px;">我的信息</span>
+			<span style="font-size: 20px;font-weight: 500;">我的信息</span>
 		</div>
 	</div>
 
 	<div class="weui-form-preview"  th:each="m:${listWeixinMsg}"  th:id="${m.id}+w"
 		 style="border: 2px solid #e5e5e5 ; border-radius: 8px;margin: 5px;position: relative;">
 		<div class="weui-form-preview__bd">
+
+			<div class="weui-form-preview__item">
+				<a  th:href="@{/personalData/personBarcode(bloodCard=${m.bloodCard},m_name=${m.m_name} )}" class="weui-form-preview__label"
+					style="color: green;font-size: 16px;">点击查看个人条形码信息</a>
+				<!--<span class="weui-form-preview__value" th:text="${m.bloodCard}"></span>-->
+
+			</div>
+			<!--th:href="@{/project/listMilestone(projectId=${project.projectId},type='p')}"-->
+
+			<div class="weui-form-preview__item">
+				<label class="weui-form-preview__label">采血卡号</label>
+				<span class="weui-form-preview__value" th:text="${m.bloodCard}"></span>
+			</div>
+
+			<div class="weui-form-preview__item" th:if="${m.tes!=null}">
+				<label class="weui-form-preview__label">胎儿数</label>
+				<span class="weui-form-preview__value" th:if="${m.tes==1}">单胎</span>
+				<span class="weui-form-preview__value" th:if="${m.tes==2}">双胎</span>
+				<span class="weui-form-preview__value" th:if="${m.tes==3}">三胎</span>
+				<span class="weui-form-preview__value" th:if="${m.tes==4}">四胎</span>
+			</div>
+			<div class="weui-form-preview__item" th:if="${m.hospitalNo!=null}">
+				<label class="weui-form-preview__label">住院号</label>
+				<span class="weui-form-preview__value" th:text="${m.hospitalNo}"></span>
+			</div>
 			<div class="weui-form-preview__item">
 				<label class="weui-form-preview__label">母亲姓名</label>
 				<span class="weui-form-preview__value" th:text="${m.m_name}"></span>
 			</div>
 			<div class="weui-form-preview__item">
-				<label class="weui-form-preview__label">采血卡号</label>
-				<span class="weui-form-preview__value" th:text="${m.bloodCard}"></span>
-			</div>
-			<div class="weui-form-preview__item">
 				<label class="weui-form-preview__label">联系电话</label>
 				<span class="weui-form-preview__value"  th:text="${m.tel}"></span>
+			</div>
+			<div class="weui-form-preview__item" th:if="${m.m_age!=null}">
+				<label class="weui-form-preview__label">母亲年龄</label>
+				<span class="weui-form-preview__value"  th:text="${m.m_age}"></span>
+			</div>
+			<div class="weui-form-preview__item" th:if="${m.f_name!=null}">
+				<label class="weui-form-preview__label">父亲名称</label>
+				<span class="weui-form-preview__value"  th:text="${m.f_name}"></span>
+			</div>
+			<div class="weui-form-preview__item" th:if="${m.tel_2!=null}">
+				<label class="weui-form-preview__label">父亲电话</label>
+				<span class="weui-form-preview__value"  th:text="${m.tel_2}"></span>
+			</div>
+
+			<div class="weui-form-preview__item"  th:if="${m.address!=null}">
+				<label class="weui-form-preview__label">居住地址</label>
+				<span class="weui-form-preview__value" th:text="${m.address}"></span>
+			</div>
+
+			<div class="weui-form-preview__item"  th:if="${m.pregnanciesNum!=null}">
+				<label class="weui-form-preview__label">怀孕次数</label>
+				<span class="weui-form-preview__value" th:text="${m.pregnanciesNum}"></span>
+			</div>
+			<div class="weui-form-preview__item"  th:if="${m.deliverNum!=null}">
+				<label class="weui-form-preview__label">分娩次数</label>
+				<span class="weui-form-preview__value"  th:text="${m.deliverNum}"></span>
+			</div>
+
+			<div class="weui-form-preview__item"  th:if="${m.pregnancyWeek!=null}">
+				<label class="weui-form-preview__label">孕周</label>
+				<span th:text="${m.pregnancyWeek}"></span>周<span th:text="${m.pregnancyDay}"></span>天
 			</div>
 			<div class="weui-form-preview__item">
 				<label class="weui-form-preview__label">小孩出生日期</label>
 				<!--<span class="weui-form-preview__value"  th:text="${#dates.format(m.s_birthday,'yyyy-MM-dd')}"  th:if="${m.s_birthday!=null}"></span>-->
 				<span class="weui-form-preview__value"  th:text="${#strings.substring(m.bithday,0,10)}"></span>
 			</div>
+			<div class="weui-form-preview__item" th:if="${m.sex!=null}">
+				<label class="weui-form-preview__label">婴儿性别</label>
+				<span class="weui-form-preview__value" th:text="${m.sex=='1'?'男':'女'}"></span>
+			</div>
+			<div class="weui-form-preview__item"  th:if="${m.weigh!=null}">
+				<label class="weui-form-preview__label">婴儿出生体重</label>
+				<span th:text="${m.weigh}"></span>g
+			</div>
+
 			<div style="position: absolute;margin-left: 25%;margin-top: -25%">
 					<img src="../img/pass.png"  th:if="${m.isPass==0}" style="width: 160px;" />
 					<img src="../img/nopass.png" th:if="${m.isPass==2}"  style="width: 160px;"/>
@@ -83,8 +147,9 @@
 
 	</div>
 
-	<div class='demos-content-padded'  >
-		<a href="/personalData/addInformation" class="weui-btn weui-btn_primary" >继续添加</a>
+	<div class='demos-content-padded' >
+		<a  th:if="${pageParam=='0'}"  href="/personalData/addInformation" class="weui-btn weui-btn_primary"  >添加个人信息</a>
+		<a  th:if="${pageParam=='1'}"  href="/personalData/xinShaiAdd" class="weui-btn weui-btn_primary"  >新筛信息登记</a>
 	</div>
 
 	<span></span>
@@ -102,6 +167,11 @@
 <script>
     var bindingMsg = "";//从后台取解绑提示信息
     $(function() {
+
+		$.get("/signpic/getSignpicId",{},function(data){
+			$("#img1").attr("src","/signpic/Pictureshows?id="+data );
+		})
+
         $.get("/open/dynamicConfig/getMyMessage",{},function(data){
 			$("#myMessage").append("<span>"+data+"</span>")
 		})
@@ -121,6 +191,11 @@
 				$.get("/personalData/deleteBind",{"id":id},function(data){
 					$("#"+id+'w').remove();
 					$.toast("解除绑定成功!");
+
+					if( $(".weui-form-preview").length==0 ){
+                        location.href="/personalData/personal"
+					}
+
 				})
         }, function() {
             //取消操作

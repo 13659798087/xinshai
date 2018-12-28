@@ -6,6 +6,8 @@ import com.xinshai.xinshai.services.CombineServices;
 import com.xinshai.xinshai.util.Paging;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,8 +36,8 @@ public class CombineController {
 
     @ResponseBody
     @RequestMapping("/getTableCombine")
-    public Map<String, Object> getTableCombine(String pageNumber,String rowNumber,String sortName,
-                                               String sortOrder,String c_name,String c_rpt,HttpServletRequest request){
+    public Map<String, Object> getTableCombine(String pageNumber,String rowNumber,String sortName,String sortOrder,
+                                               String c_name,String c_rpt){
 
         List<Combine> listCombine = new ArrayList<Combine>();
 
@@ -60,8 +62,8 @@ public class CombineController {
     }
 
     @RequestMapping("/createCombine")
-    public String createCombine(String hide_code,String c_code,String c_name,String c_price,String c_order_no,String c_rpt,String c_rpt_title,
-                                String c_rpt_bz1,String c_rpt_bz2,String paper_size){
+    public String createCombine(String hide_code,String c_code,String c_name,String c_price,String c_order_no,String c_rpt,
+                                String c_rpt_title,String c_rpt_bz1,String c_rpt_bz2,String paper_size){
         String sign = "";
         BigDecimal price = null;
         if(!StringUtils.isEmpty(c_price)){
@@ -81,8 +83,8 @@ public class CombineController {
     }
 
     @RequestMapping("/addCombine")
-    public String addCombine(Model model, String c_code, String c_name, String c_price, String c_order_no,String c_rpt,
-                              String c_rpt_title, String c_rpt_bz1, String c_rpt_bz2,String paper_size,String type,String sign){
+    public String addCombine(Model model,String c_code,String c_name,String c_price,String c_order_no,String c_rpt,
+        String c_rpt_title,String c_rpt_bz1,String c_rpt_bz2,String paper_size,String type,String sign){
 
         model.addAttribute("c_code",c_code);
         model.addAttribute("c_name",c_name);
@@ -157,6 +159,28 @@ public class CombineController {
     @RequestMapping("/toCombine")
     public String toCombine(){
         return view+"toCombine";
+    }
+
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @RequestMapping("/create")
+    public void create(){
+        try {
+            //updata();
+            //updata2();
+            String c_id = "6";
+            String c_code = "dd前";
+            String c_name = "更改前";
+            combineServices.create(c_id,c_code,c_name);//updata();
+            c_code = "dd后";
+            c_name = "更改红藕";
+            combineServices.update(c_id,c_code,c_name); //updata2();
+        } catch (Exception e) {
+            e.printStackTrace();
+            //如果updata2()抛了异常,updata()会回滚,不影响事物正常执行
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
     }
 
 

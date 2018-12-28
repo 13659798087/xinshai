@@ -2,11 +2,9 @@ package com.xinshai.xinshai.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.xinshai.xinshai.entiry.SemParams;
-import com.xinshai.xinshai.model.AttentionReply;
-import com.xinshai.xinshai.services.AttentionServices;
+import com.xinshai.xinshai.services.HospitalServices;
 import com.xinshai.xinshai.services.WeixinUserInfoServices;
 import com.xinshai.xinshai.servlet.TokenThread;
-import com.xinshai.xinshai.util.CheckUtil;
 import com.xinshai.xinshai.util.MessageUtil;
 import com.xinshai.xinshai.util.WeixinUtil;
 import net.sf.json.JSONObject;
@@ -36,6 +34,9 @@ public class WeixinServlet extends HttpServlet {
 
 	@Resource
 	private AttentionController attentionController;
+
+	@Resource
+	private HospitalServices hospitalServices;
 
 	@RequestMapping("/Index")
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -91,7 +92,11 @@ public class WeixinServlet extends HttpServlet {
 					else if("?".equals(content) || "？".equals(content)){
 						//message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.secondMenu());
 						message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText());
-					}else if("人工服务".equals(content)) { //其他都进入微信客服模式
+					}/*else if("人工服务".equals(content)) { //其他都进入微信客服模式
+						msgType = "transfer_customer_service";
+						message = MessageUtil.initServer(toUserName,fromUserName,msgType);
+					}*/
+					else if( content.length()>0 ) { //其他都进入微信客服模式
 						msgType = "transfer_customer_service";
 						message = MessageUtil.initServer(toUserName,fromUserName,msgType);
 					}
@@ -110,15 +115,9 @@ public class WeixinServlet extends HttpServlet {
 					//message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText1()); //静态数据
 					message = MessageUtil.initText(toUserName, fromUserName, replyMenu);//动态数据
 
-					int m = weixinUserInfoServices.getByOpenid(fromUserName);
-
-					if(m==1){    //0-关注的用户,1-取消的用户
-						weixinUserInfoServices.UpdateConcerns(fromUserName,0);
-
-					}else{//如果查不到该用户的记录，说明用户之前没关注过该公众号，就往数据库插入一条记录
-						JSONObject job = WeixinUtil.getUserInfo(TokenThread.accessToken.getToken(),fromUserName);
-						String sex = null;//用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
-						int i = job.getInt("sex");
+					JSONObject job = WeixinUtil.getUserInfo(TokenThread.accessToken.getToken(),fromUserName);
+					String sex = null;//用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+					int i = job.getInt("sex");
 						switch (i){
 							case 1:
 								sex = "男";
@@ -144,17 +143,28 @@ public class WeixinServlet extends HttpServlet {
 						String groupid = job.getString("groupid");//用户所在的分组ID（暂时兼容用户分组旧接口）
 						String remark =  job.getString("remark");//备注
 
+					int m = weixinUserInfoServices.getByOpenid(fromUserName);
+
+					if(m==1){ //说明用户关注过，再次关注的时候更改关注时间等信息
+						weixinUserInfoServices.UpdateConcerns(fromUserName,0,nickname,language,city,province,country,groupid,attentionTime,remark);
+					}else{//如果查不到该用户的记录，说明用户之前没关注过该公众号，就往数据库插入一条记录
 						weixinUserInfoServices.insertUserOpenid(openid,nickname,sex,language,city,province,country,groupid,attentionTime,remark);
 					}
 
 				}else if(MessageUtil.MESSAGE_UNSUBSCRIBE.equals(eventType)){ //取消关注
 
-					//取消关注之后,不用用户删除数据，到时候要统计   0-关注的用户，1-取消的用户
-					weixinUserInfoServices.UpdateConcerns(fromUserName,1);
+					weixinUserInfoServices.UpdateConcerns1(fromUserName,1);
+
 					//weixinUserInfoServices.deleteWeixinMsg(fromUserName);
 
 				}else if(MessageUtil.MESSAGE_CLICK.equals(eventType)){
+
 					message = MessageUtil.initText(toUserName, fromUserName, MessageUtil.menuText());
+
+					String key = map.get("EventKey");
+					if (key.equals("33")) {
+						message = "天气预报菜单项被点击！";
+					}
 				}else if(MessageUtil.MESSAGE_VIEW.equals(msgType)){
 					String url = map.get("EventKey");
 					message = MessageUtil.initText(toUserName, fromUserName, url);
@@ -170,7 +180,7 @@ public class WeixinServlet extends HttpServlet {
 				String recognition=map.get("Recognition");
 
 				SemParams p=new SemParams();
-				p.setAppid(WeixinUtil.APPID);
+				p.setAppid( hospitalServices.getAppid() );
 				p.setCategory("weather");
 				p.setCity("广州");
 				p.setQuery(recognition);

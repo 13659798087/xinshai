@@ -179,7 +179,7 @@
                         //$('#table').bootstrapTable("getOptions"); //返回各项的object
                     }
                 },
-                {
+                /*{
                     title: "代码",
                     field: "c_code",
                     sortable: true,//是否可排序
@@ -189,7 +189,7 @@
                     width: '10%',
                     titleTooltip: "代码",
 
-                },
+                },*/
                 {
                     title: "名称",
                     field: "c_name",
@@ -198,17 +198,6 @@
                     visible:true,
                     valign: "middle",
                     width: '10%',
-                    titleTooltip: "名称",
-
-                },
-                {
-                    title: "纸张类型",
-                    field: "paper_size",
-                    sortable: true,//是否可排序
-                    align: "center",//水平
-                    visible:true,
-                    valign: "middle",
-                    width: '5%',
                     titleTooltip: "名称",
 
                 },
@@ -233,6 +222,33 @@
                 {
                     field: "c_rpt",
                     title: "报表名称",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '12%',
+                    visible:true
+                },
+                {
+                    field: "c_rpt2",
+                    title: "报表名称2",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '12%',
+                    visible:true
+                },
+                {
+                    field: "c_rpt3",
+                    title: "报表名称3",
+                    sortable: true,
+                    align: "center",//水平
+                    valign: "middle",
+                    width: '12%',
+                    visible:true
+                },
+                {
+                    field: "c_rpt4",
+                    title: "报表名称4",
                     sortable: true,
                     align: "center",//水平
                     valign: "middle",
@@ -347,8 +363,8 @@
         },
         'click .RoleOfEdit': function (e, value, row, index) {
             debugger;
-            location.href="/combine/addCombine?type=e&c_code="+row.c_code+"&c_name="+row.c_name+"&c_price="+row.c_price +"&c_order_no="
-			  	+row.c_order_no+"&c_rpt="+row.c_rpt+"&c_rpt_title="+row.c_rpt_title+"&c_rpt_bz1="
+            location.href="/combine/addCombine?type=e&c_code="+row.c_code+"&c_name="+row.c_name+"&c_price="+row.c_price
+                +"&c_order_no="+row.c_order_no+"&c_rpt="+row.c_rpt+"&c_rpt_title="+row.c_rpt_title+"&c_rpt_bz1="
 				+row.c_rpt_bz1+"&c_rpt_bz2="+row.c_rpt_bz2+"&paper_size="+row.paper_size;
         }
     }

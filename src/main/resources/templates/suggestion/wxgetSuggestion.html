@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>意见反馈</title>
+<link rel="stylesheet" type="text/css" href="../css/css.css" />
+<link href="../Content/bootstrap.min.css" rel="stylesheet" />
+<link href="../Content/jquery.fileupload.css" rel="stylesheet" />
+<link href="../Content/jquery.validate.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<script src="../js/jquery-3.2.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<!-- 引入vue.js -->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+
+<script src="../js/fastclick.js"></script>
+<script src="../js/jquery-weui.min.js"></script>
+<link href="../css/jquery-weui.min.css" rel="stylesheet" />
+<link href="../css/weui.min.css" rel="stylesheet" />
+<link href="../css/demos.css" rel="stylesheet" />
+
+<link href="../css/style.css" rel="stylesheet" />
+
+	<!--微信js-->
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<script src="../js/JS-SDK.js"></script>
+
+
+<style>
+	.weui-toast{margin-left: 3%;}
+	input[type="date"]:before{color:#A9A9A9;content:attr(placeholder);}
+	input[type="date"].full:before {color:black;content:""!important;}
+
+	/*list1{float:left;width: 30%;margin: 5%;}
+	list2{display: inline-block;float:left;width: 10%;}*/
+</style>
+
+</head>
+<body style="background-color: white;">
+
+
+<div class="weui-tab" style="width: 100%;">
+	<div class="weui-navbar">
+		<div class="weui-navbar__item weui-navbar__item--on aaa"> <!--href="#tab1"-->
+			意见反馈
+		</div>
+		<div class="weui-navbar__item bbb" style="background-color: #BBFFFF;" ><!--href="#tab2"-->
+			历史反馈
+		</div>
+	</div>
+
+	<div class="doc-head">&nbsp;</div>	<div class="doc-head">&nbsp;</div>
+
+	<center th:if="${listSize==0}">您没有留言记录</center>
+
+	<div class="weui-form-preview"  th:each="b:${list}"  th:id="${b.id}+w"
+		 style="border: 2px solid #e5e5e5 ; border-radius: 8px;margin: 5px;position: relative;">
+		<div class="weui-form-preview__bd">
+			<div class="weui-form-preview__item">
+				<label class="weui-form-preview__label">时间</label>
+				<span class="weui-form-preview__value" th:text="${#dates.format(b.createTime, 'yyyy-MM-dd')}" ></span>
+			</div>
+
+			<div class="weui-form-preview__item">
+				<label class="weui-form-preview__label">建议</label>
+				<span class="weui-form-preview__value" th:text="${b.suggestion}" ></span>
+			</div>
+
+			<div class="weui-form-preview__item" >
+				<a class="weui-form-preview__value deleteSug"  th:id="${b.id}">删除</a>
+			</div>
+	    </div>
+
+	</div>
+
+</div>
+
+</body>
+
+<script>
+
+
+
+	
+	$(".aaa").click(function () {
+		location.href="/suggestion/wxSuggestion";
+    })
+    $(".bbb").click(function () {
+        location.href="/suggestion/wxgetSuggestion1";
+    })
+
+
+   /* $(document).on("click", ".deleteSug", function() {
+        var id = this.id;
+        $.confirm("","确定删除?", function() {
+            $.get("/suggestion/deleteSug",{"id": id },function(data){
+                $("#"+id+'w').remove();
+                $.toast("删除成功!");
+            })
+        }, function() {
+            //取消操作
+        });
+    });*/
+
+	$(".deleteSug").click(function(){
+        var id = this.id;
+        $.confirm("","确定删除?", function() {
+            $.get("/suggestion/deleteSug",{"id": id },function(data){
+                $("#"+id+'w').remove();
+                $.toast("删除成功!");
+            })
+        }, function() {
+            //取消操作
+        });
+	})
+
+
+
+    $(function() {
+
+      /*  var a = $("#ok").val();
+        if(a=="success"){
+            $.toast("提交成功，感谢您的支持!");
+		}*/
+
+
+
+       /* $.get("/signpic/getSignpicId",{},function(data){
+            $("#img1").attr("src","/signpic/Pictureshows?id="+data );
+        })
+*/
+        FastClick.attach(document.body);
+
+    });
+
+    function check(form) {
+        debugger
+        if(form.name.value=='') {
+            $.alert("请输入您的姓名", "提示！");
+            //form.p_name.focus();
+            return false;
+        }
+        if(form.phone.value.length!=11){
+            $.alert("电话号码长度不正确", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+
+        if(form.suggestion.value==''){
+            $.alert("请输入采血卡号上的电话号码", "提示！");
+            //form.p_tel.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
+</html>

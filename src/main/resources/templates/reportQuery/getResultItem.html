@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>报告单</title>
+<title>绑定信息</title>
 <link rel="stylesheet" type="text/css" href="../css/css.css" />
 <link href="../Content/bootstrap.min.css" rel="stylesheet" />
 <link href="../Content/jquery.fileupload.css" rel="stylesheet" />
@@ -44,12 +44,15 @@
 </head>
 <body style="background-color: white;">
 
-<div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
-    <div class="weui-cell__hd"><img src="../img/yichun.png"></div>
-    <div class="weui-cell__bd">
-        <span style="font-size: 18px;color: #1A9E39;">新生儿疾病筛查报告单</span>
+
+    <div class="weui-cell" style="border-bottom: 1px solid 	#F5F5F5">
+        <div class="weui-cell__hd">
+            <img  id="img1"  style="width: 40px;">
+        </div>
+        <div class="weui-cell__bd">
+            <span style="font-size: 20px;font-weight: 500;">新生儿疾病筛查</span>
+        </div>
     </div>
-</div>
 
 
     <center style="margin-top: 15%;" th:if="${listSize==0}">
@@ -57,32 +60,79 @@
             <img src="../img/report.png" />
         </div>
         <div style="margin-top: 15%">暂时没查找到报告明细！</div>
+
+
     </center>
 
-    <div class="weui-cells__title" th:if="${listSize!=0}" style="font-size: 18px;color: black;">
-        您有<span th:text="${listSize}"></span>条报告:
+    <!--th:if="${listSize!=0}"-->
+    <div class="weui-cells__title"  style="font-size: 18px;color: black;" th:if="${listSize!=0}">
+        您绑定的个人信息：
     </div>
 
-    <div th:each="a:${list}" >
-        <div class="weui-cells" style="border: 3px solid #ddd;border-radius: 12px;color: grey;margin: 5px 10px;">
-            <a class="weui-cell weui-cell_access" th:href="@{/reportQuery/reportPreview(c_id=${a.c_id},c_code=${a.c_code},authorHospital=${a.authorHospital})}" >
+    <div  th:text="${listSize}" id="listSize" style="display: none;"></div>
+
+    <div th:each="a:${list}" style="color:black;" >
+        <div class="weui-cells" style="border: 3px solid #1A9E39;border-radius: 12px;color: black;margin: 10px 15px;">
+            <div class="weui-cell weui-cell_access personClick" th:id="${a.patientId}"  >
+               <!-- //th:href="@{/reportQuery/personReport(patientId=${a.patientId})}"-->
                 <div class="weui-cell__bd">
-                    <p th:text="${a.p_m_name}"></p>
-                    <p th:text="${a.bloodCard}"></p>
-                    <p th:text="${a.combineName+'报告'}"></p>
+                    <div>
+                        <label>母亲姓名：</label><span th:text="${a.m_name}"></span>
+                    </div>
+                    <div>
+                        <label>采血卡号：</label><span  th:text="${a.bloodCard}"></span>
+                    </div>
                 </div>
-                <div class="weui-cell__ft">
-                    查看
+                <div class="weui-cell__ft" th:if="${a.isPass==1}"  >
+                    待验证
                 </div>
-            </a>
+                <div class="weui-cell__ft" th:if="${a.isPass==2}">
+                    验证不通过
+                </div>
+                <div class="weui-cell__ft" th:if="${a.patientId!=null }" style="color: green;">
+                    查看报告
+                </div>
+                <div class="weui-cell__ft" th:if="${a.patientId ==null &amp;&amp; a.isPass==0}">
+                    报告未出
+                </div>
+                <!--<span th:text="${a.isPass}"></span>-->
+            </div>
         </div>
     </div>
 
+    <div class='demos-content-padded'  th:if="${listSize!=0}" >
+        <!--  <a  href="/reportQuery/queryReportMsg" class="weui-btn weui-btn_primary"  >报告查询</a>-->
+        <span>结果查询请点击</span>
+        <span>“查看报告”</span>或
+        <a href="/reportQuery/queryReportMsg">手工输入信息</a>进行查询
+    </div>
+
+    <div class='demos-content-padded'  th:if="${listSize==0}">
+        <!--  <a  href="/reportQuery/queryReportMsg" class="weui-btn weui-btn_primary"  >报告查询</a>-->
+        <span>结果查询请</span>
+        <a href="/personalData/addInformation">添加个人信息</a>或
+        <a href="/reportQuery/queryReportMsg">手工输入信息</a>进行查询
+    </div>
 
 </body>
 
 <script>
 
+    $(function(){
+
+        $.get("/signpic/getSignpicId",{},function(data){
+            $("#img1").attr("src","/signpic/Pictureshows?id="+data );
+        })
+
+    })
+
+    $(".personClick").click(function(){
+        var patientId = $(this).attr("id");
+        if(typeof( patientId ) !="undefined"){
+            location.href="/reportQuery/personReport?patientId="+patientId;
+        }
+    })
 
 </script>
+
 </html>

@@ -28,7 +28,7 @@ public class ShiroConfiguration {
         bean.setLoginUrl("/login/loginPage");
         bean.setSuccessUrl("/login/index");
         //配置访问权限
-        LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
+        LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap();
         //filterChainDefinitionMap.put("/login/**", "anon");
 
         filterChainDefinitionMap.put("/login/loginPage", "anon");
@@ -54,16 +54,14 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/*.*", "authc");*/
 
 
+        //下面这些方法验登录之后才能访问
         filterChainDefinitionMap.put("/home/**", "authc");
-        //filterChainDefinitionMap.put("/combine/**", "authc");
         filterChainDefinitionMap.put("/setmeal/**", "authc");
         filterChainDefinitionMap.put("/mb/**", "authc");
         filterChainDefinitionMap.put("/menu/**", "authc");
         filterChainDefinitionMap.put("/organization/**", "authc");
-        //filterChainDefinitionMap.put("/reportQuery/**", "authc");
         filterChainDefinitionMap.put("/role/**", "authc");
         filterChainDefinitionMap.put("/sendApplication/**", "authc");
-        filterChainDefinitionMap.put("/signpic/**", "authc");
         filterChainDefinitionMap.put("/dataStatistics/**", "authc");
         filterChainDefinitionMap.put("/config/**", "authc");
         filterChainDefinitionMap.put("/authUser/**", "authc");

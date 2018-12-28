@@ -16,6 +16,16 @@ public class Template {
     private Integer orderNum;
     private Integer isDelete;
 
+    private String authorHospital;
+
+    public String getAuthorHospital() {
+        return authorHospital;
+    }
+
+    public void setAuthorHospital(String authorHospital) {
+        this.authorHospital = authorHospital;
+    }
+
     public Integer getKeyCount() {
         return keyCount;
     }

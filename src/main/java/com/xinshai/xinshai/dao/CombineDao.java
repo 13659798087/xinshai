@@ -10,11 +10,11 @@ import java.util.List;
 public interface CombineDao {
 
 
-    @Select("SELECT * from combine where c_flag=0 ORDER BY c_order_no ")
+    @Select("SELECT * from combine where c_flag=1 ORDER BY c_order_no ")  //flag=1为在用
     List<Combine> getCombine();
 
     @Select("<script> SELECT * FROM (SELECT *,ROW_NUMBER() OVER(ORDER BY c_order_no asc) AS num FROM combine " +
-            "where 1=1 and c_flag=0 " +
+            "where 1=1 and c_flag=1 " +
             " <if test='c_name !=null &amp;&amp; c_name !=\"\"'> and c_name like '%${c_name}%' </if>"+
             " <if test='c_rpt !=null &amp;&amp; c_rpt !=\"\"'> and c_rpt like '%${c_rpt}%' </if>"+
             ") " +
@@ -40,11 +40,12 @@ public interface CombineDao {
     int validateCombine(String c_code);
 
     @Insert("INSERT into combine (c_code,c_name,c_price,c_order_no,c_rpt,c_rpt_title,c_rpt_bz1,c_rpt_bz2,create_time,paper_size) " +
-            "VALUES (#{c_code},#{c_name},#{c_price},#{c_order_no},#{c_rpt},#{c_rpt_title},#{c_rpt_bz1},#{c_rpt_bz1},getdate(),#{paper_size} )")
+     "VALUES (#{c_code},#{c_name},#{c_price},#{c_order_no},#{c_rpt},#{c_rpt_title},#{c_rpt_bz1},#{c_rpt_bz1},getdate(),#{paper_size} )")
     void createCombine(@Param(value = "c_code") String c_code, @Param(value = "c_name") String c_name,
                        @Param(value = "c_price") BigDecimal c_price, @Param(value = "c_order_no") String c_order_no,
                        @Param(value = "c_rpt") String c_rpt, @Param(value = "c_rpt_title") String c_rpt_title,
-                       @Param(value = "c_rpt_bz1") String c_rpt_bz1, @Param(value = "c_rpt_bz2") String c_rpt_bz2, @Param(value = "paper_size") String paper_size);
+                       @Param(value = "c_rpt_bz1") String c_rpt_bz1, @Param(value = "c_rpt_bz2") String c_rpt_bz2,
+                       @Param(value = "paper_size") String paper_size);
 
     @Update("update combine set c_code=#{c_code},c_name=#{c_name},c_price=#{c_price},c_order_no=#{c_order_no},c_rpt=#{c_rpt}," +
             "c_rpt_title=#{c_rpt_title},c_rpt_bz1=#{c_rpt_bz1},c_rpt_bz2=#{c_rpt_bz2},paper_size=#{paper_size} where c_code=#{hide_code} ")
@@ -52,12 +53,26 @@ public interface CombineDao {
                        @Param(value = "c_code") String c_code, @Param(value = "c_name") String c_name,
                        @Param(value = "c_price") BigDecimal c_price, @Param(value = "c_order_no") String c_order_no,
                        @Param(value = "c_rpt") String c_rpt, @Param(value = "c_rpt_title") String c_rpt_title,
-                       @Param(value = "c_rpt_bz1") String c_rpt_bz1, @Param(value = "c_rpt_bz2") String c_rpt_bz2, @Param(value = "paper_size") String paper_size);
+                       @Param(value = "c_rpt_bz1") String c_rpt_bz1, @Param(value = "c_rpt_bz2") String c_rpt_bz2,
+                       @Param(value = "paper_size") String paper_size);
 
     @Delete("update combine set c_flag = 1 where c_code = #{c_code} ")
     void deleteCombine(String c_code);
 
     @Select("SELECT * from combine where c_code = #{c_code} ")
     Combine getCombineByCode(String c_code);
+
+
+
+    @Insert("INSERT into combine (c_id,c_code,c_name) VALUES (#{c_id},#{c_code},#{c_name} )")
+    void create(@Param(value = "c_id")String c_id,
+                @Param(value = "c_code")String c_code,
+                @Param(value = "c_name")String c_name);
+
+    @Delete("update combine set c_code = #{c_code},c_name={c_name} where c_id = #{c_id} ")
+    void update(@Param(value = "c_id")String c_id,
+                @Param(value = "c_code")String c_code,
+               String c_name);
+
 
 }

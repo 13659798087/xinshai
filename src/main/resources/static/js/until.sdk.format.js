@@ -103,7 +103,7 @@ var windowSuccess = function(txt){
 /*
    格式化时间 yyyy-MM-dd
     */
-     function FormatDate(timestamp){
+  /* function FormatDate(timestamp){
 
        // 根据 timestamp 值初始化一个 Date 对象
        var tmpDate = new Date(timestamp);
@@ -111,8 +111,15 @@ var windowSuccess = function(txt){
        return tmpDate.getFullYear()+"-"
          +(tmpDate.getMonth()+1)+"-"
          +tmpDate.getDate();
-   }
+   }*/
 
+   var  FormatDate = function(timestamp){
+       var tmpDate = new Date(timestamp);
+       // 按格式填充数据
+       return tmpDate.getFullYear()+"-"
+           +(tmpDate.getMonth()+1)+"-"
+           +tmpDate.getDate();
+   }
 
 /*
   控制input中只能输入金额
@@ -124,6 +131,7 @@ var windowSuccess = function(txt){
         bindKeyEvent($("#s_price_high"));
         bindKeyEvent($("#c_price_high"));
         bindKeyEvent($("#c_price_low"));
+        bindKeyEvent($("#dayCount"));
 
         //bindKeyEvent($("#input1"));
         //bindKeyEvent($("#input2"));
@@ -149,6 +157,35 @@ var windowSuccess = function(txt){
     }
 
 
+    var showNotification = function(msg,body){
+
+            var notification = new Notification(msg, {
+                body: body,
+                icon: "img/1.jpg"
+            });
+            setTimeout(function() { notification.close(); }, 5000);
+
+    }
+
+    /*
+    <a onclick="showNotification();">点我看右下角信息</a>
+    function showNotification() {
+        window.Notification.permission = "granted";
+        alert(window.Notification.permission);
+        if(window.Notification) {
+            debugger
+            if(window.Notification.permission == "granted") {
+                var notification = new Notification('你有一条新信息', {
+                    body: "你好我是王小婷",
+
+                    icon: "img/1.jpg"
+                });
+                setTimeout(function() { notification.close(); }, 5000);
+            } else {
+                window.Notification.requestPermission();
+            }
+        } else alert('你的浏览器不支持此消息提示功能，请使用chrome内核的浏览器！');
+    };*/
 
 
 /*]]>*/

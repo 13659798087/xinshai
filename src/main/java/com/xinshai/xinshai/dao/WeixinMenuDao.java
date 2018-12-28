@@ -9,9 +9,8 @@ import java.util.List;
 public interface WeixinMenuDao {
 
 
-    @Select("SELECT id,name,parentId pid,url,menukey,type,orderNum from weixinMenu where isDelete=0 order by orderNum ")
+    @Select("SELECT id,name,parentId pid,url,menukey,type,orderNum,isDelete,mainName from weixinMenu where isDelete=0 order by orderNum ")
     List<WeixinMenu> getWeixinMenu();
-
 
     @Update("UPDATE weixinMenu SET name=#{name},type=#{type},url=#{url},menukey=#{menukey}," +
             "orderNum=#{orderNum},parentId=#{pid} where id=#{id}")

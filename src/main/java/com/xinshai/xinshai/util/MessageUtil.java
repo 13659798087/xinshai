@@ -4,6 +4,8 @@ import com.thoughtworks.xstream.XStream;
 import com.xinshai.xinshai.entiry.*;
 import com.xinshai.xinshai.model.AttentionReply;
 import com.xinshai.xinshai.services.AttentionServices;
+import com.xinshai.xinshai.services.HospitalServices;
+import com.xinshai.xinshai.services.WeixinUserInfoServices;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -19,6 +21,12 @@ import java.util.*;
 @Component
 public class MessageUtil {
 
+	private static HospitalServices hospitalServices;
+	@Resource
+	public void setVerificDao(HospitalServices hospitalServices) {
+		this.hospitalServices = hospitalServices;
+	}
+
 	public static String MESSAGE_TEXT = "text";
 	public static String MESSAGE_NEWS = "news";
 	public static String MESSAGE_IMAGE = "image";
@@ -33,9 +41,6 @@ public class MessageUtil {
 	public static String MESSAGE_CLICK = "CLICK";
 	public static String MESSAGE_VIEW = "VIEW";
 	public static final String MESSAGE_SCANCODE= "scancode_push";
-
-	@Resource
-	private AttentionServices attentionServices;
 
 	/**
 	 * 将文本消息对象转为xml
@@ -196,7 +201,7 @@ public class MessageUtil {
 		News news = new News();
 		news.setTitle("码上敲响录");
 		news.setDescription("码上敲响录是老王的技能学习网站，提供技术交流和软件开发");//单图文消息才会展
-		news.setPicUrl(DomainUrl.getUrl()+"/img/house.png");
+		news.setPicUrl( hospitalServices.getDomainUrl()  +"/img/house.png");
 		news.setUrl("http://yayihouse.com/yayishuwu/");
 
 		newslist.add(news);
@@ -224,13 +229,13 @@ public class MessageUtil {
 		News news = new News();
 		news.setTitle("淘宝网");
 		news.setDescription("淘宝网是大型的购物网站平台");//单图文消息才会展
-		news.setPicUrl(DomainUrl.getUrl()+"/img/taobao.png");
+		news.setPicUrl( hospitalServices.getDomainUrl()  +"/img/taobao.png");
 		news.setUrl("https://www.taobao.com/");
 
 		News news1 = new News();
 		news1.setTitle("百度");
 		news1.setDescription("百度网站是国内的高级搜索引擎，网站baidu.com，百度一下，你就知道");//单图文消息才会展
-		news1.setPicUrl(DomainUrl.getUrl()+"/img/baidu.png");
+		news1.setPicUrl( hospitalServices.getDomainUrl() +"/img/baidu.png");
 		news1.setUrl("https://www.hao123.com/");
 
 		newslist.add(news);
@@ -279,8 +284,8 @@ public class MessageUtil {
 		music.setThumbMediaId("onv19hLaL1xoBM4vjGRFZvyMhJRkESxw7ZFSGhQ-Kv5LmABWYKF-Em35ndm8RGZe");
 		music.setTitle("see you again");
 		music.setDescription("速7片尾曲");
-		music.setMusicUrl(DomainUrl.getUrl()+"/weixin/resources/static/img/beautiful.mp3");
-		music.setHQMusicUrl(DomainUrl.getUrl()+"/weixin/resources/static/img/beautiful.mp3");
+		music.setMusicUrl( hospitalServices.getDomainUrl() +"/weixin/resources/static/img/beautiful.mp3");
+		music.setHQMusicUrl( hospitalServices.getDomainUrl() +"/weixin/resources/static/img/beautiful.mp3");
 
 		MusicMessage musicMessage = new MusicMessage();
 		musicMessage.setFromUserName(toUserName);

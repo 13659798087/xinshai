@@ -3,6 +3,7 @@ package com.xinshai.xinshai.servlet;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+
 /**
  * 初始化servlet
  *
@@ -16,7 +17,10 @@ public class MyCommandLineRunner implements CommandLineRunner {
     public void run(String... args) {
         // 启动定时获取access_token的线程
         new Thread(new TokenThread()).start();
+
     }
+
+
 
 
 }

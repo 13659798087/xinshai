@@ -18,6 +18,16 @@ public class WeixinMenu {
 
     private Double isDelete;
 
+    private Integer mainName;
+
+    public Integer getMainName() {
+        return mainName;
+    }
+
+    public void setMainName(Integer mainName) {
+        this.mainName = mainName;
+    }
+
     public Double getIsDelete() {
         return isDelete;
     }

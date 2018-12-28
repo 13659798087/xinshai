@@ -40,12 +40,8 @@ public class WeixinUserInfoServices {
         return weixinUserInfoDao.getByApplyinfo(m_name,tel);
     }
 
-    public List<ResultPushMsg> getAllMsg() {
-        return weixinUserInfoDao.getAllMsg();
-    }
-
-    public void UpdateConcerns(String fromUserName,int concerns) {
-        weixinUserInfoDao.UpdateConcerns(fromUserName,concerns);
+    public void UpdateConcerns1(String fromUserName,int concerns) {
+        weixinUserInfoDao.UpdateConcerns1(fromUserName,concerns);
     }
 
     public void deleteWeixinMsg(String fromUserName) {
@@ -72,15 +68,32 @@ public class WeixinUserInfoServices {
         return  weixinUserInfoDao.getByOpenid(openid);
     }
 
-    public List<WeixinUserInfo> getRecentlyUser(Integer dayCount) {
-        return  weixinUserInfoDao.getRecentlyUser(dayCount);
+    public List<WeixinUserInfo> getRecentlyUser(int dayCount,int bindRemind) {
+        return  weixinUserInfoDao.getRecentlyUser(dayCount,bindRemind);
     }
 
-    public void AlreadyPushMsg(String value) {
-        weixinUserInfoDao.AlreadyPushMsg(value);
+    public void pushHistory(String value) {
+        weixinUserInfoDao.pushHistory(value);
     }
 
     public void deleteResult() {
         weixinUserInfoDao.deleteResult();
+    }
+
+    public void updatePushCount(String successId) {
+        weixinUserInfoDao.updatePushCount(successId);
+    }
+
+    public List<WeixinUserInfo> getConfigDay(int dayCount) {
+        return weixinUserInfoDao.getConfigDay(dayCount);
+    }
+
+    public void insertBatchUser(List<WeixinUserInfo> listUserInfo) {
+        weixinUserInfoDao.insertBatchUser(listUserInfo);
+    }
+
+    public void UpdateConcerns(String fromUserName, int concerns, String nickname, String language, String city,
+                               String province, String country, String groupid,Timestamp attentionTime,String remark) {
+        weixinUserInfoDao.UpdateConcerns(fromUserName,concerns,nickname,language,city,province,country,groupid,attentionTime,remark);
     }
 }

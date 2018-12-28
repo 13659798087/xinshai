@@ -155,7 +155,7 @@
                     //title: '编号',
                     // field: "编号",
                     align: "center",//水平
-                    width:  '5%',
+                    width:  '2%',
                     valign: "middle",
                     formatter: function (value, row, index) {
                         //return index+1; //序号正序排序从1开始
@@ -204,6 +204,15 @@
                 {
                     field: "icons",
                     title: "菜单图标",
+                    sortable: true,
+                    width: '15%',
+                    align: "center",//水平
+                    valign: "middle",
+                    visible:true
+                },
+                {
+                    field: "orderNum",
+                    title: "序号",
                     sortable: true,
                     width: '15%',
                     align: "center",//水平

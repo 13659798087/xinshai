@@ -30,11 +30,11 @@ public class CombineServices {
         return combineDao.validateCombine(c_code);
     }
 
-    public void createCombine(String c_code, String c_name, BigDecimal c_price, String c_order_no, String c_rpt, String c_rpt_title, String c_rpt_bz1, String c_rpt_bz2,String paper_size) {
+    public void createCombine(String c_code, String c_name, BigDecimal c_price, String c_order_no, String c_rpt, String c_rpt_title, String c_rpt_bz1, String c_rpt_bz2, String paper_size) {
         combineDao.createCombine(c_code,c_name,c_price,c_order_no,c_rpt,c_rpt_title,c_rpt_bz1,c_rpt_bz2,paper_size);
     }
 
-    public void updateCombine(String hide_code,String c_code, String c_name, BigDecimal c_price, String c_order_no, String c_rpt, String c_rpt_title, String c_rpt_bz1, String c_rpt_bz2,String paper_size) {
+    public void updateCombine(String hide_code, String c_code, String c_name, BigDecimal c_price, String c_order_no, String c_rpt, String c_rpt_title, String c_rpt_bz1, String c_rpt_bz2, String paper_size) {
         combineDao.updateCombine(hide_code,c_code,c_name,c_price,c_order_no,c_rpt,c_rpt_title,c_rpt_bz1,c_rpt_bz2,paper_size);
     }
 
@@ -49,4 +49,16 @@ public class CombineServices {
     public Combine getCombineByCode(String c_code) {
         return combineDao.getCombineByCode(c_code);
     }
+
+
+
+
+    public void create(String c_id, String c_code, String c_name) {
+        combineDao.create(c_id, c_code, c_name);
+    }
+
+    public void update(String c_id, String c_code, String c_name) {
+        combineDao.update(c_id, c_code, c_name);
+    }
+
 }

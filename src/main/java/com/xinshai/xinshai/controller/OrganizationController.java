@@ -84,12 +84,12 @@ public class OrganizationController {
     }
 
     //编辑节点名字
-    @ResponseBody
+    /*@ResponseBody
     @RequestMapping("/getOrg")
     public Organization getOrg(String organizationId){
         Organization organization = organizationServices.getOrg(organizationId);
         return organization;
-    }
+    }*/
 
     //编辑节点名字
     @ResponseBody

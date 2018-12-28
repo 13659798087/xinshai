@@ -42,17 +42,33 @@ public class MessageConroller {
     }
 
     @RequestMapping("/printReport")
-    public void myprint(HttpServletResponse response, String c_id, String c_code, String authorHospital) throws Exception {
+    public void myprint(HttpServletResponse response,String c_sid,String c_combine,String rptno) throws Exception {
         String fileName = "";
 
         List<Combine> combine = combineServices.getCombine();
         for(Combine c : combine){
-            if(c_code.equals(c.getC_code())){
-                fileName = c.getC_rpt()+".jasper";//拼接文件后缀pdf,此处是下载pdf文件
+            if(c_combine.equals(c.getC_code())){
+                // fileName = c.getC_rpt()+".jasper";//拼接文件后缀pdf,此处是下载pdf文件
+                switch (rptno){
+                    case "1":
+                        fileName = c.getC_rpt()+".jasper";//拼接文件后缀pdf,此处是下载pdf文件
+                        break;
+                    case "2":
+                        fileName = c.getC_rpt2()+".jasper";
+                        break;
+                    case "3":
+                        fileName = c.getC_rpt3()+".jasper";
+                        break;
+                    case "4":
+                        fileName = c.getC_rpt4()+".jasper";
+                        break;
+                }
+
             }
         }
+
         response.setContentType("multipart/form-data");
-        BufferedImage bufferedImage = genPdf(c_id,fileName,authorHospital);
+        BufferedImage bufferedImage = genPdf(c_sid,c_combine,fileName);
 
         ServletOutputStream out = response.getOutputStream();//新建流。
 
@@ -64,13 +80,13 @@ public class MessageConroller {
     }
 
 
-    public BufferedImage genPdf(String c_id, String fileName, String authorHospital) {
+    public BufferedImage genPdf(String c_sid,String c_combine,String fileName) {
         List<Report> userLs = new ArrayList<Report>();
         Map<String, Object> map = new HashMap<String, Object>();
 
         /*map.put("cCombine", "ct"); map.put("cSid", "C1700530");*//*map.put("c_combine", "cl"); map.put("c_sid", "20170967");*///map.put("c_id", "ts180529001");//map.put("c_id", " wc20180529002");// map.put("c_id", "dp20180529001");
-        map.put("c_id", c_id);
-        map.put("authorHospital", authorHospital);
+        map.put("c_sid", c_sid);
+        map.put("c_combine", c_combine);
 
 
         return jasperUtil.exportPdfDir1(fileName, map, userLs);
